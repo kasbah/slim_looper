@@ -33,13 +33,17 @@ class LooperTestCase(unittest.TestCase):
 
         self.instance = lilv.Instance(self.plugin, 48000, None)
 
-        self.in_buf     = numpy.array([1.0] * self.nframes, 'f')
-        self.out_buf    = numpy.array([1.0] * self.nframes, 'f')
-        self.record_buf = numpy.array([0.0], 'f')
+        self.in_buf           = numpy.array([1.0] * self.nframes, 'f')
+        self.out_buf          = numpy.array([1.0] * self.nframes, 'f')
+        self.record_buf       = numpy.array([0.0], 'f')
+        self.pause_buf        = numpy.array([0.0], 'f')
+        self.record_mode_buf  = numpy.array([0.0], 'f')
 
         self.instance.connect_port(0, self.in_buf)
         self.instance.connect_port(1, self.out_buf)
         self.instance.connect_port(2, self.record_buf)
+        self.instance.connect_port(3, self.pause_buf)
+        self.instance.connect_port(4, self.record_mode_buf)
         self.instance.activate()
     def setBufferAll(self, buf, val):
         for i,s in enumerate(buf):
@@ -116,3 +120,28 @@ class RecordTestCase(LooperTestCase):
         self.assertOutputIsAll(0.2)
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.2)
+    def testPause(self):
+        '''Test that pause works.'''
+        self.setInputAll(0.1)
+        self.record_buf[0] = 1.0
+        self.instance.run(self.nframes)
+        self.record_buf[0] = 0.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+        self.pause_buf[0] = 1.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.0)
+        self.pause_buf[0] = 0.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+    def testOverdub(self):
+        '''Test that overdub works.'''
+        self.setInputAll(0.1)
+        self.record_buf[0] = 1.0
+        self.instance.run(self.nframes)
+        self.record_mode_buf[0] = 1.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.2)
+
+        
+         

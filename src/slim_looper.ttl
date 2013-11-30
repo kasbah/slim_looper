@@ -28,6 +28,38 @@
         lv2:default 0;
         lv2:minimum 0;
         lv2:maximum 1;
-        lv2:portProperty lv2:toggled, 
-            <http://lv2plug.in/ns/ext/port-props#trigger> 
+        lv2:portProperty lv2:toggled
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 3 ;
+		lv2:symbol "pause" ;
+		lv2:name "Pause" ;
+        lv2:default 0;
+        lv2:minimum 0;
+        lv2:maximum 1;
+        lv2:portProperty lv2:toggled
+	] , [
+		a lv2:InputPort ,
+			lv2:ControlPort ;
+		lv2:index 4 ;
+		lv2:symbol "record_mode" ;
+		lv2:name "Record Mode" ;
+        lv2:default 0;
+        lv2:minimum 0;
+        lv2:maximum 3;
+        lv2:scalePoint [
+			rdfs:label "New" ;
+			rdf:value 0.0
+		] , [
+			rdfs:label "Overdub" ;
+			rdf:value 1.0
+		] , [
+			rdfs:label "Insert" ;
+			rdf:value 2.0
+		] , [
+			rdfs:label "Replace" ;
+			rdf:value 3.0
+		];
+        lv2:portProperty lv2:integer
 	] .
