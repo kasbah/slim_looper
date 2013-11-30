@@ -20,21 +20,15 @@
 typedef enum {
     LOOPER_INPUT        = 0,
     LOOPER_OUTPUT       = 1,
-    LOOPER_RECORD       = 2,
-    LOOPER_PAUSE        = 3,
-    LOOPER_RECORD_MODE  = 4
+    LOOPER_CONTROL      = 2,
+    LOOPER_RECORD_MODE  = 3
 } PortIndex;
 
-typedef struct {
-    float*       buffer;
-    size_t       end;
-    size_t       pos;
-} Loop;
-
-typedef struct {
-    uint8_t record;
-    uint8_t pause;
-} LooperControlState;
+typedef enum {
+    PLAYING   = 0,
+    PAUSED    = 1,
+    RECORDING = 2
+} LooperState;
 
 typedef enum {
     MODE_NEW     = 0,
@@ -47,24 +41,21 @@ typedef struct {
     LooperRecordMode record_mode;
 } LooperSettings;
 
-typedef enum {
-    PLAYING   = 0,
-    PAUSED    = 1,
-    RECORDING = 2
-} LooperState;
+typedef struct {
+    float*       buffer;
+    size_t       end;
+    size_t       pos;
+} Loop;
 
 typedef struct {
     const float* input;
     float*       output;
-    const float* record_input;
-    const float* pause_input;
+    const float* control_input;
     const float* record_mode_input;
-    LooperControlState* controls;
     Loop*  loop;
-    LooperState state;
     LooperSettings* settings;
-    uint8_t previous_state;
-    uint8_t prev_record_input;
+    LooperState state;
+    LooperState previous_state;
 } Looper;
 
 #endif// __LOOPER_H__

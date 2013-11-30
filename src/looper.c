@@ -30,7 +30,6 @@ instantiate(const LV2_Descriptor*     descriptor,
     Looper* looper = (Looper*)malloc(sizeof(Looper));
     looper->loop = (Loop*)malloc(sizeof(Loop));
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
-    looper->controls = (LooperControlState*)malloc(sizeof(LooperControlState));
     looper->settings = (LooperSettings*)malloc(sizeof(LooperSettings));
 
     return (LV2_Handle)looper;
@@ -50,11 +49,8 @@ connect_port(LV2_Handle instance,
     case LOOPER_OUTPUT:
         looper->output = (float*)data;
         break;
-    case LOOPER_RECORD:
-        looper->record_input = (const float*)data;
-        break;
-    case LOOPER_PAUSE:
-        looper->pause_input = (const float*)data;
+    case LOOPER_CONTROL:
+        looper->control_input = (const float*)data;
         break;
     case LOOPER_RECORD_MODE:
         looper->record_mode_input = (const float*)data;
@@ -68,8 +64,6 @@ activate(LV2_Handle instance)
     Looper* looper = (Looper*)instance;
     looper->loop->pos = 0;
     looper->loop->end = 0;
-    looper->controls->record = 0;
-    looper->controls->pause = 0;
     looper->state = PLAYING;
     looper->previous_state = PLAYING;
     looper->settings->record_mode = MODE_NEW;
@@ -191,33 +185,20 @@ run(LV2_Handle instance, uint32_t n_samples)
 {
     Looper*             looper   = (Looper*)instance;
     Loop*               loop     = looper->loop;
-    LooperControlState* controls = looper->controls;
     LooperSettings*     settings = looper->settings;
 
     const float* const input  = looper->input;
     float* const       output = looper->output;
 
-    controls->record = ((*(looper->record_input) != 0.0) ? 1 : 0);
-    controls->pause  = ((*(looper->pause_input ) != 0.0) ? 1 : 0);
-
     settings->record_mode  = (LooperRecordMode)(*(looper->record_mode_input));
+    looper->state          = (LooperState)(*(looper->control_input));
     
-    if (controls->record)
+    if (looper->state == RECORDING && 
+        looper->previous_state != RECORDING && 
+        settings->record_mode == MODE_NEW)
     {
-      looper->state = RECORDING;
-      if (looper->previous_state != RECORDING && settings->record_mode == MODE_NEW)
-      {
-          loop->pos = 0;
-          loop->end = 0;
-      }
-    }
-    else if (controls->pause)
-    {
-      looper->state = PAUSED;
-    }
-    else
-    {
-      looper->state = PLAYING;
+        loop->pos = 0;
+        loop->end = 0;
     }
 
     looper->previous_state = looper->state;

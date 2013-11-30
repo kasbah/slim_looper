@@ -23,26 +23,26 @@
 		a lv2:InputPort ,
 			lv2:ControlPort ;
 		lv2:index 2 ;
-		lv2:symbol "record" ;
-		lv2:name "Record" ;
+		lv2:symbol "control" ;
+		lv2:name "Control" ;
         lv2:default 0;
         lv2:minimum 0;
-        lv2:maximum 1;
-        lv2:portProperty lv2:toggled
+        lv2:maximum 2;
+        lv2:scalePoint [
+			rdfs:label "Play" ;
+			rdf:value 0.0
+		] , [
+			rdfs:label "Pause" ;
+			rdf:value 1.0
+		] , [
+			rdfs:label "Record" ;
+			rdf:value 2.0
+		];
+        lv2:portProperty lv2:integer
 	] , [
 		a lv2:InputPort ,
 			lv2:ControlPort ;
 		lv2:index 3 ;
-		lv2:symbol "pause" ;
-		lv2:name "Pause" ;
-        lv2:default 0;
-        lv2:minimum 0;
-        lv2:maximum 1;
-        lv2:portProperty lv2:toggled
-	] , [
-		a lv2:InputPort ,
-			lv2:ControlPort ;
-		lv2:index 4 ;
 		lv2:symbol "record_mode" ;
 		lv2:name "Record Mode" ;
         lv2:default 0;

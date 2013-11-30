@@ -35,15 +35,13 @@ class LooperTestCase(unittest.TestCase):
 
         self.in_buf           = numpy.array([1.0] * self.nframes, 'f')
         self.out_buf          = numpy.array([1.0] * self.nframes, 'f')
-        self.record_buf       = numpy.array([0.0], 'f')
-        self.pause_buf        = numpy.array([0.0], 'f')
+        self.control_buf      = numpy.array([0.0], 'f')
         self.record_mode_buf  = numpy.array([0.0], 'f')
 
         self.instance.connect_port(0, self.in_buf)
         self.instance.connect_port(1, self.out_buf)
-        self.instance.connect_port(2, self.record_buf)
-        self.instance.connect_port(3, self.pause_buf)
-        self.instance.connect_port(4, self.record_mode_buf)
+        self.instance.connect_port(2, self.control_buf)
+        self.instance.connect_port(3, self.record_mode_buf)
         self.instance.activate()
     def setBufferAll(self, buf, val):
         for i,s in enumerate(buf):
@@ -71,16 +69,16 @@ class RecordTestCase(LooperTestCase):
         self.assertOutputIsAll(0.0)
 
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.0)
 
     def testRecord(self):
         ''' Test record works.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
@@ -89,13 +87,13 @@ class RecordTestCase(LooperTestCase):
     def testRecord2(self):
         ''' Test record over two run calls.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
         self.setInputAll(0.2)
         self.instance.run(self.nframes)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
@@ -104,17 +102,17 @@ class RecordTestCase(LooperTestCase):
     def testRecord3(self):
         ''' Test that subsequent records overwrite each other.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
 
         self.setInputAll(0.2)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
 
         self.assertOutputIsAll(0.2)
@@ -123,21 +121,21 @@ class RecordTestCase(LooperTestCase):
     def testPause(self):
         '''Test that pause works.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
-        self.pause_buf[0] = 1.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.0)
-        self.pause_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
     def testOverdub(self):
         '''Test that overdub works.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
         self.record_mode_buf[0] = 1.0
         self.instance.run(self.nframes)
@@ -145,7 +143,7 @@ class RecordTestCase(LooperTestCase):
     def testInsert(self):
         '''Test that insert works.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
         self.setInputAll(0.2)
@@ -154,18 +152,18 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.3)
         self.instance.run(self.nframes)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
         #this is where we insert
         self.setInputAll(-0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.record_mode_buf[0] = 2.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.0)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.2)
 
@@ -180,7 +178,7 @@ class RecordTestCase(LooperTestCase):
     def testReplace(self):
         '''Test that replace works.'''
         self.setInputAll(0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
         self.setInputAll(0.2)
@@ -189,18 +187,18 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.3)
         self.instance.run(self.nframes)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
         #this is where we replace
         self.setInputAll(-0.1)
-        self.record_buf[0] = 1.0
+        self.control_buf[0] = 2.0
         self.record_mode_buf[0] = 3.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.0)
 
-        self.record_buf[0] = 0.0
+        self.control_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.3)
 
