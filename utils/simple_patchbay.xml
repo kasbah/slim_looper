@@ -1,0 +1,27 @@
+<!DOCTYPE patchbay>
+<patchbay version="0.3.10" name="simple_patchbay">
+ <output-sockets>
+  <socket exclusive="off" client="system" type="jack-audio" name="system">
+   <plug>capture_1</plug>
+   <plug>capture_2</plug>
+  </socket>
+  <socket exclusive="off" client="SLim Looper" type="jack-audio" name="SLim Looper">
+   <plug>out</plug>
+  </socket>
+ </output-sockets>
+ <input-sockets>
+  <socket exclusive="off" client="system" type="jack-audio" name="system">
+   <plug>playback_1</plug>
+   <plug>playback_2</plug>
+  </socket>
+  <socket exclusive="off" client="SLim Looper" type="jack-audio" name="SLim Looper">
+   <plug>in</plug>
+  </socket>
+ </input-sockets>
+ <slots/>
+ <cables>
+  <cable output="system" input="SLim Looper" type="jack-audio"/>
+  <cable output="SLim Looper" input="system" type="jack-audio"/>
+ </cables>
+</patchbay>
+
