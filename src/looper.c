@@ -126,6 +126,92 @@ activate(LV2_Handle instance)
     looper->settings->record_mode = MODE_NEW;
 }
 
+// is position after processing nsamples before loop end?
+uint8_t slim_loop_pos_before_end(Loop* loop, uint32_t n_samples)
+{
+    return ((loop->pos + n_samples) <= (loop->end));
+}
+
+// existence is defined as being at least one block long
+uint8_t slim_loop_exists(Loop* loop, uint32_t n_samples)
+{
+    return (loop->end >= n_samples);
+}
+
+static void
+slim_record(Looper* looper, uint32_t n_samples)
+{
+    const float* const input  = looper->input;
+    float* const       output = looper->output;
+
+    Loop*               loop     = looper->loop;
+    LooperSettings*     settings = looper->settings;
+
+    switch(settings->record_mode) 
+    {
+        case MODE_NEW:
+            memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
+            loop->pos += n_samples;
+            loop->end += n_samples;
+            memset(output, 0, n_samples * sizeof(float));
+            break;
+        case MODE_OVERDUB:
+            if (slim_loop_pos_before_end(loop, n_samples)) 
+            {
+                for (int i = 0; i < n_samples; i++)
+                {
+                    loop->buffer[loop->pos + i] += input[i]; //TODO: reduce gain to stop clipping 
+                }
+                loop->pos += n_samples;
+            }
+            //position is greater than loop length 
+            //looping around to start as long as we have a loop
+            else if (slim_loop_exists(loop, n_samples)) 
+            {
+                for (int i = 0; i < n_samples; i++)
+                {
+                    loop->buffer[i] += input[i]; //TODO: reduce gain to stop clipping 
+                }
+                memcpy(output, loop->buffer, n_samples * sizeof(float));
+                loop->pos = n_samples;
+            }
+            else //no loop, output silence
+            {
+                memset(output, 0, n_samples * sizeof(float));
+            }
+            break;
+        case MODE_INSERT:
+        default:
+            break;
+    }
+}
+
+static void
+slim_play(Looper* looper, uint32_t n_samples)
+{
+    const float* const input  = looper->input;
+    float* const       output = looper->output;
+
+    Loop*               loop     = looper->loop;
+    LooperSettings*     settings = looper->settings;
+
+    if (slim_loop_pos_before_end(loop, n_samples))
+    {
+        memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
+        loop->pos += n_samples;
+    }
+    //position is greater than loop length 
+    //looping around to start as long as we have a loop
+    else if (slim_loop_exists(loop, n_samples))
+    {
+        memcpy(output, loop->buffer, n_samples * sizeof(float));
+        loop->pos = n_samples;
+    }
+    else //no loop, output silence
+    {
+        memset(output, 0, n_samples * sizeof(float));
+    }
+}
 /** Process a block of audio (audio thread, must be RT safe). */
 static void
 run(LV2_Handle instance, uint32_t n_samples)
@@ -166,70 +252,14 @@ run(LV2_Handle instance, uint32_t n_samples)
     switch(looper->state)
     {
         case RECORDING:
-            {
-                if (settings->record_mode == MODE_NEW)
-                {
-                    memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
-                    loop->pos += n_samples;
-                    loop->end += n_samples;
-                    memset(output, 0, n_samples * sizeof(float));
-                }
-                else if (settings->record_mode == MODE_OVERDUB)
-                {
-                    // position is before loop end
-                    if ((loop->pos + n_samples) <= (loop->end)) 
-                    {
-                        for (int i = 0; i < n_samples; i++)
-                        {
-                            loop->buffer[loop->pos + i] += input[i]; //TODO: reduce gain to stop clipping 
-                        }
-                        loop->pos += n_samples;
-                    }
-                    //position is greater than loop length 
-                    //looping around to start as long as we have a loop
-                    else if (loop->end >= n_samples) 
-                    {
-                        for (int i = 0; i < n_samples; i++)
-                        {
-                            loop->buffer[i] += input[i]; //TODO: reduce gain to stop clipping 
-                        }
-                        memcpy(output, loop->buffer, n_samples * sizeof(float));
-                        loop->pos = n_samples;
-                    }
-                    else //no loop, output silence
-                    {
-                        memset(output, 0, n_samples * sizeof(float));
-                    }
-                }
-            }
+            slim_record(looper, n_samples);
             break;
         case PAUSED:
-            {
-                memset(output, 0, n_samples * sizeof(float));
-            }
+            memset(output, 0, n_samples * sizeof(float));
             break;
         case PLAYING:
         default:
-            {
-                // position is before loop end
-                if ((loop->pos + n_samples) <= loop->end)
-                {
-                    memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
-                    loop->pos += n_samples;
-                }
-                //position is greater than loop length 
-                //looping around to start as long as we have a loop
-                else if (loop->end >= n_samples)
-                {
-                    memcpy(output, loop->buffer, n_samples * sizeof(float));
-                    loop->pos = n_samples;
-                }
-                else //no loop, output silence
-                {
-                    memset(output, 0, n_samples * sizeof(float));
-                }
-            }
-            break;
+            slim_play(looper, n_samples);
     }
 }
 
