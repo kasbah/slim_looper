@@ -55,8 +55,8 @@ class LooperTestCase(unittest.TestCase):
     def assertBufferIsAll(self, buf, val, msg=None):
         for i,sample in enumerate(buf):
             if msg is None:
-                msg = "Buffer not all expected value: %0.8f. Sample %i is: %0.8f" % (val, i, sample)
-            self.assertAlmostEqual(sample, val, 8, msg)
+                msg = "Buffer not all expected value: %0.7f. Sample %i is: %0.7f" % (val, i, sample)
+            self.assertAlmostEqual(sample, val, 7, msg)
     def assertOutputIsAll(self, val):
         self.assertBufferIsAll(self.out_buf, val)
     def tearDown(self):
@@ -142,6 +142,37 @@ class RecordTestCase(LooperTestCase):
         self.record_mode_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.2)
+    def testInsert(self):
+        '''Test that insert works.'''
+        self.setInputAll(0.1)
+        self.record_buf[0] = 1.0
+        self.instance.run(self.nframes)
 
-        
-         
+        self.setInputAll(0.2)
+        self.instance.run(self.nframes)
+
+        self.setInputAll(0.3)
+        self.instance.run(self.nframes)
+
+        self.record_buf[0] = 0.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+
+        self.setInputAll(-0.1)
+        self.record_buf[0] = 1.0
+        self.record_mode_buf[0] = 2.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.0)
+
+        self.record_buf[0] = 0.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.2)
+
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.3)
+
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(-0.1)

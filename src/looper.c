@@ -181,6 +181,18 @@ slim_record(Looper* looper, uint32_t n_samples)
             }
             break;
         case MODE_INSERT:
+            if (slim_loop_exists(loop, n_samples))
+            {
+                memmove(&(loop->buffer[loop->pos + n_samples]), &(loop->buffer[loop->pos]), (loop->end - loop->pos) * sizeof(float));
+                memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
+                loop->pos += n_samples;
+                loop->end += n_samples;
+                memset(output, 0, n_samples * sizeof(float));
+            }
+            else //no loop, output silence
+            {
+                memset(output, 0, n_samples * sizeof(float));
+            }
         default:
             break;
     }
