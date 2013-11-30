@@ -187,12 +187,24 @@ slim_record(Looper* looper, uint32_t n_samples)
                 memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
                 loop->pos += n_samples;
                 loop->end += n_samples;
-                memset(output, 0, n_samples * sizeof(float));
             }
-            else //no loop, output silence
+            memset(output, 0, n_samples * sizeof(float));
+            break;
+        case MODE_REPLACE:
+            if (slim_loop_pos_before_end(loop, n_samples)) 
             {
-                memset(output, 0, n_samples * sizeof(float));
+                memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
+                loop->pos += n_samples;
             }
+            //position is greater than loop length 
+            //looping around to start as long as we have a loop
+            else if (slim_loop_exists(loop, n_samples))
+            {
+                memcpy(loop->buffer, input, n_samples * sizeof(float));
+                loop->pos = n_samples;
+            }
+            memset(output, 0, n_samples * sizeof(float));
+            break;
         default:
             break;
     }

@@ -158,6 +158,7 @@ class RecordTestCase(LooperTestCase):
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
+        #this is where we insert
         self.setInputAll(-0.1)
         self.record_buf[0] = 1.0
         self.record_mode_buf[0] = 2.0
@@ -168,6 +169,38 @@ class RecordTestCase(LooperTestCase):
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.2)
 
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.3)
+
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(-0.1)
+    def testReplace(self):
+        '''Test that replace works.'''
+        self.setInputAll(0.1)
+        self.record_buf[0] = 1.0
+        self.instance.run(self.nframes)
+
+        self.setInputAll(0.2)
+        self.instance.run(self.nframes)
+
+        self.setInputAll(0.3)
+        self.instance.run(self.nframes)
+
+        self.record_buf[0] = 0.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+
+        #this is where we replace
+        self.setInputAll(-0.1)
+        self.record_buf[0] = 1.0
+        self.record_mode_buf[0] = 3.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.0)
+
+        self.record_buf[0] = 0.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.3)
 
