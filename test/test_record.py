@@ -60,7 +60,7 @@ class LooperTestCase(unittest.TestCase):
 
 
 
-class testRecord(LooperTestCase):
+class RecordTestCase(LooperTestCase):
     def testSilence(self):
         ''' Test default silence while and while not recording.'''
         self.instance.run(self.nframes)
