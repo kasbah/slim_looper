@@ -137,8 +137,19 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.1)
         self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
+
+        self.control_buf[0] = 1.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+
+        self.control_buf[0] = 2.0
         self.record_mode_buf[0] = 1.0
         self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.1)
+
+        self.control_buf[0] = 1.0
+        self.instance.run(self.nframes)
+
         self.assertOutputIsAll(0.2)
     def testInsert(self):
         '''Test that insert works.'''

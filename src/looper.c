@@ -101,9 +101,10 @@ slim_record(Looper* looper, uint32_t n_samples)
         case MODE_OVERDUB:
             if (slim_loop_pos_before_end(loop, n_samples)) 
             {
+                memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
                 for (int i = 0; i < n_samples; i++)
-                {
-                    loop->buffer[loop->pos + i] += input[i]; //TODO: reduce gain to stop clipping 
+                {   //TODO: reduce gain to stop clipping 
+                    loop->buffer[loop->pos + i] += input[i];
                 }
                 loop->pos += n_samples;
             }
@@ -111,11 +112,11 @@ slim_record(Looper* looper, uint32_t n_samples)
             //looping around to start as long as we have a loop
             else if (slim_loop_exists(loop, n_samples)) 
             {
-                for (int i = 0; i < n_samples; i++)
-                {
-                    loop->buffer[i] += input[i]; //TODO: reduce gain to stop clipping 
-                }
                 memcpy(output, loop->buffer, n_samples * sizeof(float));
+                for (int i = 0; i < n_samples; i++)
+                {//TODO: reduce gain to stop clipping 
+                    loop->buffer[i] += input[i];
+                }
                 loop->pos = n_samples;
             }
             else //no loop, output silence
