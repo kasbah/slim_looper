@@ -208,12 +208,13 @@ run(LV2_Handle instance, uint32_t n_samples)
         case RECORDING:
             slim_record(looper, n_samples);
             break;
+        case PLAYING:
+            slim_play(looper, n_samples);
+            break;
         case PAUSED:
+        default:
             memset(output, 0, n_samples * sizeof(float));
             break;
-        case PLAYING:
-        default:
-            slim_play(looper, n_samples);
     }
 }
 

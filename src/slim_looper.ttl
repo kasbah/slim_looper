@@ -23,19 +23,19 @@
 		a lv2:InputPort ,
 			lv2:ControlPort ;
 		lv2:index 2 ;
-		lv2:symbol "control" ;
-		lv2:name "Control" ;
+		lv2:symbol "state_control" ;
+		lv2:name "State Control" ;
         lv2:default 0;
         lv2:minimum 0;
         lv2:maximum 2;
         lv2:scalePoint [
-			rdfs:label "Play" ;
+			rdfs:label "Paused" ;
 			rdf:value 0.0
 		] , [
-			rdfs:label "Pause" ;
+			rdfs:label "Playing" ;
 			rdf:value 1.0
 		] , [
-			rdfs:label "Record" ;
+			rdfs:label "Recording" ;
 			rdf:value 2.0
 		];
         lv2:portProperty lv2:integer

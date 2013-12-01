@@ -25,8 +25,8 @@ typedef enum {
 } PortIndex;
 
 typedef enum {
-    PLAYING   = 0,
-    PAUSED    = 1,
+    PAUSED    = 0,
+    PLAYING   = 1,
     RECORDING = 2
 } LooperState;
 
@@ -43,8 +43,8 @@ typedef struct {
 
 typedef struct {
     float*       buffer;
-    size_t       end;
-    size_t       pos;
+    unsigned       end;
+    unsigned       pos;
 } Loop;
 
 typedef struct {

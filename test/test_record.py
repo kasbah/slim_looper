@@ -78,7 +78,7 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.1)
         self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
@@ -93,7 +93,7 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.2)
         self.instance.run(self.nframes)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
@@ -105,14 +105,14 @@ class RecordTestCase(LooperTestCase):
         self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
 
         self.setInputAll(0.2)
         self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
 
         self.assertOutputIsAll(0.2)
@@ -123,13 +123,13 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.1)
         self.control_buf[0] = 2.0
         self.instance.run(self.nframes)
-        self.control_buf[0] = 0.0
-        self.instance.run(self.nframes)
-        self.assertOutputIsAll(0.1)
         self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
-        self.assertOutputIsAll(0.0)
+        self.assertOutputIsAll(0.1)
         self.control_buf[0] = 0.0
+        self.instance.run(self.nframes)
+        self.assertOutputIsAll(0.0)
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
     def testOverdub(self):
@@ -152,7 +152,7 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.3)
         self.instance.run(self.nframes)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
@@ -163,7 +163,7 @@ class RecordTestCase(LooperTestCase):
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.0)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.2)
 
@@ -187,7 +187,7 @@ class RecordTestCase(LooperTestCase):
         self.setInputAll(0.3)
         self.instance.run(self.nframes)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.1)
 
@@ -198,7 +198,7 @@ class RecordTestCase(LooperTestCase):
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.0)
 
-        self.control_buf[0] = 0.0
+        self.control_buf[0] = 1.0
         self.instance.run(self.nframes)
         self.assertOutputIsAll(0.3)
 
