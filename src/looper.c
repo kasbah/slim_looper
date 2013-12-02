@@ -64,9 +64,40 @@ activate(LV2_Handle instance)
     Looper* looper = (Looper*)instance;
     looper->loop->pos = 0;
     looper->loop->end = 0;
-    looper->state = PLAYING;
-    looper->previous_state = PLAYING;
+    looper->state = PAUSED;
+    looper->previous_state = PAUSED;
     looper->settings->record_mode = MODE_NEW;
+}
+
+/** Process a block of audio (audio thread, must be RT safe). */
+static void
+run(LV2_Handle instance, uint32_t n_samples)
+{
+    Looper*             looper   = (Looper*)instance;
+    Loop*               loop     = looper->loop;
+    LooperSettings*     settings = looper->settings;
+
+    const float* const input  = looper->input;
+    float* const       output = looper->output;
+
+    settings->record_mode  = (LooperRecordMode)(*(looper->record_mode_input));
+    looper->state          = (LooperState)(*(looper->control_input));
+
+    switch(looper->state)
+    {
+        case RECORDING:
+            slim_record(looper, n_samples);
+            break;
+        case PLAYING:
+            slim_play(looper, n_samples);
+            break;
+        case PAUSED:
+        default:
+            memset(output, 0, n_samples * sizeof(float));
+            break;
+    }
+
+    looper->previous_state = looper->state;
 }
 
 // is position after processing nsamples before loop end?
@@ -93,11 +124,18 @@ slim_record(Looper* looper, uint32_t n_samples)
     switch(settings->record_mode) 
     {
         case MODE_NEW:
+            //reset if we are not already running
+            if (looper->previous_state != RECORDING)
+            {
+                loop->pos = 0;
+                loop->end = 0;
+            }
             memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
             loop->pos += n_samples;
             loop->end += n_samples;
             memset(output, 0, n_samples * sizeof(float));
             break;
+
         case MODE_OVERDUB:
             if (slim_loop_pos_before_end(loop, n_samples)) 
             {
@@ -124,6 +162,7 @@ slim_record(Looper* looper, uint32_t n_samples)
                 memset(output, 0, n_samples * sizeof(float));
             }
             break;
+
         case MODE_INSERT:
             if (slim_loop_exists(loop, n_samples))
             {
@@ -134,6 +173,7 @@ slim_record(Looper* looper, uint32_t n_samples)
             }
             memset(output, 0, n_samples * sizeof(float));
             break;
+
         case MODE_REPLACE:
             if (slim_loop_pos_before_end(loop, n_samples)) 
             {
@@ -149,6 +189,7 @@ slim_record(Looper* looper, uint32_t n_samples)
             }
             memset(output, 0, n_samples * sizeof(float));
             break;
+
         default:
             break;
     }
@@ -178,44 +219,6 @@ slim_play(Looper* looper, uint32_t n_samples)
     else //no loop, output silence
     {
         memset(output, 0, n_samples * sizeof(float));
-    }
-}
-/** Process a block of audio (audio thread, must be RT safe). */
-static void
-run(LV2_Handle instance, uint32_t n_samples)
-{
-    Looper*             looper   = (Looper*)instance;
-    Loop*               loop     = looper->loop;
-    LooperSettings*     settings = looper->settings;
-
-    const float* const input  = looper->input;
-    float* const       output = looper->output;
-
-    settings->record_mode  = (LooperRecordMode)(*(looper->record_mode_input));
-    looper->state          = (LooperState)(*(looper->control_input));
-    
-    if (looper->state == RECORDING && 
-        looper->previous_state != RECORDING && 
-        settings->record_mode == MODE_NEW)
-    {
-        loop->pos = 0;
-        loop->end = 0;
-    }
-
-    looper->previous_state = looper->state;
-
-    switch(looper->state)
-    {
-        case RECORDING:
-            slim_record(looper, n_samples);
-            break;
-        case PLAYING:
-            slim_play(looper, n_samples);
-            break;
-        case PAUSED:
-        default:
-            memset(output, 0, n_samples * sizeof(float));
-            break;
     }
 }
 

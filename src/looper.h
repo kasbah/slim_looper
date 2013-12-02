@@ -62,4 +62,10 @@ LV2_SYMBOL_EXPORT
 const LV2_Descriptor*
 lv2_descriptor(uint32_t index);
 
+static void
+slim_record(Looper* looper, uint32_t n_samples);
+
+static void
+slim_play(Looper* looper, uint32_t n_samples);
+
 #endif// __LOOPER_H__
