@@ -70,13 +70,13 @@ activate(LV2_Handle instance)
 }
 
 // is position after processing nsamples before loop end?
-uint8_t slim_loop_pos_before_end(Loop* loop, uint32_t n_samples)
+static uint8_t slim_loop_pos_before_end(Loop* loop, uint32_t n_samples)
 {
     return ((loop->pos + n_samples) <= (loop->end));
 }
 
 // existence is defined as being at least one block long
-uint8_t slim_loop_exists(Loop* loop, uint32_t n_samples)
+static uint8_t slim_loop_exists(Loop* loop, uint32_t n_samples)
 {
     return (loop->end >= n_samples);
 }

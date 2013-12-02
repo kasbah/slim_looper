@@ -12,6 +12,7 @@ def configure(conf):
 
 def build(bld):
     bld.recurse("src")
+    bld.recurse("test")
 
 def test(opt):
     opt.recurse("test")

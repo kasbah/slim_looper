@@ -51,9 +51,9 @@ def build(bld):
             install_path = '${LV2DIR}/%s' % bundle)
 
     # Use LV2 headers from parent directory if building as a sub-project
-    includes = None
-    if autowaf.is_child:
-        includes = '../..'
+    #includes = None
+    #if autowaf.is_child:
+    #    includes = '../..'
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
@@ -61,7 +61,6 @@ def build(bld):
               name         = 'looper',
               target       = '%s/looper' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'M LV2',
-              includes     = includes)
+              uselib       = 'M LV2')
     obj.env.cshlib_PATTERN = module_pat
 
