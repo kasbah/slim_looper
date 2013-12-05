@@ -16,7 +16,7 @@ float in_buf[N_FRAMES];
 float out_buf[N_FRAMES];
 float control;
 float record_mode;
-uint8_t atom_buf[64];
+uint8_t port_buf[64];
 
 /* Test that instantiate returns a valid pointer.
  * Mainly we are setting everything up here.  
@@ -30,7 +30,7 @@ static char* test_instantiate()
     looper->connect_port(instance, PORT_OUTPUT,           out_buf);
     looper->connect_port(instance, PORT_CONTROL,         &control);
     looper->connect_port(instance, PORT_RECORD_MODE, &record_mode);
-    looper->connect_port(instance, PORT_ATOM,             atom_buf);
+    looper->connect_port(instance, PORT_ATOM,             port_buf);
     looper->activate(instance);
     return 0;
 }
@@ -81,48 +81,36 @@ static char* test_atom()
     LV2_Atom_Forge_Frame frame;
     LV2_URID_Map map;
 
-	lv2_atom_forge_init(&forge, &map);
-
-    uint8_t temp[64];
-    LV2_Atom_Sequence* aseq = (LV2_Atom_Sequence*)temp;
-
-    lv2_atom_forge_set_buffer(&forge, (uint8_t*)aseq, 64);
-
-    lv2_atom_forge_sequence_head(&forge, &frame, 0);
-
-    lv2_atom_forge_frame_time(&forge, 21);
-
     /* the data that we want to send */
     uint8_t raw_midi[3];
     raw_midi[0] = 0x90;
     raw_midi[1] = 127;
     raw_midi[2] = 127;
 
-    lv2_atom_forge_write(&forge, raw_midi, 3);
+    /* and the length of the data */
+    size_t  midi_message_length = 3;
+ 
+    /* Message payload header */
+    LV2_Atom midiatom;
+    midiatom.type = map.map(map.handle, LV2_MIDI__MidiEvent);
+    midiatom.size = midi_message_length;
 
- 
-    ///* and the length of the data */
-    //size_t  midi_message_length = 3;
- 
-    ///* Message payload header */
-    //LV2_Atom midiatom;
-    //midiatom.type = map.map(map.handle, LV2_MIDI__MidiEvent);
-    //midiatom.size = midi_message_length;
- 
-    ///* buffer used to forge the message in */
- 
-    ///* make forge use this buffer for now */
-    //lv2_atom_forge_set_buffer(&forge, atom_buf, sizeof(atom_buf));
- 
-    ///* .. then we need to specify what this message is about and how long the
-    // * payload is: add the header */
-    //lv2_atom_forge_raw(&forge, &midiatom, sizeof(LV2_Atom));
-    ///* now we we can add the actual data */
-    //lv2_atom_forge_raw(&forge, raw_midi, midi_message_length);
-    ///* finally pad the message to make it 32bit aligned */
-    //lv2_atom_forge_pad(&forge, sizeof(LV2_Atom) + midi_message_length);
+	lv2_atom_forge_init(&forge, &map);
 
-    //looper->run(instance, N_FRAMES);
+    /* buffer used to forge the message in */
+    uint8_t atom_buf[64];
+    /* make forge use this buffer for now */
+    lv2_atom_forge_set_buffer(&forge, atom_buf, sizeof(atom_buf));
+ 
+    /* .. then we need to specify what this message is about and how long the
+     * payload is: add the header */
+    lv2_atom_forge_raw(&forge, &midiatom, sizeof(LV2_Atom));
+    /* now we we can add the actual data */
+    lv2_atom_forge_raw(&forge, raw_midi, midi_message_length);
+    /* finally pad the message to make it 32bit aligned */
+    lv2_atom_forge_pad(&forge, sizeof(LV2_Atom) + midi_message_length);
+
+    looper->run(instance, N_FRAMES);
 
     mu_assert("yo", 1);
 
