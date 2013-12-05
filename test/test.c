@@ -77,7 +77,7 @@ static char* test_silence()
 //Test atom port
 static char* test_atom()
 {
-	LV2_Atom_Forge forge;
+    LV2_Atom_Forge forge;
     LV2_Atom_Forge_Frame frame;
     LV2_URID_Map map;
 
@@ -95,7 +95,7 @@ static char* test_atom()
     midiatom.type = map.map(map.handle, LV2_MIDI__MidiEvent);
     midiatom.size = midi_message_length;
 
-	lv2_atom_forge_init(&forge, &map);
+    lv2_atom_forge_init(&forge, &map);
 
     /* buffer used to forge the message in */
     uint8_t atom_buf[64];
