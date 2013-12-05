@@ -13,6 +13,7 @@ LV2_Descriptor* looper;
 LV2_Handle instance;
 float in_buf[N_FRAMES];
 float out_buf[N_FRAMES];
+LV2_Atom_Sequence midi_buf[N_FRAMES];
 float control;
 float record_mode;
 
@@ -28,6 +29,7 @@ static char* test_instantiate()
     looper->connect_port(instance, PORT_OUTPUT,           out_buf);
     looper->connect_port(instance, PORT_CONTROL,         &control);
     looper->connect_port(instance, PORT_RECORD_MODE, &record_mode);
+    looper->connect_port(instance, PORT_MIDI_IN, midi_buf);
     looper->activate(instance);
     return 0;
 }

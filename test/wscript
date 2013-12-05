@@ -15,7 +15,7 @@ def build(bld):
               includes     = '../src')
 
 def test(ctx):
-    suite = unittest.TestLoader().discover("test/")
-    test_runner = unittest.TextTestRunner()
-    test_runner.run(suite)
+    #suite = unittest.TestLoader().discover("test/")
+    #test_runner = unittest.TextTestRunner()
+    #test_runner.run(suite)
     autowaf.run_tests(ctx, "looper", ['build/test/test'], dirs=['build/test/'])

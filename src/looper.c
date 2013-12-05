@@ -17,8 +17,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-
 #include "looper.h"
 
 static LV2_Handle
@@ -55,9 +53,9 @@ connect_port(LV2_Handle instance,
     case PORT_RECORD_MODE:
         looper->record_mode_input = (const float*)data;
         break;
-    //case PORT_RECORD_MODE:
-    //    looper->record_mode_input = (const float*)data;
-    //    break;
+    case PORT_MIDI_IN:
+        looper->midi_input = (LV2_Atom_Sequence*) data;
+        break;
     }
 }
 
@@ -85,6 +83,11 @@ run(LV2_Handle instance, uint32_t n_samples)
 
     settings->record_mode  = (LooperRecordMode)(*(looper->record_mode_input));
     looper->state          = (LooperState)(*(looper->control_input));
+
+    LV2_ATOM_SEQUENCE_FOREACH(looper->midi_input, ev) 
+    {
+        lv2_log_trace(&looper->logger, "event: %u\r\n", ev->time.frames);
+    }
 
     switch(looper->state)
     {
@@ -123,6 +126,10 @@ slim_record(Looper* looper, uint32_t n_samples)
 
     Loop*               loop     = looper->loop;
     LooperSettings*     settings = looper->settings;
+
+    LV2_ATOM_SEQUENCE_FOREACH(looper->midi_input, ev) {
+        printf("event: %li\r\n", ev->time.frames);
+    }
 
     switch(settings->record_mode) 
     {

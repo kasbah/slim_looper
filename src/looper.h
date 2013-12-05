@@ -14,14 +14,22 @@
 #ifndef __LOOPER_H__
 #define __LOOPER_H__
 
+#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
+#include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/lv2plug.in/ns/ext/log/log.h"
+#include "lv2/lv2plug.in/ns/ext/log/logger.h"
+
 #define LOOPER_URI "https://github.com/kasbah/slim_looper.lv2"
 #define LOOP_MAX_SAMPLES 19200000 
+
 
 typedef enum {
     PORT_INPUT        = 0,
     PORT_OUTPUT       = 1,
     PORT_CONTROL      = 2,
-    PORT_RECORD_MODE  = 3
+    PORT_RECORD_MODE  = 3,
+    PORT_MIDI_IN      = 4
 } PortIndex;
 
 typedef enum {
@@ -52,10 +60,13 @@ typedef struct {
     float*       output;
     const float* control_input;
     const float* record_mode_input;
+    LV2_Atom_Sequence* midi_input;
     Loop*  loop;
     LooperSettings* settings;
     LooperState state;
     LooperState previous_state;
+    LV2_Log_Log* log;
+    LV2_Log_Logger logger;
 } Looper;
 
 LV2_SYMBOL_EXPORT
