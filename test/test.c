@@ -24,10 +24,10 @@ static char* test_instantiate()
     looper = lv2_descriptor(0);
     instance = looper->instantiate(looper, 0.0, NULL, NULL);
     mu_assert("test_instantiate: instance is NULL", instance != NULL);
-    looper->connect_port(instance, LOOPER_INPUT,             in_buf);
-    looper->connect_port(instance, LOOPER_OUTPUT,           out_buf);
-    looper->connect_port(instance, LOOPER_CONTROL,         &control);
-    looper->connect_port(instance, LOOPER_RECORD_MODE, &record_mode);
+    looper->connect_port(instance, PORT_INPUT,             in_buf);
+    looper->connect_port(instance, PORT_OUTPUT,           out_buf);
+    looper->connect_port(instance, PORT_CONTROL,         &control);
+    looper->connect_port(instance, PORT_RECORD_MODE, &record_mode);
     looper->activate(instance);
     return 0;
 }

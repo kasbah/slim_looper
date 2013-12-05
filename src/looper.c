@@ -43,18 +43,21 @@ connect_port(LV2_Handle instance,
     Looper* looper = (Looper*)instance;
 
     switch ((PortIndex)port) {
-    case LOOPER_INPUT:
+    case PORT_INPUT:
         looper->input = (const float*)data;
         break;
-    case LOOPER_OUTPUT:
+    case PORT_OUTPUT:
         looper->output = (float*)data;
         break;
-    case LOOPER_CONTROL:
+    case PORT_CONTROL:
         looper->control_input = (const float*)data;
         break;
-    case LOOPER_RECORD_MODE:
+    case PORT_RECORD_MODE:
         looper->record_mode_input = (const float*)data;
         break;
+    //case PORT_RECORD_MODE:
+    //    looper->record_mode_input = (const float*)data;
+    //    break;
     }
 }
 

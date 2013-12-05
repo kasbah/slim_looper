@@ -18,10 +18,10 @@
 #define LOOP_MAX_SAMPLES 19200000 
 
 typedef enum {
-    LOOPER_INPUT        = 0,
-    LOOPER_OUTPUT       = 1,
-    LOOPER_CONTROL      = 2,
-    LOOPER_RECORD_MODE  = 3
+    PORT_INPUT        = 0,
+    PORT_OUTPUT       = 1,
+    PORT_CONTROL      = 2,
+    PORT_RECORD_MODE  = 3
 } PortIndex;
 
 typedef enum {
