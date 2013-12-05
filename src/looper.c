@@ -17,8 +17,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-
 #include "looper.h"
 
 static LV2_Handle
@@ -27,10 +25,10 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               bundle_path,
             const LV2_Feature* const* features)
 {
-    Looper* looper = (Looper*)malloc(sizeof(Looper));
-    looper->loop = (Loop*)malloc(sizeof(Loop));
+    Looper* looper       = (Looper*)malloc(sizeof(Looper));
+    looper->loop         = (Loop*)malloc(sizeof(Loop));
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
-    looper->settings = (LooperSettings*)malloc(sizeof(LooperSettings));
+    looper->settings     = (LooperSettings*)malloc(sizeof(LooperSettings));
 
     return (LV2_Handle)looper;
 }
@@ -55,9 +53,9 @@ connect_port(LV2_Handle instance,
     case PORT_RECORD_MODE:
         looper->record_mode_input = (const float*)data;
         break;
-    //case PORT_RECORD_MODE:
-    //    looper->record_mode_input = (const float*)data;
-    //    break;
+    case PORT_ATOM:
+        looper->atom_input = (LV2_Atom_Sequence*)data;
+        break;
     }
 }
 
@@ -85,6 +83,13 @@ run(LV2_Handle instance, uint32_t n_samples)
 
     settings->record_mode  = (LooperRecordMode)(*(looper->record_mode_input));
     looper->state          = (LooperState)(*(looper->control_input));
+
+    printf("yo\r\n");
+	// Read incoming events
+	LV2_ATOM_SEQUENCE_FOREACH(looper->atom_input, ev) {
+        lv2_log_trace(&looper->logger, "event: %u\r\n", ev->time.frames);
+        printf("event: %u\r\n", ev->time.frames);
+    }
 
     switch(looper->state)
     {
