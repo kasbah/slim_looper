@@ -1,19 +1,19 @@
 //
 // copyright 2013-2014 Kaspar Emanuel
 //
-// This file is part of Slim Looper.
+// This file is part of SLim Looper.
 // 
-// Slim Looper is free software: you can redistribute it and/or modify
+// SLim Looper is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 3 as 
 // published by the Free Software Foundation.
 // 
-// Slim Looper is distributed in the hope that it will be useful,
+// SLim Looper is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with Slim Looper. If not, see <http://www.gnu.org/licenses/>
+// along with SLim Looper. If not, see <http://www.gnu.org/licenses/>
 //
 
 #include "slim_lv2.h"
@@ -30,33 +30,39 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
     SlimLV2* self = (SlimLV2*)malloc(sizeof(SlimLV2));
-    self->slim = slim_new(1);
+    self->slim = slim_new(1, 4096);
 
 	// Get host features
-    //if (features)
-    //{
-    //    for (int i = 0; features[i]; ++i) {
-    //        if (!strcmp(features[i]->URI, LV2_URID__map)) {
-    //            self->map = (LV2_URID_Map*)features[i]->data;
-    //        } 
-    //        //else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
-    //        //	self->schedule = (LV2_Worker_Schedule*)features[i]->data;
-    //        //} 
-    //        else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
-    //            self->log = (LV2_Log_Log*)features[i]->data;
-    //        }
-    //    }
-    //}
-    //if (!self->map) {
-    //    lv2_log_error(&self->logger, "Missing feature urid:map\n");
-    //    goto fail;
-    //} 
+    if (features)
+    {
+        for (int i = 0; features[i]; ++i) {
+            if (!strcmp(features[i]->URI, LV2_URID__map)) {
+                self->map = (LV2_URID_Map*)features[i]->data;
+            } 
+            //else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
+            //	self->schedule = (LV2_Worker_Schedule*)features[i]->data;
+            //} 
+            else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
+                self->log = (LV2_Log_Log*)features[i]->data;
+            }
+            else if (!strcmp(features[i]->URI, LV2_BUF_SIZE__maxBlockLength)) {
+                self->maxBlockLength = *((uint32_t*)(features[i]->data));
+            }
+        }
+    }
+    lv2_log_trace(&self->logger, "maxBlockLength: %u\r\n", (self->maxBlockLength));
+
+    if (!self->map) {
+        lv2_log_error(&self->logger, "Missing feature urid:map\n");
+        goto fail;
+    } 
     //else if (!self->schedule) {
 	//	lv2_log_error(&self->logger, "Missing feature work:schedule\n");
 	//	goto fail;
 	//}
 
-    //self->midi_Event = self->map->map(self->map->handle, LV2_MIDI__MidiEvent);
+    self->midi_Event = self->map->map(self->map->handle, LV2_MIDI__MidiEvent);
+
 
     return (LV2_Handle)self;
 fail:
@@ -75,11 +81,11 @@ connect_port(LV2_Handle instance,
     switch ((PortIndex)port) {
     case PORT_INPUT:
         self->input = (const float*)data;
-        self->slim->looper_array[0]->input = self->input;
+        self->slim->input = self->input;
         break;
     case PORT_OUTPUT:
         self->output = (float*)data;
-        self->slim->looper_array[0]->output = self->output;
+        self->slim->output = self->output;
         break;
     case PORT_CONTROL:
         self->control_input = (const float*)data;

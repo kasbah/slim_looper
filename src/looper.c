@@ -16,12 +16,13 @@
 // along with SLim Looper. If not, see <http://www.gnu.org/licenses/>
 //
 #include "looper.h"
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-Looper* looper_new(void)
+Looper* looper_new(uint32_t n_samples)
 {
     Looper* looper = (Looper*)malloc(sizeof(Looper));
+    //looper->output = calloc(n_samples, sizeof(float));
     looper->loop   = (Loop*)malloc(sizeof(Loop));
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
     looper->settings     = (LooperSettings*)malloc(sizeof(LooperSettings));

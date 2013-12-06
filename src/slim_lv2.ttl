@@ -3,11 +3,13 @@
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
 
 <https://github.com/kasbah/slim_looper.lv2>
 	a lv2:Plugin;
 	doap:name "SLim Looper" ;
 	lv2:optionalFeature lv2:hardRTCapable ;
+	lv2:requiredFeature bufsz:boundedBlockLength ;
 	lv2:port [
 		a lv2:AudioPort ,
 			lv2:InputPort ;
