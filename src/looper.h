@@ -55,7 +55,7 @@ typedef struct {
     LooperState previous_state;
 } Looper;
 
-Looper* looper_new();
+Looper* looper_new(uint32_t max_n_samples);
 void looper_free  (Looper* looper);
 void looper_run   (Looper* looper, uint32_t n_samples);
 void looper_record(Looper* looper, uint32_t n_samples);

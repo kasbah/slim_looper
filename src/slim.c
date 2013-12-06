@@ -37,6 +37,7 @@ void slim_activate(Slim* slim)
     for (int i = 0; i < (slim->n_loopers); i++)
     {
         looper_reset(slim->looper_array[i]);
+        slim->looper_array[i]->input = slim->input;
     }
 }
 
@@ -45,10 +46,10 @@ void slim_run(Slim* slim , uint32_t n_samples)
     memset(slim->output, 0, sizeof(float) * n_samples);
     for (int i = 0; i < (slim->n_loopers); i++)
     {
-        //looper_run(slim->looper_array[i], n_samples);
+        looper_run(slim->looper_array[i], n_samples);
         for (int j = 0; j < n_samples; j++)
         {
-            //slim->output[j] += slim->looper_array[i]->output[j];
+            slim->output[j] += slim->looper_array[i]->output[j];
         }
     }
 }

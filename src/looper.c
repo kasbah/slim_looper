@@ -19,10 +19,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-Looper* looper_new(uint32_t n_samples)
+Looper* looper_new(uint32_t max_n_samples)
 {
     Looper* looper = (Looper*)malloc(sizeof(Looper));
-    //looper->output = calloc(n_samples, sizeof(float));
+    looper->output = calloc(max_n_samples, sizeof(float));
     looper->loop   = (Loop*)malloc(sizeof(Loop));
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
     looper->settings     = (LooperSettings*)malloc(sizeof(LooperSettings));
@@ -47,7 +47,6 @@ void looper_reset(Looper* looper)
 
 void looper_run(Looper* looper, uint32_t n_samples)
 {
-    float* const       output = looper->output;
     switch(looper->state)
     {
         case RECORDING:
@@ -58,7 +57,7 @@ void looper_run(Looper* looper, uint32_t n_samples)
             break;
         case PAUSED:
         default:
-            memset(output, 0, n_samples * sizeof(float));
+            memset(looper->output, 0, n_samples * sizeof(float));
             break;
     }
 

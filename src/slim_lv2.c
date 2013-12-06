@@ -30,9 +30,8 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
     SlimLV2* self = (SlimLV2*)malloc(sizeof(SlimLV2));
-    self->slim = slim_new(1, 4096);
-
-	// Get host features
+    LV2_Options_Option* options = NULL;
+    // Get host features
     if (features)
     {
         for (int i = 0; features[i]; ++i) {
@@ -40,29 +39,54 @@ instantiate(const LV2_Descriptor*     descriptor,
                 self->map = (LV2_URID_Map*)features[i]->data;
             } 
             //else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
-            //	self->schedule = (LV2_Worker_Schedule*)features[i]->data;
+            //    self->schedule = (LV2_Worker_Schedule*)features[i]->data;
             //} 
             else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
                 self->log = (LV2_Log_Log*)features[i]->data;
             }
-            else if (!strcmp(features[i]->URI, LV2_BUF_SIZE__maxBlockLength)) {
-                self->maxBlockLength = *((uint32_t*)(features[i]->data));
+            else if (!strcmp(features[i]->URI, LV2_OPTIONS__options)) {
+                options = (LV2_Options_Option*)features[i]->data;
             }
+            //else if (!strcmp(features[i]->URI, LV2_BUF_SIZE__maxBlockLength)) {
+            //    self->maxBlockLength = *((uint32_t*)(features[i]->data));
+            //}
         }
     }
-    lv2_log_trace(&self->logger, "maxBlockLength: %u\r\n", (self->maxBlockLength));
 
-    if (!self->map) {
+    if (!self->map) 
+    {
         lv2_log_error(&self->logger, "Missing feature urid:map\n");
         goto fail;
     } 
+    else if (!options)
+    {
+        lv2_log_error(&self->logger, "Missing feature ext:options\n");
+        goto fail;
+    }
     //else if (!self->schedule) {
-	//	lv2_log_error(&self->logger, "Missing feature work:schedule\n");
-	//	goto fail;
-	//}
+    //    lv2_log_error(&self->logger, "Missing feature work:schedule\n");
+    //    goto fail;
+    //}
 
     self->midi_Event = self->map->map(self->map->handle, LV2_MIDI__MidiEvent);
+    LV2_URID bufsz_max = self->map->map(self->map->handle, LV2_BUF_SIZE__maxBlockLength);
+    LV2_URID atom_Int = self->map->map(self->map->handle, LV2_ATOM__Int);
+    for (const LV2_Options_Option* o = options; o->key; ++o) 
+    {
+        if (o->context == LV2_OPTIONS_INSTANCE &&
+                o->key == bufsz_max &&
+                o->type == atom_Int) 
+        {
+            self->maxBlockLength = *(const uint32_t*)o->value;
+        }
+    }
+    if (self->maxBlockLength == 0) 
+    {
+       lv2_log_error(&self->logger, "No maximum buffer size given.\n");
+       goto fail;
+    }
 
+    self->slim = slim_new(1, self->maxBlockLength);
 
     return (LV2_Handle)self;
 fail:
@@ -80,8 +104,10 @@ connect_port(LV2_Handle instance,
 
     switch ((PortIndex)port) {
     case PORT_INPUT:
-        self->input = (const float*)data;
-        self->slim->input = self->input;
+        for (int i = 0; i < (self->slim->n_loopers); i++)
+        {
+            self->slim->looper_array[i]->input = (const float*)data;
+        }
         break;
     case PORT_OUTPUT:
         self->output = (float*)data;
@@ -117,7 +143,7 @@ run(LV2_Handle instance, uint32_t n_samples)
 
     //LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
     //{
-	//	if (ev->body.type == self->midi_Event) {
+    //    if (ev->body.type == self->midi_Event) {
     //        lv2_log_trace(&self->logger, "event: %u\r\n", ev->time.frames);
     //        lv2_log_trace(&self->logger, "event size: %u\r\n", ev->body.size);
     //    }

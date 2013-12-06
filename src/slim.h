@@ -28,7 +28,7 @@ typedef struct {
     Looper** looper_array;
 } Slim;
 
-Slim* slim_new(uint32_t n_loopers, uint32_t n_samples);
+Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples);
 void slim_activate(Slim* slim);
 void slim_run(Slim* slim , uint32_t n_samples);
 void slim_free(Slim* slim);
