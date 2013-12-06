@@ -16,6 +16,7 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
+#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/log/log.h"
 #include "lv2/lv2plug.in/ns/ext/log/logger.h"
@@ -67,6 +68,8 @@ typedef struct {
     LooperState previous_state;
     LV2_Log_Log* log;
     LV2_Log_Logger logger;
+    LV2_URID_Map* map;
+    uint8_t midi_Event;
 } Looper;
 
 LV2_SYMBOL_EXPORT

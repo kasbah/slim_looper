@@ -30,7 +30,36 @@ instantiate(const LV2_Descriptor*     descriptor,
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
     looper->settings = (LooperSettings*)malloc(sizeof(LooperSettings));
 
+	// Get host features
+    if (features)
+    {
+        for (int i = 0; features[i]; ++i) {
+            if (!strcmp(features[i]->URI, LV2_URID__map)) {
+                looper->map = (LV2_URID_Map*)features[i]->data;
+            } 
+            //else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
+            //	looper->schedule = (LV2_Worker_Schedule*)features[i]->data;
+            //} 
+            else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
+                looper->log = (LV2_Log_Log*)features[i]->data;
+            }
+        }
+    }
+    if (!looper->map) {
+        lv2_log_error(&looper->logger, "Missing feature urid:map\n");
+        goto fail;
+    } 
+    //else if (!self->schedule) {
+	//	lv2_log_error(&self->logger, "Missing feature work:schedule\n");
+	//	goto fail;
+	//}
+
+    looper->midi_Event = looper->map->map(looper->map->handle, LV2_MIDI__MidiEvent);
+
     return (LV2_Handle)looper;
+fail:
+    free(looper);
+    return NULL;
 }
 
 static void
@@ -86,7 +115,10 @@ run(LV2_Handle instance, uint32_t n_samples)
 
     LV2_ATOM_SEQUENCE_FOREACH(looper->midi_input, ev) 
     {
-        lv2_log_trace(&looper->logger, "event: %u\r\n", ev->time.frames);
+		if (ev->body.type == looper->midi_Event) {
+            lv2_log_trace(&looper->logger, "event: %u\r\n", ev->time.frames);
+            lv2_log_trace(&looper->logger, "event size: %u\r\n", ev->body.size);
+        }
     }
 
     switch(looper->state)
