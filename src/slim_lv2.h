@@ -23,9 +23,7 @@
 #include "lv2/lv2plug.in/ns/ext/log/log.h"
 #include "lv2/lv2plug.in/ns/ext/log/logger.h"
 
-
 #define LOOPER_URI "https://github.com/kasbah/slim_looper.lv2"
-#define LOOP_MAX_SAMPLES 19200000 
 
 typedef enum {
     PORT_INPUT        = 0,

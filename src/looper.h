@@ -1,3 +1,6 @@
+// 
+// copyright 2013-2014 Kaspar Emanuel
+// 
 // This file is part of SLim Looper.
 // 
 // SLim Looper is free software: you can redistribute it and/or modify
@@ -11,11 +14,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with SLim Looper. If not, see <http://www.gnu.org/licenses/>
+// 
 #ifndef __LOOPER_H__
 #define __LOOPER_H__
 
 #include <stdint.h>
-#include <string.h>
+
+#define LOOP_MAX_SAMPLES 19200000 
 
 typedef enum {
     PAUSED    = 0,
@@ -50,10 +55,16 @@ typedef struct {
     LooperState previous_state;
 } Looper;
 
-void
-slim_record(Looper* looper, uint32_t n_samples);
+
+Looper* looper_new(void);
+
+void looper_free(Looper* looper);
 
 void
-slim_play(Looper* looper, uint32_t n_samples);
+looper_record(Looper* looper, uint32_t n_samples);
+
+void
+looper_play(Looper* looper, uint32_t n_samples);
+
 
 #endif// __LOOPER_H__

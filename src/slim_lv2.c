@@ -1,3 +1,6 @@
+//
+// copyright 2013-2014 Kaspar Emanuel
+//
 // This file is part of SLim Looper.
 // 
 // SLim Looper is free software: you can redistribute it and/or modify
@@ -11,13 +14,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with SLim Looper. If not, see <http://www.gnu.org/licenses/>
+//
+
+#include "slim_lv2.h"
 
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "lv2.h"
 
 static LV2_Handle
 instantiate(const LV2_Descriptor*     descriptor,
@@ -26,10 +30,7 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
     SLimLV2* self = (SLimLV2*)malloc(sizeof(SLimLV2));
-    self->looper    = (Looper*)malloc(sizeof(Looper));
-    self->looper->loop = (Loop*)malloc(sizeof(Loop));
-    self->looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
-    self->looper->settings = (LooperSettings*)malloc(sizeof(LooperSettings));
+    self->looper = looper_new();
 
 	// Get host features
     //if (features)
@@ -59,9 +60,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 
     return (LV2_Handle)self;
 fail:
-    free(self->looper->loop->buffer);
-    free(self->looper->loop);
-    free(self->looper);
+    looper_free(self->looper);
     free(self);
     return NULL;
 }
@@ -131,10 +130,10 @@ run(LV2_Handle instance, uint32_t n_samples)
     switch(looper->state)
     {
         case RECORDING:
-            slim_record(looper, n_samples);
+            looper_record(looper, n_samples);
             break;
         case PLAYING:
-            slim_play(looper, n_samples);
+            looper_play(looper, n_samples);
             break;
         case PAUSED:
         default:
@@ -154,10 +153,7 @@ static void
 cleanup(LV2_Handle instance)
 {
     SLimLV2* self = (SLimLV2*)instance;
-    Looper* looper = self->looper;
-    free(looper->loop->buffer);
-    free(looper->loop);
-    free(looper);
+    looper_free(self->looper);
     free(self);
 }
 
