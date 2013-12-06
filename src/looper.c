@@ -35,6 +35,26 @@ void looper_free(Looper* looper)
     free(looper);
 }
 
+void looper_run(Looper* looper, uint32_t n_samples)
+{
+    float* const       output = looper->output;
+    switch(looper->state)
+    {
+        case RECORDING:
+            looper_record(looper, n_samples);
+            break;
+        case PLAYING:
+            looper_play(looper, n_samples);
+            break;
+        case PAUSED:
+        default:
+            memset(output, 0, n_samples * sizeof(float));
+            break;
+    }
+
+    looper->previous_state = looper->state;
+}
+
 // is position after processing nsamples before loop end?
 static uint8_t loop_pos_before_end(Loop* loop, uint32_t n_samples)
 {

@@ -60,11 +60,11 @@ Looper* looper_new(void);
 
 void looper_free(Looper* looper);
 
-void
-looper_record(Looper* looper, uint32_t n_samples);
+void looper_run(Looper* looper, uint32_t n_samples);
 
-void
-looper_play(Looper* looper, uint32_t n_samples);
+void looper_record(Looper* looper, uint32_t n_samples);
+
+void looper_play(Looper* looper, uint32_t n_samples);
 
 
 #endif// __LOOPER_H__

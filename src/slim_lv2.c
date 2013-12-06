@@ -109,15 +109,9 @@ static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
     SLimLV2*        self     = (SLimLV2*)instance;
-    Looper*         looper   = self->looper;
-    Loop*           loop     = looper->loop;
-    LooperSettings* settings = looper->settings;
 
-    const float* const input  = looper->input;
-    float* const       output = looper->output;
-
-    settings->record_mode  = (LooperRecordMode)(*(self->record_mode_input));
-    looper->state          = (LooperState)(*(self->control_input));
+    self->looper->settings->record_mode  = (LooperRecordMode)(*(self->record_mode_input));
+    self->looper->state                  = (LooperState)(*(self->control_input));
 
     //LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
     //{
@@ -127,21 +121,8 @@ run(LV2_Handle instance, uint32_t n_samples)
     //    }
     //}
 
-    switch(looper->state)
-    {
-        case RECORDING:
-            looper_record(looper, n_samples);
-            break;
-        case PLAYING:
-            looper_play(looper, n_samples);
-            break;
-        case PAUSED:
-        default:
-            memset(output, 0, n_samples * sizeof(float));
-            break;
-    }
+    looper_run(looper, n_samples);
 
-    looper->previous_state = looper->state;
 }
 
 static void
