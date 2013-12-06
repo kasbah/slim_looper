@@ -35,6 +35,15 @@ void looper_free(Looper* looper)
     free(looper);
 }
 
+void looper_reset(Looper* looper)
+{
+    looper->loop->pos = 0;
+    looper->loop->end = 0;
+    looper->state = PAUSED;
+    looper->previous_state = PAUSED;
+    looper->settings->record_mode = MODE_NEW;
+}
+
 void looper_run(Looper* looper, uint32_t n_samples)
 {
     float* const       output = looper->output;

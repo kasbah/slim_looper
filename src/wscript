@@ -57,7 +57,7 @@ def build(bld):
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
-              source       = 'slim_lv2.c looper.c',
+              source       = 'slim_lv2.c looper.c slim.c',
               name         = 'slim',
               target       = '%s/slim' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,

@@ -1,19 +1,20 @@
-// This file is part of SLim Looper.
+// This file is part of Slim Looper.
 // 
-// SLim Looper is free software: you can redistribute it and/or modify
+// Slim Looper is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 3 as 
 // published by the Free Software Foundation.
 // 
-// SLim Looper is distributed in the hope that it will be useful,
+// Slim Looper is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with SLim Looper. If not, see <http://www.gnu.org/licenses/>
-#ifndef __SLIM_LV2_H__
-#define __SLIM_LV2_H__
+// along with Slim Looper. If not, see <http://www.gnu.org/licenses/>
+#ifndef __SlIM_LV2_H__
+#define __SlIM_LV2_H__
 
+#include "slim.h"
 #include "looper.h"
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
@@ -43,11 +44,11 @@ typedef struct {
     LV2_Log_Logger logger;
     LV2_URID_Map* map;
     uint8_t midi_Event;
-    Looper* looper;
-} SLimLV2;
+    Slim* slim;
+} SlimLV2;
 
 LV2_SYMBOL_EXPORT
 const LV2_Descriptor*
 lv2_descriptor(uint32_t index);
 
-#endif// __SLIM_LV2_H__
+#endif// __SlIM_LV2_H__

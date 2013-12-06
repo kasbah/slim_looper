@@ -1,19 +1,19 @@
 //
 // copyright 2013-2014 Kaspar Emanuel
 //
-// This file is part of SLim Looper.
+// This file is part of Slim Looper.
 // 
-// SLim Looper is free software: you can redistribute it and/or modify
+// Slim Looper is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License version 3 as 
 // published by the Free Software Foundation.
 // 
-// SLim Looper is distributed in the hope that it will be useful,
+// Slim Looper is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with SLim Looper. If not, see <http://www.gnu.org/licenses/>
+// along with Slim Looper. If not, see <http://www.gnu.org/licenses/>
 //
 
 #include "slim_lv2.h"
@@ -29,8 +29,8 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               bundle_path,
             const LV2_Feature* const* features)
 {
-    SLimLV2* self = (SLimLV2*)malloc(sizeof(SLimLV2));
-    self->looper = looper_new();
+    SlimLV2* self = (SlimLV2*)malloc(sizeof(SlimLV2));
+    self->slim = slim_new(1);
 
 	// Get host features
     //if (features)
@@ -60,7 +60,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 
     return (LV2_Handle)self;
 fail:
-    looper_free(self->looper);
+    slim_free(self->slim);
     free(self);
     return NULL;
 }
@@ -70,16 +70,16 @@ connect_port(LV2_Handle instance,
              uint32_t   port,
              void*      data)
 {
-    SLimLV2* self = (SLimLV2*)instance;
+    SlimLV2* self = (SlimLV2*)instance;
 
     switch ((PortIndex)port) {
     case PORT_INPUT:
         self->input = (const float*)data;
-        self->looper->input = self->input;
+        self->slim->looper_array[0]->input = self->input;
         break;
     case PORT_OUTPUT:
         self->output = (float*)data;
-        self->looper->output = self->output;
+        self->slim->looper_array[0]->output = self->output;
         break;
     case PORT_CONTROL:
         self->control_input = (const float*)data;
@@ -96,22 +96,18 @@ connect_port(LV2_Handle instance,
 static void
 activate(LV2_Handle instance)
 {
-    Looper* looper = ((SLimLV2*)instance)->looper;
-    looper->loop->pos = 0;
-    looper->loop->end = 0;
-    looper->state = PAUSED;
-    looper->previous_state = PAUSED;
-    looper->settings->record_mode = MODE_NEW;
+    SlimLV2* self = (SlimLV2*)instance;
+    slim_activate(self->slim);
 }
 
 /** Process a block of audio (audio thread, must be RT safe). */
 static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
-    SLimLV2*        self     = (SLimLV2*)instance;
+    SlimLV2*        self     = (SlimLV2*)instance;
 
-    self->looper->settings->record_mode  = (LooperRecordMode)(*(self->record_mode_input));
-    self->looper->state                  = (LooperState)(*(self->control_input));
+    self->slim->looper_array[0]->settings->record_mode  = (LooperRecordMode)(*(self->record_mode_input));
+    self->slim->looper_array[0]->state                  = (LooperState)(*(self->control_input));
 
     //LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
     //{
@@ -121,7 +117,7 @@ run(LV2_Handle instance, uint32_t n_samples)
     //    }
     //}
 
-    looper_run(looper, n_samples);
+    slim_run(self->slim, n_samples);
 
 }
 
@@ -133,8 +129,8 @@ deactivate(LV2_Handle instance)
 static void
 cleanup(LV2_Handle instance)
 {
-    SLimLV2* self = (SLimLV2*)instance;
-    looper_free(self->looper);
+    SlimLV2* self = (SlimLV2*)instance;
+    slim_free(self->slim);
     free(self);
 }
 
