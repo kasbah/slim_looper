@@ -63,13 +63,13 @@
 			rdf:value 3.0
 		];
         lv2:portProperty lv2:integer
-	] , [
-		a lv2:InputPort ,
-			atom:AtomPort ;
-		atom:bufferType atom:Sequence ;
-		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
-		lv2:designation lv2:control ;
-		lv2:index 4 ;
-		lv2:symbol "midi_input" ;
-		lv2:name "Midi Input"
+	#] , [
+	#	a lv2:InputPort ,
+	#		atom:AtomPort ;
+	#	atom:bufferType atom:Sequence ;
+	#	atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+	#	lv2:designation lv2:control ;
+	#	lv2:index 4 ;
+	#	lv2:symbol "midi_input" ;
+	#	lv2:name "Midi Input"
 	] .

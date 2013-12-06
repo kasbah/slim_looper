@@ -37,13 +37,13 @@ def build(bld):
 
     # Build manifest.ttl by substitution (for portable lib extension)
     bld(features     = 'subst',
-        source       = 'manifest.ttl.in',
+        source       = 'lv2_manifest.ttl.in',
         target       = '%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
         LIB_EXT      = module_ext)
 
     # Copy other data files to build bundle (build/slim_looper.lv2)
-    for i in ['slim_looper.ttl']:
+    for i in ['lv2_slim.ttl']:
         bld(features     = 'subst',
             is_copy      = True,
             source       = i,
@@ -57,9 +57,9 @@ def build(bld):
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
-              source       = 'looper.c',
-              name         = 'looper',
-              target       = '%s/looper' % bundle,
+              source       = 'lv2.c looper.c',
+              name         = 'slim',
+              target       = '%s/slim' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               uselib       = 'M LV2')
     obj.env.cshlib_PATTERN = module_pat

@@ -7,15 +7,16 @@ top = '../'
 out = '../build'
 
 def build(bld):
-    obj = bld(features     = 'c cprogram',
-              source       = ['test.c', '../src/looper.c'],
-              target       = 'test',
-              install_path = None,
-              uselib       = 'M LV2',
-              includes     = '../src')
+    pass
+    #obj = bld(features     = 'c cprogram',
+    #          source       = ['test.c', '../src/looper.c'],
+    #          target       = 'test',
+    #          install_path = None,
+    #          uselib       = 'M LV2',
+    #          includes     = '../src')
 
 def test(ctx):
-    #suite = unittest.TestLoader().discover("test/")
-    #test_runner = unittest.TextTestRunner()
-    #test_runner.run(suite)
-    autowaf.run_tests(ctx, "looper", ['build/test/test'], dirs=['build/test/'])
+    suite = unittest.TestLoader().discover("test/")
+    test_runner = unittest.TextTestRunner()
+    test_runner.run(suite)
+    #autowaf.run_tests(ctx, "looper", ['build/test/test'], dirs=['build/test/'])
