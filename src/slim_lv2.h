@@ -17,6 +17,7 @@
 #include "slim.h"
 #include "looper.h"
 
+
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
@@ -28,17 +29,12 @@
 
 #define LOOPER_URI "https://github.com/kasbah/slim_looper.lv2"
 
+#include "slim_lv2_uris.h"
 typedef enum {
     PORT_INPUT        = 0,
     PORT_OUTPUT       = 1,
     PORT_MIDI_IN      = 2
 } PortIndex;
-
-typedef struct {
-    LV2_URID midi_Event;
-    LV2_URID atom_Resource;
-    LV2_URID atom_Blank;
-} SlimUris;
 
 typedef struct {
     const float* input;

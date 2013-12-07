@@ -135,19 +135,19 @@ run(LV2_Handle instance, uint32_t n_samples)
 {
     SlimLV2*        self     = (SlimLV2*)instance;
 
-    LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
-    {
-        if (ev->body.type == self->uris->midi_Event) {
-            lv2_log_trace(&self->logger, "midi event time-stamp: %li\r\n", ev->time.frames);
-            lv2_log_trace(&self->logger, "midi event size: %li\r\n", ev->body.size);
-        }
-        else if (ev->body.type == self->uris->atom_Resource || 
-                 ev->body.type == self->uris->atom_Blank)
-        {
-            lv2_log_trace(&self->logger, "atom event time-stamp: %li\r\n", ev->time.frames);
-            lv2_log_trace(&self->logger, "atom event size: %li\r\n", ev->body.size);
-        }
-    }
+    //LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
+    //{
+    //    if (ev->body.type == self->uris->midi_Event) {
+    //        lv2_log_trace(&self->logger, "midi event time-stamp: %li\r\n", ev->time.frames);
+    //        lv2_log_trace(&self->logger, "midi event size: %li\r\n", ev->body.size);
+    //    }
+    //    else if (ev->body.type == self->uris->atom_Resource || 
+    //             ev->body.type == self->uris->atom_Blank)
+    //    {
+    //        lv2_log_trace(&self->logger, "atom event time-stamp: %li\r\n", ev->time.frames);
+    //        lv2_log_trace(&self->logger, "atom event size: %li\r\n", ev->body.size);
+    //    }
+    //}
 
     slim_run(self->slim, n_samples);
 

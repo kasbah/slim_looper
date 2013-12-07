@@ -25,6 +25,9 @@ def configure(conf):
         
     conf.check(features='c cprogram', lib='m', uselib_store='M', mandatory=False) 
 
+    autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
+                      atleast_version='2.18.0', mandatory=False)
+
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
 
@@ -62,5 +65,15 @@ def build(bld):
               target       = '%s/slim' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               uselib       = 'M LV2')
+    obj.env.cshlib_PATTERN = module_pat
+
+    # Build UI library
+    if bld.is_defined('HAVE_GTK2'):
+        obj = bld(features     = 'c cshlib',
+                  source       = 'slim_lv2_ui.c',
+                  name         = 'slim_ui',
+                  target       = '%s/slim_ui' % bundle,
+                  install_path = '${LV2DIR}/%s' % bundle,
+                  use          = 'GTK2 LV2')
     obj.env.cshlib_PATTERN = module_pat
 

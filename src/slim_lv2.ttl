@@ -4,12 +4,17 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix ui:    <http://lv2plug.in/ns/ext/map#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
 
 <https://github.com/kasbah/slim_looper.lv2>
 	a lv2:Plugin;
 	doap:name "SLim Looper" ;
 	lv2:optionalFeature lv2:hardRTCapable ;
-	lv2:requiredFeature bufsz:boundedBlockLength ;
+	lv2:requiredFeature bufsz:boundedBlockLength ,
+        urid:map ;
 	lv2:port [
 		a lv2:AudioPort ,
 			lv2:InputPort ;
@@ -26,9 +31,28 @@
 		a lv2:InputPort ,
 			atom:AtomPort ;
 		atom:bufferType atom:Sequence ;
-		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ,
+			patch:Message ;
 		lv2:designation lv2:control ;
 		lv2:index 2 ;
-		lv2:symbol "midi_input" ;
-		lv2:name "Midi Input"
+		lv2:symbol "control" ;
+		lv2:name "Control"
+	] , [
+		a lv2:OutputPort ,
+			atom:AtomPort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports patch:Message ;
+		lv2:designation lv2:control ;
+		lv2:index 3 ;
+		lv2:symbol "notify" ;
+		lv2:name "Notify"
 	] .
+
+<https://github.com/kasbah/slim_looper.lv2#ui>
+    a ui:GtkUI ;
+    lv2:requiredFeature urid:map ;  
+    ui:portNotification [
+        ui:plugin <https://github.com/kasbah/slim_looper.lv2> ;
+        lv2:symbol "notify" ;
+        ui:notifyType atom:Blank
+    ] .
