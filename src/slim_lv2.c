@@ -30,6 +30,7 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
     SlimLV2* self = (SlimLV2*)malloc(sizeof(SlimLV2));
+    self->uris    =(SlimUris*)malloc(sizeof(SlimUris)); 
     LV2_Options_Option* options = NULL;
     // Get host features
     if (features)
@@ -68,9 +69,11 @@ instantiate(const LV2_Descriptor*     descriptor,
     //    goto fail;
     //}
 
-    self->midi_Event = self->map->map(self->map->handle, LV2_MIDI__MidiEvent);
-    LV2_URID bufsz_max = self->map->map(self->map->handle, LV2_BUF_SIZE__maxBlockLength);
-    LV2_URID atom_Int = self->map->map(self->map->handle, LV2_ATOM__Int);
+    self->uris->midi_Event    = self->map->map(self->map->handle, LV2_MIDI__MidiEvent);
+    self->uris->atom_Resource = self->map->map(self->map->handle, LV2_ATOM__Resource);
+    self->uris->atom_Blank    = self->map->map(self->map->handle, LV2_ATOM__Blank);
+    LV2_URID bufsz_max        = self->map->map(self->map->handle, LV2_BUF_SIZE__maxBlockLength);
+    LV2_URID atom_Int         = self->map->map(self->map->handle, LV2_ATOM__Int);
     for (const LV2_Options_Option* o = options; o->key; ++o) 
     {
         if (o->context == LV2_OPTIONS_INSTANCE &&
@@ -113,15 +116,9 @@ connect_port(LV2_Handle instance,
         self->output = (float*)data;
         self->slim->output = self->output;
         break;
-    case PORT_CONTROL:
-        self->control_input = (const float*)data;
+    case PORT_MIDI_IN:
+        self->midi_input = (LV2_Atom_Sequence*) data;
         break;
-    case PORT_RECORD_MODE:
-        self->record_mode_input = (const float*)data;
-        break;
-    //case PORT_MIDI_IN:
-    //    self->midi_input = (LV2_Atom_Sequence*) data;
-    //    break;
     }
 }
 
@@ -138,16 +135,19 @@ run(LV2_Handle instance, uint32_t n_samples)
 {
     SlimLV2*        self     = (SlimLV2*)instance;
 
-    self->slim->looper_array[0]->settings->record_mode  = (LooperRecordMode)(*(self->record_mode_input));
-    self->slim->looper_array[0]->state                  = (LooperState)(*(self->control_input));
-
-    //LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
-    //{
-    //    if (ev->body.type == self->midi_Event) {
-    //        lv2_log_trace(&self->logger, "event: %u\r\n", ev->time.frames);
-    //        lv2_log_trace(&self->logger, "event size: %u\r\n", ev->body.size);
-    //    }
-    //}
+    LV2_ATOM_SEQUENCE_FOREACH(self->midi_input, ev) 
+    {
+        if (ev->body.type == self->uris->midi_Event) {
+            lv2_log_trace(&self->logger, "midi event time-stamp: %li\r\n", ev->time.frames);
+            lv2_log_trace(&self->logger, "midi event size: %li\r\n", ev->body.size);
+        }
+        else if (ev->body.type == self->uris->atom_Resource || 
+                 ev->body.type == self->uris->atom_Blank)
+        {
+            lv2_log_trace(&self->logger, "atom event time-stamp: %li\r\n", ev->time.frames);
+            lv2_log_trace(&self->logger, "atom event size: %li\r\n", ev->body.size);
+        }
+    }
 
     slim_run(self->slim, n_samples);
 

@@ -37,7 +37,6 @@ void slim_activate(Slim* slim)
     for (int i = 0; i < (slim->n_loopers); i++)
     {
         looper_reset(slim->looper_array[i]);
-        slim->looper_array[i]->input = slim->input;
     }
 }
 

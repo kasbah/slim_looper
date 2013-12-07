@@ -31,10 +31,14 @@
 typedef enum {
     PORT_INPUT        = 0,
     PORT_OUTPUT       = 1,
-    PORT_CONTROL      = 2,
-    PORT_RECORD_MODE  = 3,
-    PORT_MIDI_IN      = 4
+    PORT_MIDI_IN      = 2
 } PortIndex;
+
+typedef struct {
+    LV2_URID midi_Event;
+    LV2_URID atom_Resource;
+    LV2_URID atom_Blank;
+} SlimUris;
 
 typedef struct {
     const float* input;
@@ -48,6 +52,7 @@ typedef struct {
     uint8_t midi_Event;
     uint32_t maxBlockLength;
     Slim* slim;
+    SlimUris* uris;
 } SlimLV2;
 
 LV2_SYMBOL_EXPORT
