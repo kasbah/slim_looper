@@ -20,8 +20,9 @@ def configure(conf):
     autowaf.set_c99_mode(conf)
     autowaf.display_header('Amp Configuration')
 
-    if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
+    #if not autowaf.is_child():
+    autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
+    autowaf.check_pkg(conf, 'jack', uselib_store='JACK')
         
     conf.check(features='c cprogram', lib='m', uselib_store='M', mandatory=False) 
 
@@ -57,10 +58,18 @@ def build(bld):
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
-              source       = 'slim_lv2.c looper.c slim.c',
+              source       = 'slim_lv2.c slim.c looper.c',
               name         = 'slim',
               target       = '%s/slim' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               uselib       = 'M LV2')
     obj.env.cshlib_PATTERN = module_pat
+
+    # Build a standalone jack client
+    obj = bld(features     = 'c cprogram',
+              source       = 'slim_jack.c slim.c looper.c',
+              name         = 'slim',
+              target       = '/slim',
+              install_path = None,
+              uselib       = 'M JACK')
 
