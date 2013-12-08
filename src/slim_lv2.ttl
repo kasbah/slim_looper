@@ -5,7 +5,6 @@
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
 @prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
-@prefix ui:    <http://lv2plug.in/ns/ext/map#> .
 @prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
 @prefix patch: <http://lv2plug.in/ns/ext/patch#> .
 
@@ -15,6 +14,7 @@
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:requiredFeature bufsz:boundedBlockLength ,
         urid:map ;
+    ui:ui <https://github.com/kasbah/slim_looper.lv2#ui>;
 	lv2:port [
 		a lv2:AudioPort ,
 			lv2:InputPort ;
