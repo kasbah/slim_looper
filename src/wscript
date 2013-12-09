@@ -23,6 +23,7 @@ def configure(conf):
     #if not autowaf.is_child():
     autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
     autowaf.check_pkg(conf, 'jack', uselib_store='JACK')
+    autowaf.check_pkg(conf, 'libprotobuf-c', uselib_store='PROTOBUF_C')
         
     conf.check(features='c cprogram', lib='m', uselib_store='M', mandatory=False) 
 
@@ -67,9 +68,9 @@ def build(bld):
 
     # Build a standalone jack client
     obj = bld(features     = 'c cprogram',
-              source       = 'slim_jack.c slim.c looper.c',
+              source       = 'slim_jack.c slim.c looper.c socket.c gui/slim.pb-c.c',
               name         = 'slim',
               target       = '/slim',
               install_path = None,
-              uselib       = 'M JACK')
+              uselib       = 'M JACK PROTOBUF_C')
 

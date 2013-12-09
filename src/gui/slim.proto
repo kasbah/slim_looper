@@ -1,0 +1,10 @@
+enum LooperCommand {
+    PLAY_OR_PAUSE = 0;
+    RECORD        = 1;
+    OVERDUB       = 2;
+    INSERT        = 3;
+    REPLACE       = 4;
+};
+message LooperCommandMessage {
+    required LooperCommand command = 1;
+}

@@ -17,6 +17,7 @@
 // 
 
 #include "slim_jack.h"
+#include "socket.h"
 #include <jack/jack.h>
 
 jack_port_t *input_port;
@@ -40,7 +41,6 @@ int main(void)
     input_port = jack_port_register (client, "in", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
     output_port = jack_port_register (client, "out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
     jack_activate(client);
-
-    while(1);
+    socket_run();
     exit(0);
 }
