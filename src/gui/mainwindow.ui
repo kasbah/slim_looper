@@ -25,9 +25,19 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
+      <widget class="QSlider" name="drySlider">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QPushButton" name="pushButton_3">
+        <widget class="QPushButton" name="playPauseButton">
          <property name="text">
           <string>Play/Pause</string>
          </property>
@@ -38,14 +48,14 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QPushButton" name="pushButton_5">
+        <widget class="QPushButton" name="recordButton">
          <property name="text">
           <string>Record</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="overdubButton">
          <property name="text">
           <string>Overdub</string>
          </property>
@@ -56,14 +66,14 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="QPushButton" name="pushButton_7">
+        <widget class="QPushButton" name="replaceButton">
          <property name="text">
           <string>Replace</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_8">
+        <widget class="QPushButton" name="insertButton">
          <property name="text">
           <string>Insert</string>
          </property>

@@ -16,27 +16,30 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
 def playPause():
-    msg = slim_pb2.LooperCommandMessage()
-    msg.command = slim_pb2.PLAY_OR_PAUSE
-    print ("msg: " +  msg.SerializeToString())
+    msg = slim_pb2.LooperMessage()
+    msg.type = slim_pb2.LooperMessage.COMMAND
+    msg.command.command = slim_pb2.PLAY_OR_PAUSE
     s.send(msg.SerializeToString())
 
 def record():
-    msg = slim_pb2.LooperCommandMessage()
-    msg.command = slim_pb2.RECORD
-    print ("msg: " +  msg.SerializeToString())
+    msg = slim_pb2.LooperMessage()
+    msg.type = slim_pb2.LooperMessage.COMMAND
+    msg.command.command = slim_pb2.RECORD
+    s.send(msg.SerializeToString())
+
+def dryValueChanged():
+    msg = slim_pb2.LooperMessage()
+    msg.type = slim_pb2.LooperMessage.SETTING
+    msg.setting.dry = mySW.ui.drySlider.value()/100.0
     s.send(msg.SerializeToString())
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     mySW = ControlMainWindow()
-    buttons = {}
-    for key in mySW.ui.__dict__:
-        if "pushButton" in key:
-            button = mySW.ui.__dict__[key]
-            buttons[button.text()] = button
-    buttons["Play/Pause"].clicked.connect(playPause)
-    buttons["Record"].clicked.connect(record)
+    mySW.ui.drySlider.valueChanged.connect (dryValueChanged)
+    mySW.ui.playPauseButton.clicked.connect(playPause)
+    mySW.ui.recordButton.clicked.connect(playPause)
+    mySW.ui.drySlider.valueChanged.connect(dryValueChanged)
     mySW.show() 
     sys.exit(app.exec_())
 

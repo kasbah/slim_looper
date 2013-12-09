@@ -2,11 +2,11 @@
 #include <linux/un.h>
 #include <string.h>
 #include <stdio.h>
-#include "socket.h"
-#include "gui/slim.pb-c.h"
-int socket_run(void)
+#include "slim_socket.h"
+#include "protocol/slim.pb-c.h"
+int slim_socket_run(void)
 {
-    LooperCommandMessage* msg;
+    LooperMessage* msg;
     struct sockaddr_un address;
     int socket_fd, connection_fd;
     socklen_t address_length;
@@ -48,13 +48,19 @@ int socket_run(void)
                     &address_length)) > -1)
     {
         printf("successfully received\r\n");
-        bzero(buffer, 256);
+        memset(buffer, 0, sizeof(char) * 256);
         n = read(connection_fd, buffer, 255);
         if (n < 0) error("ERROR reading from socket");
-        printf("message: %s\r\n", buffer);
-        msg = looper_command_message__unpack(NULL, sizeof(buffer), buffer);
-        printf("command: %s\r\n", looper_command__descriptor.values[msg->command].name);
-        //printf("msg->command: %s\r\n",
+        msg = looper_message__unpack(NULL, n, buffer);
+        switch(msg->type)
+        {
+            case LOOPER_MESSAGE__TYPE__COMMAND:
+                printf ("command: %i\r\n", msg->command->command);
+                break;
+            case LOOPER_MESSAGE__TYPE__SETTING:
+                printf ("setting dry: %f\r\n", msg->setting->dry);
+                break;
+        }
         //n = write(connection_fd, buffer, strlen(buffer));
         //if (n < 0) 
         //    printf("ERROR writing to socket\n");           

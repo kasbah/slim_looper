@@ -1,0 +1,22 @@
+enum LooperCommand {
+    PLAY_OR_PAUSE = 0;
+    RECORD        = 1;
+    OVERDUB       = 2;
+    INSERT        = 3;
+    REPLACE       = 4;
+};
+message Command {
+    required LooperCommand command = 1;
+}
+message Setting {
+    optional float dry = 1;
+}
+message LooperMessage {
+    enum Type {
+        COMMAND = 0;
+        SETTING = 1;
+    };
+    required Type    type    = 1;
+    optional Command command = 2;
+    optional Setting setting = 3;
+}
