@@ -17,14 +17,19 @@
 // 
 
 #include "slim_jack.h"
-#include "slim_socket.h"
+#include "slim.h"
 #include <jack/jack.h>
 
-jack_port_t *input_port;
-jack_port_t *output_port;
+static jack_port_t* input_port;
+static jack_port_t* output_port;
+static Slim* slim;
 
 int slim_jack_process(jack_nframes_t n_samples, void* arg)
 {
+    float *out = (float*)jack_port_get_buffer(output_port, n_samples);
+    float *in  = (float*)jack_port_get_buffer(input_port , n_samples);
+    slim_connect(slim, in, out);
+    slim_run(slim, n_samples);
     return 0;
 }
 
@@ -40,7 +45,9 @@ int main(void)
     jack_on_shutdown(client, slim_jack_shutdown, 0);
     input_port = jack_port_register (client, "in", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
     output_port = jack_port_register (client, "out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+    slim = slim_new(1, jack_get_buffer_size(client));
     jack_activate(client);
-    slim_socket_run();
+    slim_work_loop(slim);
     exit(0);
+
 }

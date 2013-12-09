@@ -19,6 +19,8 @@
 #include "slim.h"
 #include <stdlib.h>
 #include <string.h>
+#include "slim_socket.h"
+#include "protocol/slim.pb-c.h"
 
 Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples)
 {
@@ -59,4 +61,50 @@ void slim_free(Slim* slim)
     {
         looper_free(slim->looper_array[i]);
     }
+}
+
+void slim_connect(Slim* slim, void* input, void* output) 
+{
+    for (int i = 0; i < (slim->n_loopers); i++)
+    {
+        for (int i = 0; i < (slim->n_loopers); i++)
+        {
+            slim->looper_array[i]->input = (const float*)input;
+        }
+    }
+    slim->output = (const float*) output;
+}
+
+
+void slim_work_loop(Slim* slim)
+{
+    Socket* socket = slim_socket_new();
+    char buffer[256];
+    LooperMessage* msg;
+    while (1)
+    {
+        int n = read(socket->connection_fd, buffer, 255);
+        if (n < 0) perror("ERROR reading from socket");
+        else if (n > 0)
+        {
+            msg = looper_message__unpack(NULL, n, buffer);
+            if (msg > 0)
+            {
+                switch(msg->type)
+                {
+                    case MESSAGE_TYPE__COMMAND:
+                        printf ("command: %i\r\n", msg->command->value);
+                        break;
+                    case MESSAGE_TYPE__SETTING:
+                        printf ("setting dry: %f\r\n", msg->setting->dry);
+                        break;
+                }
+            }
+            else if (msg < 0)
+            {
+                perror("fuck");
+            }
+        }
+    }
+    slim_socket_close(socket);
 }
