@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>701</width>
-      <height>61</height>
+      <height>60</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -33,17 +33,6 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
-        <widget class="QPushButton" name="playPauseButton">
-         <property name="text">
-          <string>Play/Pause</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -76,6 +65,26 @@
         <widget class="QPushButton" name="insertButton">
          <property name="text">
           <string>Insert</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QPushButton" name="playPauseButton">
+         <property name="text">
+          <string>Pause</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
          </property>
         </widget>
        </item>

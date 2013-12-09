@@ -138,12 +138,12 @@ void   looper_message__free_unpacked
 static const ProtobufCFieldDescriptor command__field_descriptors[1] =
 {
   {
-    "command",
+    "value",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(Command, command),
+    PROTOBUF_C_OFFSETOF(Command, value),
     &looper_command__descriptor,
     NULL,
     0,            /* packed */
@@ -151,7 +151,7 @@ static const ProtobufCFieldDescriptor command__field_descriptors[1] =
   },
 };
 static const unsigned command__field_indices_by_name[] = {
-  0,   /* field[0] = command */
+  0,   /* field[0] = value */
 };
 static const ProtobufCIntRange command__number_ranges[1 + 1] =
 {
@@ -211,34 +211,6 @@ const ProtobufCMessageDescriptor setting__descriptor =
   (ProtobufCMessageInit) setting__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-const ProtobufCEnumValue looper_message__type__enum_values_by_number[2] =
-{
-  { "COMMAND", "LOOPER_MESSAGE__TYPE__COMMAND", 0 },
-  { "SETTING", "LOOPER_MESSAGE__TYPE__SETTING", 1 },
-};
-static const ProtobufCIntRange looper_message__type__value_ranges[] = {
-{0, 0},{0, 2}
-};
-const ProtobufCEnumValueIndex looper_message__type__enum_values_by_name[2] =
-{
-  { "COMMAND", 0 },
-  { "SETTING", 1 },
-};
-const ProtobufCEnumDescriptor looper_message__type__descriptor =
-{
-  PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
-  "LooperMessage.Type",
-  "Type",
-  "LooperMessage__Type",
-  "",
-  2,
-  looper_message__type__enum_values_by_number,
-  2,
-  looper_message__type__enum_values_by_name,
-  1,
-  looper_message__type__value_ranges,
-  NULL,NULL,NULL,NULL   /* reserved[1234] */
-};
 static const ProtobufCFieldDescriptor looper_message__field_descriptors[3] =
 {
   {
@@ -248,7 +220,7 @@ static const ProtobufCFieldDescriptor looper_message__field_descriptors[3] =
     PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
     PROTOBUF_C_OFFSETOF(LooperMessage, type),
-    &looper_message__type__descriptor,
+    &message_type__descriptor,
     NULL,
     0,            /* packed */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -305,7 +277,7 @@ const ProtobufCMessageDescriptor looper_message__descriptor =
 };
 const ProtobufCEnumValue looper_command__enum_values_by_number[5] =
 {
-  { "PLAY_OR_PAUSE", "LOOPER_COMMAND__PLAY_OR_PAUSE", 0 },
+  { "PAUSE", "LOOPER_COMMAND__PAUSE", 0 },
   { "RECORD", "LOOPER_COMMAND__RECORD", 1 },
   { "OVERDUB", "LOOPER_COMMAND__OVERDUB", 2 },
   { "INSERT", "LOOPER_COMMAND__INSERT", 3 },
@@ -318,7 +290,7 @@ const ProtobufCEnumValueIndex looper_command__enum_values_by_name[5] =
 {
   { "INSERT", 3 },
   { "OVERDUB", 2 },
-  { "PLAY_OR_PAUSE", 0 },
+  { "PAUSE", 0 },
   { "RECORD", 1 },
   { "REPLACE", 4 },
 };
@@ -335,5 +307,33 @@ const ProtobufCEnumDescriptor looper_command__descriptor =
   looper_command__enum_values_by_name,
   1,
   looper_command__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+const ProtobufCEnumValue message_type__enum_values_by_number[2] =
+{
+  { "COMMAND", "MESSAGE_TYPE__COMMAND", 0 },
+  { "SETTING", "MESSAGE_TYPE__SETTING", 1 },
+};
+static const ProtobufCIntRange message_type__value_ranges[] = {
+{0, 0},{0, 2}
+};
+const ProtobufCEnumValueIndex message_type__enum_values_by_name[2] =
+{
+  { "COMMAND", 0 },
+  { "SETTING", 1 },
+};
+const ProtobufCEnumDescriptor message_type__descriptor =
+{
+  PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
+  "MessageType",
+  "MessageType",
+  "MessageType",
+  "",
+  2,
+  message_type__enum_values_by_number,
+  2,
+  message_type__enum_values_by_name,
+  1,
+  message_type__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
 };

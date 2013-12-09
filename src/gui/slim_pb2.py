@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='slim.proto',
   package='',
-  serialized_pb='\n\nslim.proto\"*\n\x07\x43ommand\x12\x1f\n\x07\x63ommand\x18\x01 \x02(\x0e\x32\x0e.LooperCommand\"\x16\n\x07Setting\x12\x0b\n\x03\x64ry\x18\x01 \x01(\x02\"\x8a\x01\n\rLooperMessage\x12!\n\x04type\x18\x01 \x02(\x0e\x32\x13.LooperMessage.Type\x12\x19\n\x07\x63ommand\x18\x02 \x01(\x0b\x32\x08.Command\x12\x19\n\x07setting\x18\x03 \x01(\x0b\x32\x08.Setting\" \n\x04Type\x12\x0b\n\x07\x43OMMAND\x10\x00\x12\x0b\n\x07SETTING\x10\x01*T\n\rLooperCommand\x12\x11\n\rPLAY_OR_PAUSE\x10\x00\x12\n\n\x06RECORD\x10\x01\x12\x0b\n\x07OVERDUB\x10\x02\x12\n\n\x06INSERT\x10\x03\x12\x0b\n\x07REPLACE\x10\x04')
+  serialized_pb='\n\nslim.proto\"(\n\x07\x43ommand\x12\x1d\n\x05value\x18\x01 \x02(\x0e\x32\x0e.LooperCommand\"\x16\n\x07Setting\x12\x0b\n\x03\x64ry\x18\x01 \x01(\x02\"a\n\rLooperMessage\x12\x1a\n\x04type\x18\x01 \x02(\x0e\x32\x0c.MessageType\x12\x19\n\x07\x63ommand\x18\x02 \x01(\x0b\x32\x08.Command\x12\x19\n\x07setting\x18\x03 \x01(\x0b\x32\x08.Setting*L\n\rLooperCommand\x12\t\n\x05PAUSE\x10\x00\x12\n\n\x06RECORD\x10\x01\x12\x0b\n\x07OVERDUB\x10\x02\x12\n\n\x06INSERT\x10\x03\x12\x0b\n\x07REPLACE\x10\x04*\'\n\x0bMessageType\x12\x0b\n\x07\x43OMMAND\x10\x00\x12\x0b\n\x07SETTING\x10\x01')
 
 _LOOPERCOMMAND = descriptor.EnumDescriptor(
   name='LooperCommand',
@@ -20,7 +20,7 @@ _LOOPERCOMMAND = descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     descriptor.EnumValueDescriptor(
-      name='PLAY_OR_PAUSE', index=0, number=0,
+      name='PAUSE', index=0, number=0,
       options=None,
       type=None),
     descriptor.EnumValueDescriptor(
@@ -42,21 +42,14 @@ _LOOPERCOMMAND = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=223,
-  serialized_end=307,
+  serialized_start=179,
+  serialized_end=255,
 )
 
 
-PLAY_OR_PAUSE = 0
-RECORD = 1
-OVERDUB = 2
-INSERT = 3
-REPLACE = 4
-
-
-_LOOPERMESSAGE_TYPE = descriptor.EnumDescriptor(
-  name='Type',
-  full_name='LooperMessage.Type',
+_MESSAGETYPE = descriptor.EnumDescriptor(
+  name='MessageType',
+  full_name='MessageType',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -71,9 +64,19 @@ _LOOPERMESSAGE_TYPE = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=189,
-  serialized_end=221,
+  serialized_start=257,
+  serialized_end=296,
 )
+
+
+PAUSE = 0
+RECORD = 1
+OVERDUB = 2
+INSERT = 3
+REPLACE = 4
+COMMAND = 0
+SETTING = 1
+
 
 
 _COMMAND = descriptor.Descriptor(
@@ -84,7 +87,7 @@ _COMMAND = descriptor.Descriptor(
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='command', full_name='Command.command', index=0,
+      name='value', full_name='Command.value', index=0,
       number=1, type=14, cpp_type=8, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -100,7 +103,7 @@ _COMMAND = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=14,
-  serialized_end=56,
+  serialized_end=54,
 )
 
 
@@ -127,8 +130,8 @@ _SETTING = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=58,
-  serialized_end=80,
+  serialized_start=56,
+  serialized_end=78,
 )
 
 
@@ -165,20 +168,18 @@ _LOOPERMESSAGE = descriptor.Descriptor(
   ],
   nested_types=[],
   enum_types=[
-    _LOOPERMESSAGE_TYPE,
   ],
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=83,
-  serialized_end=221,
+  serialized_start=80,
+  serialized_end=177,
 )
 
-_COMMAND.fields_by_name['command'].enum_type = _LOOPERCOMMAND
-_LOOPERMESSAGE.fields_by_name['type'].enum_type = _LOOPERMESSAGE_TYPE
+_COMMAND.fields_by_name['value'].enum_type = _LOOPERCOMMAND
+_LOOPERMESSAGE.fields_by_name['type'].enum_type = _MESSAGETYPE
 _LOOPERMESSAGE.fields_by_name['command'].message_type = _COMMAND
 _LOOPERMESSAGE.fields_by_name['setting'].message_type = _SETTING
-_LOOPERMESSAGE_TYPE.containing_type = _LOOPERMESSAGE;
 DESCRIPTOR.message_types_by_name['Command'] = _COMMAND
 DESCRIPTOR.message_types_by_name['Setting'] = _SETTING
 DESCRIPTOR.message_types_by_name['LooperMessage'] = _LOOPERMESSAGE

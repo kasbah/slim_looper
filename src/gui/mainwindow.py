@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created: Mon Dec  9 05:26:38 2013
+# Created: Mon Dec  9 07:52:57 2013
 #      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -16,7 +16,7 @@ class Ui_MainWindow(object):
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.horizontalLayoutWidget = QtGui.QWidget(self.centralWidget)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 701, 61))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 701, 60))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
         self.horizontalLayout_4 = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -26,12 +26,6 @@ class Ui_MainWindow(object):
         self.drySlider.setOrientation(QtCore.Qt.Vertical)
         self.drySlider.setObjectName("drySlider")
         self.horizontalLayout_4.addWidget(self.drySlider)
-        self.verticalLayout_4 = QtGui.QVBoxLayout()
-        self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.playPauseButton = QtGui.QPushButton(self.horizontalLayoutWidget)
-        self.playPauseButton.setObjectName("playPauseButton")
-        self.verticalLayout_4.addWidget(self.playPauseButton)
-        self.horizontalLayout_4.addLayout(self.verticalLayout_4)
         self.verticalLayout_5 = QtGui.QVBoxLayout()
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.recordButton = QtGui.QPushButton(self.horizontalLayoutWidget)
@@ -50,6 +44,15 @@ class Ui_MainWindow(object):
         self.insertButton.setObjectName("insertButton")
         self.verticalLayout_6.addWidget(self.insertButton)
         self.horizontalLayout_4.addLayout(self.verticalLayout_6)
+        self.verticalLayout_4 = QtGui.QVBoxLayout()
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.playPauseButton = QtGui.QPushButton(self.horizontalLayoutWidget)
+        self.playPauseButton.setCheckable(False)
+        self.playPauseButton.setDefault(False)
+        self.playPauseButton.setFlat(False)
+        self.playPauseButton.setObjectName("playPauseButton")
+        self.verticalLayout_4.addWidget(self.playPauseButton)
+        self.horizontalLayout_4.addLayout(self.verticalLayout_4)
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 700, 24))
@@ -73,11 +76,11 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
-        self.playPauseButton.setText(QtGui.QApplication.translate("MainWindow", "Play/Pause", None, QtGui.QApplication.UnicodeUTF8))
         self.recordButton.setText(QtGui.QApplication.translate("MainWindow", "Record", None, QtGui.QApplication.UnicodeUTF8))
         self.overdubButton.setText(QtGui.QApplication.translate("MainWindow", "Overdub", None, QtGui.QApplication.UnicodeUTF8))
         self.replaceButton.setText(QtGui.QApplication.translate("MainWindow", "Replace", None, QtGui.QApplication.UnicodeUTF8))
         self.insertButton.setText(QtGui.QApplication.translate("MainWindow", "Insert", None, QtGui.QApplication.UnicodeUTF8))
+        self.playPauseButton.setText(QtGui.QApplication.translate("MainWindow", "Pause", None, QtGui.QApplication.UnicodeUTF8))
         self.menuHey.setTitle(QtGui.QApplication.translate("MainWindow", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.actionExit.setText(QtGui.QApplication.translate("MainWindow", "Exit", None, QtGui.QApplication.UnicodeUTF8))
 

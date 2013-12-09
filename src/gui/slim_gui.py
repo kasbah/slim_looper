@@ -17,19 +17,19 @@ class ControlMainWindow(QtGui.QMainWindow):
 
 def playPause():
     msg = slim_pb2.LooperMessage()
-    msg.type = slim_pb2.LooperMessage.COMMAND
-    msg.command.command = slim_pb2.PLAY_OR_PAUSE
+    msg.type = slim_pb2.COMMAND
+    msg.command.value = slim_pb2.PAUSE 
     s.send(msg.SerializeToString())
 
 def record():
     msg = slim_pb2.LooperMessage()
-    msg.type = slim_pb2.LooperMessage.COMMAND
-    msg.command.command = slim_pb2.RECORD
+    msg.type = slim_pb2.COMMAND
+    msg.command.value = slim_pb2.RECORD
     s.send(msg.SerializeToString())
 
 def dryValueChanged():
     msg = slim_pb2.LooperMessage()
-    msg.type = slim_pb2.LooperMessage.SETTING
+    msg.type = slim_pb2.SETTING
     msg.setting.dry = mySW.ui.drySlider.value()/100.0
     s.send(msg.SerializeToString())
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     mySW = ControlMainWindow()
     mySW.ui.drySlider.valueChanged.connect (dryValueChanged)
     mySW.ui.playPauseButton.clicked.connect(playPause)
-    mySW.ui.recordButton.clicked.connect(playPause)
+    mySW.ui.recordButton.clicked.connect(record)
     mySW.ui.drySlider.valueChanged.connect(dryValueChanged)
     mySW.show() 
     sys.exit(app.exec_())

@@ -15,24 +15,24 @@ typedef struct _LooperMessage LooperMessage;
 
 /* --- enums --- */
 
-typedef enum _LooperMessage__Type {
-  LOOPER_MESSAGE__TYPE__COMMAND = 0,
-  LOOPER_MESSAGE__TYPE__SETTING = 1
-} LooperMessage__Type;
 typedef enum _LooperCommand {
-  LOOPER_COMMAND__PLAY_OR_PAUSE = 0,
+  LOOPER_COMMAND__PAUSE = 0,
   LOOPER_COMMAND__RECORD = 1,
   LOOPER_COMMAND__OVERDUB = 2,
   LOOPER_COMMAND__INSERT = 3,
   LOOPER_COMMAND__REPLACE = 4
 } LooperCommand;
+typedef enum _MessageType {
+  MESSAGE_TYPE__COMMAND = 0,
+  MESSAGE_TYPE__SETTING = 1
+} MessageType;
 
 /* --- messages --- */
 
 struct  _Command
 {
   ProtobufCMessage base;
-  LooperCommand command;
+  LooperCommand value;
 };
 #define COMMAND__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&command__descriptor) \
@@ -53,7 +53,7 @@ struct  _Setting
 struct  _LooperMessage
 {
   ProtobufCMessage base;
-  LooperMessage__Type type;
+  MessageType type;
   Command *command;
   Setting *setting;
 };
@@ -137,10 +137,10 @@ typedef void (*LooperMessage_Closure)
 /* --- descriptors --- */
 
 extern const ProtobufCEnumDescriptor    looper_command__descriptor;
+extern const ProtobufCEnumDescriptor    message_type__descriptor;
 extern const ProtobufCMessageDescriptor command__descriptor;
 extern const ProtobufCMessageDescriptor setting__descriptor;
 extern const ProtobufCMessageDescriptor looper_message__descriptor;
-extern const ProtobufCEnumDescriptor    looper_message__type__descriptor;
 
 PROTOBUF_C_END_DECLS
 

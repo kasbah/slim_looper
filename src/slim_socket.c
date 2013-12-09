@@ -42,29 +42,46 @@ int slim_socket_run(void)
     }
 
     address_length = sizeof(address);
-
-    while((connection_fd = accept(socket_fd, 
+    connection_fd = accept(socket_fd, 
                     (struct sockaddr*) &address, 
-                    &address_length)) > -1)
+                    &address_length);
+
+    if (connection_fd == -1)
     {
-        printf("successfully received\r\n");
+        perror("ERROR accepting socket connection");
+    }
+
+    printf("accepted connection\r\n");
+
+    while(1)
+    {
         memset(buffer, 0, sizeof(char) * 256);
         n = read(connection_fd, buffer, 255);
-        if (n < 0) error("ERROR reading from socket");
-        msg = looper_message__unpack(NULL, n, buffer);
-        switch(msg->type)
+        if (n < 0) perror("ERROR reading from socket");
+        else if (n > 0)
         {
-            case LOOPER_MESSAGE__TYPE__COMMAND:
-                printf ("command: %i\r\n", msg->command->command);
-                break;
-            case LOOPER_MESSAGE__TYPE__SETTING:
-                printf ("setting dry: %f\r\n", msg->setting->dry);
-                break;
+            msg = looper_message__unpack(NULL, n, buffer);
+            if (msg > 0)
+            {
+                switch(msg->type)
+                {
+                    case MESSAGE_TYPE__COMMAND:
+                        printf ("command: %i\r\n", msg->command->value);
+                        break;
+                    case MESSAGE_TYPE__SETTING:
+                        printf ("setting dry: %f\r\n", msg->setting->dry);
+                        break;
+                }
+            }
+            else if (msg < 0)
+            {
+                perror("fuck");
+            }
         }
         //n = write(connection_fd, buffer, strlen(buffer));
         //if (n < 0) 
         //    printf("ERROR writing to socket\n");           
-        break;
+        //break;
     }
     close(socket_fd);
     close(connection_fd);
