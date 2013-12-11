@@ -5,13 +5,13 @@
 #include <sys/socket.h>
 
 typedef struct {
-    int fd;
+    int listen_fd;
     struct sockaddr_un* address;
     int address_length;
-} Socket;
+} SlimSocket;
 
-Socket* slim_socket_new(void);
-int slim_socket_read(Socket* self, char* msg_buffer);
-void slim_socket_close(Socket* self);
+SlimSocket* slim_socket_server_new(void);
+SlimSocket* slim_socket_new(void);
+int slim_socket_read(SlimSocket* self, char* msg_buffer);
 
 #endif// __SOCKET_H__

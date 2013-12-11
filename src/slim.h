@@ -27,7 +27,7 @@ typedef struct {
     const float* input;
     float* output;
     uint32_t n_loopers;
-    Socket* socket;
+    SlimSocket* socket;
     Looper** looper_array;
     char msg_buffer[256];
     SlimMessage* msg;
