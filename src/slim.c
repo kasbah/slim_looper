@@ -41,37 +41,41 @@ void slim_activate(Slim* slim)
     }
 }
 
+void slim_parse_messages(const uint32_t n_bytes, const char* const msg_buffer)
+{
+    SlimMessage* msg = slim_message__unpack(NULL, n_bytes, msg_buffer);
+    if (msg != NULL)
+    {
+        switch(msg->type)
+        {
+            case SLIM_MESSAGE__TYPE__LOOPER:
+                printf ("command: %i\r\n", msg->looper->command);
+                if (msg->looper->command == SLIM_MESSAGE__LOOPER__COMMAND__SET)
+                {
+                    for (int i = 0; i < (msg->looper->n_settings); i++)
+                    {
+                        SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
+                        char* name = slim_message__looper__setting__name__descriptor.values[setting->name].name;
+                        printf("setting: %i %s %f\r\n", setting->name, name, setting->value);
+                    }
+                }
+                break;
+        }
+    }
+    else if (msg == NULL)
+    {
+        perror("ERROR unpacking message");
+    }
+}
+
 
 void slim_run(Slim* slim , uint32_t n_samples)
 {
     char* msg_buffer = slim->msg_buffer;
-    SlimMessage* msg = slim->msg;
     int n = slim_socket_server_read(slim->socket, msg_buffer);
     if (n > 0)
     {
-        msg = slim_message__unpack(NULL, n, msg_buffer);
-        if (msg > 0)
-        {
-            switch(msg->type)
-            {
-                case SLIM_MESSAGE__TYPE__LOOPER:
-                    printf ("command: %i\r\n", msg->looper->command);
-                    if (msg->looper->command == SLIM_MESSAGE__LOOPER__COMMAND__SET)
-                    {
-                        for (int i = 0; i < (msg->looper->n_settings); i++)
-                        {
-                            SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
-                            char* name = slim_message__looper__setting__name__descriptor.values[setting->name].name;
-                            printf("setting: %i %s %f\r\n", setting->name, name, setting->value);
-                        }
-                    }
-                    break;
-            }
-        }
-        else if (msg == NULL)
-        {
-            perror("ERROR unpacking message");
-        }
+        slim_parse_messages(n, msg_buffer)
     }
 
     memset(slim->output, 0, sizeof(float) * n_samples);

@@ -28,6 +28,8 @@ def configure(conf):
     conf.check(features='c cprogram', lib='m', uselib_store='M', mandatory=False) 
 
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
+    #conf.env.append_value('CFLAGS', '-pg')
+    #conf.env.append_value('LINKFLAGS', '-pg')
     print('')
 
 def build(bld):
@@ -58,15 +60,16 @@ def build(bld):
     #    includes = '../..'
 
     # Build plugin library
-    obj = bld(features     = 'c cshlib',
-              source       = 'slim_lv2.c slim.c looper.c',
-              name         = 'slim',
-              target       = '%s/slim' % bundle,
-              install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'M LV2')
-    obj.env.cshlib_PATTERN = module_pat
+    #obj = bld(features     = 'c cshlib',
+    #          source       = 'slim_lv2.c slim.c looper.c',
+    #          name         = 'slim',
+    #          target       = '%s/slim' % bundle,
+    #          install_path = '${LV2DIR}/%s' % bundle,
+    #          uselib       = 'M LV2')
+    #obj.env.cshlib_PATTERN = module_pat
 
     # Build a standalone jack client
+
     obj = bld(features     = 'c cprogram',
               source       = 'slim_jack.c slim.c looper.c slim_socket.c protocol/slim.pb-c.c',
               name         = 'slim',
