@@ -8,127 +8,148 @@
 PROTOBUF_C_BEGIN_DECLS
 
 
-typedef struct _Command Command;
-typedef struct _Setting Setting;
-typedef struct _LooperMessage LooperMessage;
+typedef struct _SlimMessage SlimMessage;
+typedef struct _SlimMessage__Looper SlimMessage__Looper;
+typedef struct _SlimMessage__Looper__Setting SlimMessage__Looper__Setting;
+typedef struct _SlimMessage__Global SlimMessage__Global;
+typedef struct _SlimMessage__Global__Setting SlimMessage__Global__Setting;
 
 
 /* --- enums --- */
 
-typedef enum _LooperCommand {
-  LOOPER_COMMAND__PAUSE = 0,
-  LOOPER_COMMAND__RECORD = 1,
-  LOOPER_COMMAND__OVERDUB = 2,
-  LOOPER_COMMAND__INSERT = 3,
-  LOOPER_COMMAND__REPLACE = 4
-} LooperCommand;
-typedef enum _MessageType {
-  MESSAGE_TYPE__COMMAND = 0,
-  MESSAGE_TYPE__SETTING = 1
-} MessageType;
+typedef enum _SlimMessage__Looper__Setting__Name {
+  SLIM_MESSAGE__LOOPER__SETTING__NAME__DRY = 1,
+  SLIM_MESSAGE__LOOPER__SETTING__NAME__WET = 2
+} SlimMessage__Looper__Setting__Name;
+typedef enum _SlimMessage__Looper__Command {
+  SLIM_MESSAGE__LOOPER__COMMAND__SET = 0,
+  SLIM_MESSAGE__LOOPER__COMMAND__PAUSE = 1,
+  SLIM_MESSAGE__LOOPER__COMMAND__RECORD = 2,
+  SLIM_MESSAGE__LOOPER__COMMAND__OVERDUB = 3,
+  SLIM_MESSAGE__LOOPER__COMMAND__INSERT = 4,
+  SLIM_MESSAGE__LOOPER__COMMAND__REPLACE = 5
+} SlimMessage__Looper__Command;
+typedef enum _SlimMessage__Global__Setting__Name {
+  SLIM_MESSAGE__GLOBAL__SETTING__NAME__DRY = 1,
+  SLIM_MESSAGE__GLOBAL__SETTING__NAME__WET = 2
+} SlimMessage__Global__Setting__Name;
+typedef enum _SlimMessage__Global__Command {
+  SLIM_MESSAGE__GLOBAL__COMMAND__SET = 0,
+  SLIM_MESSAGE__GLOBAL__COMMAND__QUIT = 1
+} SlimMessage__Global__Command;
+typedef enum _SlimMessage__Type {
+  SLIM_MESSAGE__TYPE__LOOPER = 0,
+  SLIM_MESSAGE__TYPE__GLOBAL = 1
+} SlimMessage__Type;
 
 /* --- messages --- */
 
-struct  _Command
+struct  _SlimMessage__Looper__Setting
 {
   ProtobufCMessage base;
-  LooperCommand value;
+  SlimMessage__Looper__Setting__Name name;
+  float value;
 };
-#define COMMAND__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&command__descriptor) \
-    , 0 }
+#define SLIM_MESSAGE__LOOPER__SETTING__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&slim_message__looper__setting__descriptor) \
+    , 0, 0 }
 
 
-struct  _Setting
+struct  _SlimMessage__Looper
 {
   ProtobufCMessage base;
-  protobuf_c_boolean has_dry;
-  float dry;
+  uint32_t loop_number;
+  SlimMessage__Looper__Command command;
+  size_t n_settings;
+  SlimMessage__Looper__Setting **settings;
 };
-#define SETTING__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&setting__descriptor) \
-    , 0,0 }
+#define SLIM_MESSAGE__LOOPER__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&slim_message__looper__descriptor) \
+    , 0, 0, 0,NULL }
 
 
-struct  _LooperMessage
+struct  _SlimMessage__Global__Setting
 {
   ProtobufCMessage base;
-  MessageType type;
-  Command *command;
-  Setting *setting;
+  SlimMessage__Global__Setting__Name name;
+  float value;
 };
-#define LOOPER_MESSAGE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&looper_message__descriptor) \
+#define SLIM_MESSAGE__GLOBAL__SETTING__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&slim_message__global__setting__descriptor) \
+    , 0, 0 }
+
+
+struct  _SlimMessage__Global
+{
+  ProtobufCMessage base;
+  SlimMessage__Global__Command command;
+  size_t n_settings;
+  SlimMessage__Global__Setting **settings;
+};
+#define SLIM_MESSAGE__GLOBAL__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&slim_message__global__descriptor) \
+    , 0, 0,NULL }
+
+
+struct  _SlimMessage
+{
+  ProtobufCMessage base;
+  SlimMessage__Type type;
+  SlimMessage__Looper *looper;
+  SlimMessage__Global *global;
+};
+#define SLIM_MESSAGE__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&slim_message__descriptor) \
     , 0, NULL, NULL }
 
 
-/* Command methods */
-void   command__init
-                     (Command         *message);
-size_t command__get_packed_size
-                     (const Command   *message);
-size_t command__pack
-                     (const Command   *message,
+/* SlimMessage__Looper__Setting methods */
+void   slim_message__looper__setting__init
+                     (SlimMessage__Looper__Setting         *message);
+/* SlimMessage__Looper methods */
+void   slim_message__looper__init
+                     (SlimMessage__Looper         *message);
+/* SlimMessage__Global__Setting methods */
+void   slim_message__global__setting__init
+                     (SlimMessage__Global__Setting         *message);
+/* SlimMessage__Global methods */
+void   slim_message__global__init
+                     (SlimMessage__Global         *message);
+/* SlimMessage methods */
+void   slim_message__init
+                     (SlimMessage         *message);
+size_t slim_message__get_packed_size
+                     (const SlimMessage   *message);
+size_t slim_message__pack
+                     (const SlimMessage   *message,
                       uint8_t             *out);
-size_t command__pack_to_buffer
-                     (const Command   *message,
+size_t slim_message__pack_to_buffer
+                     (const SlimMessage   *message,
                       ProtobufCBuffer     *buffer);
-Command *
-       command__unpack
+SlimMessage *
+       slim_message__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   command__free_unpacked
-                     (Command *message,
-                      ProtobufCAllocator *allocator);
-/* Setting methods */
-void   setting__init
-                     (Setting         *message);
-size_t setting__get_packed_size
-                     (const Setting   *message);
-size_t setting__pack
-                     (const Setting   *message,
-                      uint8_t             *out);
-size_t setting__pack_to_buffer
-                     (const Setting   *message,
-                      ProtobufCBuffer     *buffer);
-Setting *
-       setting__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data);
-void   setting__free_unpacked
-                     (Setting *message,
-                      ProtobufCAllocator *allocator);
-/* LooperMessage methods */
-void   looper_message__init
-                     (LooperMessage         *message);
-size_t looper_message__get_packed_size
-                     (const LooperMessage   *message);
-size_t looper_message__pack
-                     (const LooperMessage   *message,
-                      uint8_t             *out);
-size_t looper_message__pack_to_buffer
-                     (const LooperMessage   *message,
-                      ProtobufCBuffer     *buffer);
-LooperMessage *
-       looper_message__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data);
-void   looper_message__free_unpacked
-                     (LooperMessage *message,
+void   slim_message__free_unpacked
+                     (SlimMessage *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*Command_Closure)
-                 (const Command *message,
+typedef void (*SlimMessage__Looper__Setting_Closure)
+                 (const SlimMessage__Looper__Setting *message,
                   void *closure_data);
-typedef void (*Setting_Closure)
-                 (const Setting *message,
+typedef void (*SlimMessage__Looper_Closure)
+                 (const SlimMessage__Looper *message,
                   void *closure_data);
-typedef void (*LooperMessage_Closure)
-                 (const LooperMessage *message,
+typedef void (*SlimMessage__Global__Setting_Closure)
+                 (const SlimMessage__Global__Setting *message,
+                  void *closure_data);
+typedef void (*SlimMessage__Global_Closure)
+                 (const SlimMessage__Global *message,
+                  void *closure_data);
+typedef void (*SlimMessage_Closure)
+                 (const SlimMessage *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -136,11 +157,16 @@ typedef void (*LooperMessage_Closure)
 
 /* --- descriptors --- */
 
-extern const ProtobufCEnumDescriptor    looper_command__descriptor;
-extern const ProtobufCEnumDescriptor    message_type__descriptor;
-extern const ProtobufCMessageDescriptor command__descriptor;
-extern const ProtobufCMessageDescriptor setting__descriptor;
-extern const ProtobufCMessageDescriptor looper_message__descriptor;
+extern const ProtobufCMessageDescriptor slim_message__descriptor;
+extern const ProtobufCMessageDescriptor slim_message__looper__descriptor;
+extern const ProtobufCMessageDescriptor slim_message__looper__setting__descriptor;
+extern const ProtobufCEnumDescriptor    slim_message__looper__setting__name__descriptor;
+extern const ProtobufCEnumDescriptor    slim_message__looper__command__descriptor;
+extern const ProtobufCMessageDescriptor slim_message__global__descriptor;
+extern const ProtobufCMessageDescriptor slim_message__global__setting__descriptor;
+extern const ProtobufCEnumDescriptor    slim_message__global__setting__name__descriptor;
+extern const ProtobufCEnumDescriptor    slim_message__global__command__descriptor;
+extern const ProtobufCEnumDescriptor    slim_message__type__descriptor;
 
 PROTOBUF_C_END_DECLS
 

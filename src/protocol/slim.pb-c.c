@@ -6,221 +6,198 @@
 #endif
 
 #include "slim.pb-c.h"
-void   command__init
-                     (Command         *message)
+void   slim_message__looper__setting__init
+                     (SlimMessage__Looper__Setting         *message)
 {
-  static Command init_value = COMMAND__INIT;
+  static SlimMessage__Looper__Setting init_value = SLIM_MESSAGE__LOOPER__SETTING__INIT;
   *message = init_value;
 }
-size_t command__get_packed_size
-                     (const Command *message)
+void   slim_message__looper__init
+                     (SlimMessage__Looper         *message)
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &command__descriptor);
+  static SlimMessage__Looper init_value = SLIM_MESSAGE__LOOPER__INIT;
+  *message = init_value;
+}
+void   slim_message__global__setting__init
+                     (SlimMessage__Global__Setting         *message)
+{
+  static SlimMessage__Global__Setting init_value = SLIM_MESSAGE__GLOBAL__SETTING__INIT;
+  *message = init_value;
+}
+void   slim_message__global__init
+                     (SlimMessage__Global         *message)
+{
+  static SlimMessage__Global init_value = SLIM_MESSAGE__GLOBAL__INIT;
+  *message = init_value;
+}
+void   slim_message__init
+                     (SlimMessage         *message)
+{
+  static SlimMessage init_value = SLIM_MESSAGE__INIT;
+  *message = init_value;
+}
+size_t slim_message__get_packed_size
+                     (const SlimMessage *message)
+{
+  PROTOBUF_C_ASSERT (message->base.descriptor == &slim_message__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t command__pack
-                     (const Command *message,
+size_t slim_message__pack
+                     (const SlimMessage *message,
                       uint8_t       *out)
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &command__descriptor);
+  PROTOBUF_C_ASSERT (message->base.descriptor == &slim_message__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t command__pack_to_buffer
-                     (const Command *message,
+size_t slim_message__pack_to_buffer
+                     (const SlimMessage *message,
                       ProtobufCBuffer *buffer)
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &command__descriptor);
+  PROTOBUF_C_ASSERT (message->base.descriptor == &slim_message__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Command *
-       command__unpack
+SlimMessage *
+       slim_message__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Command *)
-     protobuf_c_message_unpack (&command__descriptor,
+  return (SlimMessage *)
+     protobuf_c_message_unpack (&slim_message__descriptor,
                                 allocator, len, data);
 }
-void   command__free_unpacked
-                     (Command *message,
+void   slim_message__free_unpacked
+                     (SlimMessage *message,
                       ProtobufCAllocator *allocator)
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &command__descriptor);
+  PROTOBUF_C_ASSERT (message->base.descriptor == &slim_message__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   setting__init
-                     (Setting         *message)
+const ProtobufCEnumValue slim_message__looper__setting__name__enum_values_by_number[2] =
 {
-  static Setting init_value = SETTING__INIT;
-  *message = init_value;
-}
-size_t setting__get_packed_size
-                     (const Setting *message)
+  { "DRY", "SLIM_MESSAGE__LOOPER__SETTING__NAME__DRY", 1 },
+  { "WET", "SLIM_MESSAGE__LOOPER__SETTING__NAME__WET", 2 },
+};
+static const ProtobufCIntRange slim_message__looper__setting__name__value_ranges[] = {
+{1, 0},{0, 2}
+};
+const ProtobufCEnumValueIndex slim_message__looper__setting__name__enum_values_by_name[2] =
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &setting__descriptor);
-  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
-}
-size_t setting__pack
-                     (const Setting *message,
-                      uint8_t       *out)
+  { "DRY", 0 },
+  { "WET", 1 },
+};
+const ProtobufCEnumDescriptor slim_message__looper__setting__name__descriptor =
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &setting__descriptor);
-  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
-}
-size_t setting__pack_to_buffer
-                     (const Setting *message,
-                      ProtobufCBuffer *buffer)
+  PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
+  "SlimMessage.Looper.Setting.Name",
+  "Name",
+  "SlimMessage__Looper__Setting__Name",
+  "",
+  2,
+  slim_message__looper__setting__name__enum_values_by_number,
+  2,
+  slim_message__looper__setting__name__enum_values_by_name,
+  1,
+  slim_message__looper__setting__name__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCFieldDescriptor slim_message__looper__setting__field_descriptors[2] =
 {
-  PROTOBUF_C_ASSERT (message->base.descriptor == &setting__descriptor);
-  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
-}
-Setting *
-       setting__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data)
-{
-  return (Setting *)
-     protobuf_c_message_unpack (&setting__descriptor,
-                                allocator, len, data);
-}
-void   setting__free_unpacked
-                     (Setting *message,
-                      ProtobufCAllocator *allocator)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &setting__descriptor);
-  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
-}
-void   looper_message__init
-                     (LooperMessage         *message)
-{
-  static LooperMessage init_value = LOOPER_MESSAGE__INIT;
-  *message = init_value;
-}
-size_t looper_message__get_packed_size
-                     (const LooperMessage *message)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &looper_message__descriptor);
-  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
-}
-size_t looper_message__pack
-                     (const LooperMessage *message,
-                      uint8_t       *out)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &looper_message__descriptor);
-  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
-}
-size_t looper_message__pack_to_buffer
-                     (const LooperMessage *message,
-                      ProtobufCBuffer *buffer)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &looper_message__descriptor);
-  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
-}
-LooperMessage *
-       looper_message__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data)
-{
-  return (LooperMessage *)
-     protobuf_c_message_unpack (&looper_message__descriptor,
-                                allocator, len, data);
-}
-void   looper_message__free_unpacked
-                     (LooperMessage *message,
-                      ProtobufCAllocator *allocator)
-{
-  PROTOBUF_C_ASSERT (message->base.descriptor == &looper_message__descriptor);
-  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
-}
-static const ProtobufCFieldDescriptor command__field_descriptors[1] =
-{
+  {
+    "name",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage__Looper__Setting, name),
+    &slim_message__looper__setting__name__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
   {
     "value",
-    1,
+    2,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_ENUM,
-    0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(Command, value),
-    &looper_command__descriptor,
-    NULL,
-    0,            /* packed */
-    0,NULL,NULL    /* reserved1,reserved2, etc */
-  },
-};
-static const unsigned command__field_indices_by_name[] = {
-  0,   /* field[0] = value */
-};
-static const ProtobufCIntRange command__number_ranges[1 + 1] =
-{
-  { 1, 0 },
-  { 0, 1 }
-};
-const ProtobufCMessageDescriptor command__descriptor =
-{
-  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
-  "Command",
-  "Command",
-  "Command",
-  "",
-  sizeof(Command),
-  1,
-  command__field_descriptors,
-  command__field_indices_by_name,
-  1,  command__number_ranges,
-  (ProtobufCMessageInit) command__init,
-  NULL,NULL,NULL    /* reserved[123] */
-};
-static const ProtobufCFieldDescriptor setting__field_descriptors[1] =
-{
-  {
-    "dry",
-    1,
-    PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_FLOAT,
-    PROTOBUF_C_OFFSETOF(Setting, has_dry),
-    PROTOBUF_C_OFFSETOF(Setting, dry),
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage__Looper__Setting, value),
     NULL,
     NULL,
     0,            /* packed */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned setting__field_indices_by_name[] = {
-  0,   /* field[0] = dry */
+static const unsigned slim_message__looper__setting__field_indices_by_name[] = {
+  0,   /* field[0] = name */
+  1,   /* field[1] = value */
 };
-static const ProtobufCIntRange setting__number_ranges[1 + 1] =
+static const ProtobufCIntRange slim_message__looper__setting__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 1 }
+  { 0, 2 }
 };
-const ProtobufCMessageDescriptor setting__descriptor =
+const ProtobufCMessageDescriptor slim_message__looper__setting__descriptor =
 {
   PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+  "SlimMessage.Looper.Setting",
   "Setting",
-  "Setting",
-  "Setting",
+  "SlimMessage__Looper__Setting",
   "",
-  sizeof(Setting),
-  1,
-  setting__field_descriptors,
-  setting__field_indices_by_name,
-  1,  setting__number_ranges,
-  (ProtobufCMessageInit) setting__init,
+  sizeof(SlimMessage__Looper__Setting),
+  2,
+  slim_message__looper__setting__field_descriptors,
+  slim_message__looper__setting__field_indices_by_name,
+  1,  slim_message__looper__setting__number_ranges,
+  (ProtobufCMessageInit) slim_message__looper__setting__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor looper_message__field_descriptors[3] =
+const ProtobufCEnumValue slim_message__looper__command__enum_values_by_number[6] =
+{
+  { "SET", "SLIM_MESSAGE__LOOPER__COMMAND__SET", 0 },
+  { "PAUSE", "SLIM_MESSAGE__LOOPER__COMMAND__PAUSE", 1 },
+  { "RECORD", "SLIM_MESSAGE__LOOPER__COMMAND__RECORD", 2 },
+  { "OVERDUB", "SLIM_MESSAGE__LOOPER__COMMAND__OVERDUB", 3 },
+  { "INSERT", "SLIM_MESSAGE__LOOPER__COMMAND__INSERT", 4 },
+  { "REPLACE", "SLIM_MESSAGE__LOOPER__COMMAND__REPLACE", 5 },
+};
+static const ProtobufCIntRange slim_message__looper__command__value_ranges[] = {
+{0, 0},{0, 6}
+};
+const ProtobufCEnumValueIndex slim_message__looper__command__enum_values_by_name[6] =
+{
+  { "INSERT", 4 },
+  { "OVERDUB", 3 },
+  { "PAUSE", 1 },
+  { "RECORD", 2 },
+  { "REPLACE", 5 },
+  { "SET", 0 },
+};
+const ProtobufCEnumDescriptor slim_message__looper__command__descriptor =
+{
+  PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
+  "SlimMessage.Looper.Command",
+  "Command",
+  "SlimMessage__Looper__Command",
+  "",
+  6,
+  slim_message__looper__command__enum_values_by_number,
+  6,
+  slim_message__looper__command__enum_values_by_name,
+  1,
+  slim_message__looper__command__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCFieldDescriptor slim_message__looper__field_descriptors[3] =
 {
   {
-    "type",
+    "loop_number",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_ENUM,
+    PROTOBUF_C_TYPE_UINT32,
     0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(LooperMessage, type),
-    &message_type__descriptor,
+    PROTOBUF_C_OFFSETOF(SlimMessage__Looper, loop_number),
+    NULL,
     NULL,
     0,            /* packed */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -228,112 +205,300 @@ static const ProtobufCFieldDescriptor looper_message__field_descriptors[3] =
   {
     "command",
     2,
-    PROTOBUF_C_LABEL_OPTIONAL,
-    PROTOBUF_C_TYPE_MESSAGE,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(LooperMessage, command),
-    &command__descriptor,
+    PROTOBUF_C_OFFSETOF(SlimMessage__Looper, command),
+    &slim_message__looper__command__descriptor,
     NULL,
     0,            /* packed */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "setting",
+    "settings",
     3,
-    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    0,   /* quantifier_offset */
-    PROTOBUF_C_OFFSETOF(LooperMessage, setting),
-    &setting__descriptor,
+    PROTOBUF_C_OFFSETOF(SlimMessage__Looper, n_settings),
+    PROTOBUF_C_OFFSETOF(SlimMessage__Looper, settings),
+    &slim_message__looper__setting__descriptor,
     NULL,
     0,            /* packed */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned looper_message__field_indices_by_name[] = {
+static const unsigned slim_message__looper__field_indices_by_name[] = {
   1,   /* field[1] = command */
-  2,   /* field[2] = setting */
-  0,   /* field[0] = type */
+  0,   /* field[0] = loop_number */
+  2,   /* field[2] = settings */
 };
-static const ProtobufCIntRange looper_message__number_ranges[1 + 1] =
+static const ProtobufCIntRange slim_message__looper__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor looper_message__descriptor =
+const ProtobufCMessageDescriptor slim_message__looper__descriptor =
 {
   PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
-  "LooperMessage",
-  "LooperMessage",
-  "LooperMessage",
+  "SlimMessage.Looper",
+  "Looper",
+  "SlimMessage__Looper",
   "",
-  sizeof(LooperMessage),
+  sizeof(SlimMessage__Looper),
   3,
-  looper_message__field_descriptors,
-  looper_message__field_indices_by_name,
-  1,  looper_message__number_ranges,
-  (ProtobufCMessageInit) looper_message__init,
+  slim_message__looper__field_descriptors,
+  slim_message__looper__field_indices_by_name,
+  1,  slim_message__looper__number_ranges,
+  (ProtobufCMessageInit) slim_message__looper__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-const ProtobufCEnumValue looper_command__enum_values_by_number[5] =
+const ProtobufCEnumValue slim_message__global__setting__name__enum_values_by_number[2] =
 {
-  { "PAUSE", "LOOPER_COMMAND__PAUSE", 0 },
-  { "RECORD", "LOOPER_COMMAND__RECORD", 1 },
-  { "OVERDUB", "LOOPER_COMMAND__OVERDUB", 2 },
-  { "INSERT", "LOOPER_COMMAND__INSERT", 3 },
-  { "REPLACE", "LOOPER_COMMAND__REPLACE", 4 },
+  { "DRY", "SLIM_MESSAGE__GLOBAL__SETTING__NAME__DRY", 1 },
+  { "WET", "SLIM_MESSAGE__GLOBAL__SETTING__NAME__WET", 2 },
 };
-static const ProtobufCIntRange looper_command__value_ranges[] = {
-{0, 0},{0, 5}
+static const ProtobufCIntRange slim_message__global__setting__name__value_ranges[] = {
+{1, 0},{0, 2}
 };
-const ProtobufCEnumValueIndex looper_command__enum_values_by_name[5] =
+const ProtobufCEnumValueIndex slim_message__global__setting__name__enum_values_by_name[2] =
 {
-  { "INSERT", 3 },
-  { "OVERDUB", 2 },
-  { "PAUSE", 0 },
-  { "RECORD", 1 },
-  { "REPLACE", 4 },
+  { "DRY", 0 },
+  { "WET", 1 },
 };
-const ProtobufCEnumDescriptor looper_command__descriptor =
+const ProtobufCEnumDescriptor slim_message__global__setting__name__descriptor =
 {
   PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
-  "LooperCommand",
-  "LooperCommand",
-  "LooperCommand",
+  "SlimMessage.Global.Setting.Name",
+  "Name",
+  "SlimMessage__Global__Setting__Name",
   "",
-  5,
-  looper_command__enum_values_by_number,
-  5,
-  looper_command__enum_values_by_name,
+  2,
+  slim_message__global__setting__name__enum_values_by_number,
+  2,
+  slim_message__global__setting__name__enum_values_by_name,
   1,
-  looper_command__value_ranges,
+  slim_message__global__setting__name__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
 };
-const ProtobufCEnumValue message_type__enum_values_by_number[2] =
+static const ProtobufCFieldDescriptor slim_message__global__setting__field_descriptors[2] =
 {
-  { "COMMAND", "MESSAGE_TYPE__COMMAND", 0 },
-  { "SETTING", "MESSAGE_TYPE__SETTING", 1 },
+  {
+    "name",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage__Global__Setting, name),
+    &slim_message__global__setting__name__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "value",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_FLOAT,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage__Global__Setting, value),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
-static const ProtobufCIntRange message_type__value_ranges[] = {
+static const unsigned slim_message__global__setting__field_indices_by_name[] = {
+  0,   /* field[0] = name */
+  1,   /* field[1] = value */
+};
+static const ProtobufCIntRange slim_message__global__setting__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor slim_message__global__setting__descriptor =
+{
+  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+  "SlimMessage.Global.Setting",
+  "Setting",
+  "SlimMessage__Global__Setting",
+  "",
+  sizeof(SlimMessage__Global__Setting),
+  2,
+  slim_message__global__setting__field_descriptors,
+  slim_message__global__setting__field_indices_by_name,
+  1,  slim_message__global__setting__number_ranges,
+  (ProtobufCMessageInit) slim_message__global__setting__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+const ProtobufCEnumValue slim_message__global__command__enum_values_by_number[2] =
+{
+  { "SET", "SLIM_MESSAGE__GLOBAL__COMMAND__SET", 0 },
+  { "QUIT", "SLIM_MESSAGE__GLOBAL__COMMAND__QUIT", 1 },
+};
+static const ProtobufCIntRange slim_message__global__command__value_ranges[] = {
 {0, 0},{0, 2}
 };
-const ProtobufCEnumValueIndex message_type__enum_values_by_name[2] =
+const ProtobufCEnumValueIndex slim_message__global__command__enum_values_by_name[2] =
 {
-  { "COMMAND", 0 },
-  { "SETTING", 1 },
+  { "QUIT", 1 },
+  { "SET", 0 },
 };
-const ProtobufCEnumDescriptor message_type__descriptor =
+const ProtobufCEnumDescriptor slim_message__global__command__descriptor =
 {
   PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
-  "MessageType",
-  "MessageType",
-  "MessageType",
+  "SlimMessage.Global.Command",
+  "Command",
+  "SlimMessage__Global__Command",
   "",
   2,
-  message_type__enum_values_by_number,
+  slim_message__global__command__enum_values_by_number,
   2,
-  message_type__enum_values_by_name,
+  slim_message__global__command__enum_values_by_name,
   1,
-  message_type__value_ranges,
+  slim_message__global__command__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCFieldDescriptor slim_message__global__field_descriptors[2] =
+{
+  {
+    "command",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage__Global, command),
+    &slim_message__global__command__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "settings",
+    3,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    PROTOBUF_C_OFFSETOF(SlimMessage__Global, n_settings),
+    PROTOBUF_C_OFFSETOF(SlimMessage__Global, settings),
+    &slim_message__global__setting__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned slim_message__global__field_indices_by_name[] = {
+  0,   /* field[0] = command */
+  1,   /* field[1] = settings */
+};
+static const ProtobufCIntRange slim_message__global__number_ranges[1 + 1] =
+{
+  { 2, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor slim_message__global__descriptor =
+{
+  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+  "SlimMessage.Global",
+  "Global",
+  "SlimMessage__Global",
+  "",
+  sizeof(SlimMessage__Global),
+  2,
+  slim_message__global__field_descriptors,
+  slim_message__global__field_indices_by_name,
+  1,  slim_message__global__number_ranges,
+  (ProtobufCMessageInit) slim_message__global__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+const ProtobufCEnumValue slim_message__type__enum_values_by_number[2] =
+{
+  { "LOOPER", "SLIM_MESSAGE__TYPE__LOOPER", 0 },
+  { "GLOBAL", "SLIM_MESSAGE__TYPE__GLOBAL", 1 },
+};
+static const ProtobufCIntRange slim_message__type__value_ranges[] = {
+{0, 0},{0, 2}
+};
+const ProtobufCEnumValueIndex slim_message__type__enum_values_by_name[2] =
+{
+  { "GLOBAL", 1 },
+  { "LOOPER", 0 },
+};
+const ProtobufCEnumDescriptor slim_message__type__descriptor =
+{
+  PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
+  "SlimMessage.Type",
+  "Type",
+  "SlimMessage__Type",
+  "",
+  2,
+  slim_message__type__enum_values_by_number,
+  2,
+  slim_message__type__enum_values_by_name,
+  1,
+  slim_message__type__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCFieldDescriptor slim_message__field_descriptors[3] =
+{
+  {
+    "type",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage, type),
+    &slim_message__type__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "looper",
+    2,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage, looper),
+    &slim_message__looper__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "global",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(SlimMessage, global),
+    &slim_message__global__descriptor,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned slim_message__field_indices_by_name[] = {
+  2,   /* field[2] = global */
+  1,   /* field[1] = looper */
+  0,   /* field[0] = type */
+};
+static const ProtobufCIntRange slim_message__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 3 }
+};
+const ProtobufCMessageDescriptor slim_message__descriptor =
+{
+  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+  "SlimMessage",
+  "SlimMessage",
+  "SlimMessage",
+  "",
+  sizeof(SlimMessage),
+  3,
+  slim_message__field_descriptors,
+  slim_message__field_indices_by_name,
+  1,  slim_message__number_ranges,
+  (ProtobufCMessageInit) slim_message__init,
+  NULL,NULL,NULL    /* reserved[123] */
 };

@@ -4,7 +4,7 @@ from PySide import QtCore, QtGui
 from mainwindow import Ui_MainWindow
 
 import socket
-import slim_pb2
+from slim_pb2 import SlimMessage
 
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 s.connect("/tmp/slim_socket")
@@ -16,21 +16,27 @@ class ControlMainWindow(QtGui.QMainWindow):
         self.ui.setupUi(self)
 
 def playPause():
-    msg = slim_pb2.LooperMessage()
-    msg.type = slim_pb2.COMMAND
-    msg.command.value = slim_pb2.PAUSE 
+    msg = SlimMessage()
+    msg.type = SlimMessage.LOOPER
+    msg.looper.loop_number = 0 
+    msg.looper.command = SlimMessage.Looper.PAUSE 
     s.send(msg.SerializeToString())
 
 def record():
-    msg = slim_pb2.LooperMessage()
-    msg.type = slim_pb2.COMMAND
-    msg.command.value = slim_pb2.RECORD
+    msg = SlimMessage()
+    msg.type = SlimMessage.LOOPER
+    msg.looper.loop_number = 0 
+    msg.looper.command = SlimMessage.Looper.RECORD
     s.send(msg.SerializeToString())
 
 def dryValueChanged():
-    msg = slim_pb2.LooperMessage()
-    msg.type = slim_pb2.SETTING
-    msg.setting.dry = mySW.ui.drySlider.value()/100.0
+    msg = SlimMessage()
+    msg.type = SlimMessage.LOOPER
+    msg.looper.loop_number = 0 
+    msg.looper.command = SlimMessage.Looper.SET
+    setting = msg.looper.settings.add()
+    setting.name = SlimMessage.Looper.Setting.DRY 
+    setting.value = mySW.ui.drySlider.value()/100.0
     s.send(msg.SerializeToString())
 
 if __name__ == "__main__":

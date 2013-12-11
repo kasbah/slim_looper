@@ -1,24 +1,54 @@
-enum LooperCommand {
-    PAUSE         = 0;
-    RECORD        = 1;
-    OVERDUB       = 2;
-    INSERT        = 3;
-    REPLACE       = 4;
-};
+message SlimMessage {
+    enum Type {
+        LOOPER = 0;
+        GLOBAL = 1;
+    }
+    required Type type = 1;
 
-enum MessageType {
-    COMMAND = 0;
-    SETTING = 1;
-};
+    message Looper { 
+        required uint32 loop_number = 1;
+        enum Command {
+            SET     = 0;
+            PAUSE   = 1;
+            RECORD  = 2;
+            OVERDUB = 3;
+            INSERT  = 4;
+            REPLACE = 5;
+        }
+        required Command command = 2;
 
-message Command {
-    required LooperCommand value = 1;
-}
-message Setting {
-    optional float dry = 1;
-}
-message LooperMessage {
-    required MessageType type = 1;
-    optional Command command  = 2;
-    optional Setting setting  = 3;
+        //settings are only read if command is "SET"
+        message Setting {
+            enum Name {
+                DRY = 1;
+                WET = 2;
+            }
+            required Name name   = 1;
+            required float value = 2;
+        }
+        repeated Setting settings = 3;
+
+    }
+
+    message Global {
+        enum Command {
+            SET  = 0;
+            QUIT = 1;
+        };
+        required Command command = 2;
+
+        //settings are only read if command is "SET"
+        message Setting {
+            enum Name {
+                DRY = 1;
+                WET = 2;
+            }
+            required Name name   = 1;
+            required float value = 2;
+        }
+        repeated Setting settings = 3;
+    }
+
+    optional Looper looper  = 2;
+    optional Global global  = 3;
 }

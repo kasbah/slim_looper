@@ -80,29 +80,34 @@ void slim_work_loop(Slim* slim)
 {
     Socket* socket = slim_socket_new();
     char buffer[256];
-    LooperMessage* msg;
+    SlimMessage* msg;
     while (1)
     {
         int n = read(socket->connection_fd, buffer, 255);
         if (n < 0) perror("ERROR reading from socket");
         else if (n > 0)
         {
-            msg = looper_message__unpack(NULL, n, buffer);
+            msg = slim_message__unpack(NULL, n, buffer);
             if (msg > 0)
             {
                 switch(msg->type)
                 {
-                    case MESSAGE_TYPE__COMMAND:
-                        printf ("command: %i\r\n", msg->command->value);
-                        break;
-                    case MESSAGE_TYPE__SETTING:
-                        printf ("setting dry: %f\r\n", msg->setting->dry);
+                    case SLIM_MESSAGE__TYPE__LOOPER:
+                        printf ("command: %i\r\n", msg->looper->command);
+                        if (msg->looper->command == SLIM_MESSAGE__LOOPER__COMMAND__SET)
+                        {
+                            for (int i = 0; i < (msg->looper->n_settings); i++)
+                            {
+                                SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
+                                printf("setting: %i %f\r\n", setting->name, setting->value);
+                            }
+                        }
                         break;
                 }
             }
-            else if (msg < 0)
+            else if (msg == NULL)
             {
-                perror("fuck");
+                perror("Error unpacking message");
             }
         }
     }

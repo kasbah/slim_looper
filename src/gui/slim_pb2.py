@@ -11,112 +11,149 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='slim.proto',
   package='',
-  serialized_pb='\n\nslim.proto\"(\n\x07\x43ommand\x12\x1d\n\x05value\x18\x01 \x02(\x0e\x32\x0e.LooperCommand\"\x16\n\x07Setting\x12\x0b\n\x03\x64ry\x18\x01 \x01(\x02\"a\n\rLooperMessage\x12\x1a\n\x04type\x18\x01 \x02(\x0e\x32\x0c.MessageType\x12\x19\n\x07\x63ommand\x18\x02 \x01(\x0b\x32\x08.Command\x12\x19\n\x07setting\x18\x03 \x01(\x0b\x32\x08.Setting*L\n\rLooperCommand\x12\t\n\x05PAUSE\x10\x00\x12\n\n\x06RECORD\x10\x01\x12\x0b\n\x07OVERDUB\x10\x02\x12\n\n\x06INSERT\x10\x03\x12\x0b\n\x07REPLACE\x10\x04*\'\n\x0bMessageType\x12\x0b\n\x07\x43OMMAND\x10\x00\x12\x0b\n\x07SETTING\x10\x01')
+  serialized_pb='\n\nslim.proto\"\xb4\x05\n\x0bSlimMessage\x12\x1f\n\x04type\x18\x01 \x02(\x0e\x32\x11.SlimMessage.Type\x12#\n\x06looper\x18\x02 \x01(\x0b\x32\x13.SlimMessage.Looper\x12#\n\x06global\x18\x03 \x01(\x0b\x32\x13.SlimMessage.Global\x1a\xaf\x02\n\x06Looper\x12\x13\n\x0bloop_number\x18\x01 \x02(\r\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Looper.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Looper.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Looper.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x01\x12\x07\n\x03WET\x10\x02\"O\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\n\n\x06RECORD\x10\x02\x12\x0b\n\x07OVERDUB\x10\x03\x12\n\n\x06INSERT\x10\x04\x12\x0b\n\x07REPLACE\x10\x05\x1a\xe7\x01\n\x06Global\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Global.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Global.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Global.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x01\x12\x07\n\x03WET\x10\x02\"\x1c\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\x08\n\x04QUIT\x10\x01\"\x1e\n\x04Type\x12\n\n\x06LOOPER\x10\x00\x12\n\n\x06GLOBAL\x10\x01')
 
-_LOOPERCOMMAND = descriptor.EnumDescriptor(
-  name='LooperCommand',
-  full_name='LooperCommand',
+
+
+_SLIMMESSAGE_LOOPER_SETTING_NAME = descriptor.EnumDescriptor(
+  name='Name',
+  full_name='SlimMessage.Looper.Setting.Name',
   filename=None,
   file=DESCRIPTOR,
   values=[
     descriptor.EnumValueDescriptor(
-      name='PAUSE', index=0, number=0,
+      name='DRY', index=0, number=1,
       options=None,
       type=None),
     descriptor.EnumValueDescriptor(
-      name='RECORD', index=1, number=1,
-      options=None,
-      type=None),
-    descriptor.EnumValueDescriptor(
-      name='OVERDUB', index=2, number=2,
-      options=None,
-      type=None),
-    descriptor.EnumValueDescriptor(
-      name='INSERT', index=3, number=3,
-      options=None,
-      type=None),
-    descriptor.EnumValueDescriptor(
-      name='REPLACE', index=4, number=4,
+      name='WET', index=1, number=2,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=179,
-  serialized_end=255,
+  serialized_start=336,
+  serialized_end=360,
 )
 
-
-_MESSAGETYPE = descriptor.EnumDescriptor(
-  name='MessageType',
-  full_name='MessageType',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    descriptor.EnumValueDescriptor(
-      name='COMMAND', index=0, number=0,
-      options=None,
-      type=None),
-    descriptor.EnumValueDescriptor(
-      name='SETTING', index=1, number=1,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=257,
-  serialized_end=296,
-)
-
-
-PAUSE = 0
-RECORD = 1
-OVERDUB = 2
-INSERT = 3
-REPLACE = 4
-COMMAND = 0
-SETTING = 1
-
-
-
-_COMMAND = descriptor.Descriptor(
+_SLIMMESSAGE_LOOPER_COMMAND = descriptor.EnumDescriptor(
   name='Command',
-  full_name='Command',
+  full_name='SlimMessage.Looper.Command',
   filename=None,
   file=DESCRIPTOR,
+  values=[
+    descriptor.EnumValueDescriptor(
+      name='SET', index=0, number=0,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='PAUSE', index=1, number=1,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='RECORD', index=2, number=2,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='OVERDUB', index=3, number=3,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='INSERT', index=4, number=4,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='REPLACE', index=5, number=5,
+      options=None,
+      type=None),
+  ],
   containing_type=None,
-  fields=[
-    descriptor.FieldDescriptor(
-      name='value', full_name='Command.value', index=0,
-      number=1, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
   options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=14,
-  serialized_end=54,
+  serialized_start=362,
+  serialized_end=441,
+)
+
+_SLIMMESSAGE_GLOBAL_SETTING_NAME = descriptor.EnumDescriptor(
+  name='Name',
+  full_name='SlimMessage.Global.Setting.Name',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    descriptor.EnumValueDescriptor(
+      name='DRY', index=0, number=1,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='WET', index=1, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=336,
+  serialized_end=360,
+)
+
+_SLIMMESSAGE_GLOBAL_COMMAND = descriptor.EnumDescriptor(
+  name='Command',
+  full_name='SlimMessage.Global.Command',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    descriptor.EnumValueDescriptor(
+      name='SET', index=0, number=0,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='QUIT', index=1, number=1,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=647,
+  serialized_end=675,
+)
+
+_SLIMMESSAGE_TYPE = descriptor.EnumDescriptor(
+  name='Type',
+  full_name='SlimMessage.Type',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    descriptor.EnumValueDescriptor(
+      name='LOOPER', index=0, number=0,
+      options=None,
+      type=None),
+    descriptor.EnumValueDescriptor(
+      name='GLOBAL', index=1, number=1,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=677,
+  serialized_end=707,
 )
 
 
-_SETTING = descriptor.Descriptor(
+_SLIMMESSAGE_LOOPER_SETTING = descriptor.Descriptor(
   name='Setting',
-  full_name='Setting',
+  full_name='SlimMessage.Looper.Setting',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='dry', full_name='Setting.dry', index=0,
-      number=1, type=2, cpp_type=6, label=1,
+      name='name', full_name='SlimMessage.Looper.Setting.name', index=0,
+      number=1, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=1,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='value', full_name='SlimMessage.Looper.Setting.value', index=1,
+      number=2, type=2, cpp_type=6, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -126,38 +163,150 @@ _SETTING = descriptor.Descriptor(
   ],
   nested_types=[],
   enum_types=[
+    _SLIMMESSAGE_LOOPER_SETTING_NAME,
   ],
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=56,
-  serialized_end=78,
+  serialized_start=262,
+  serialized_end=360,
 )
 
-
-_LOOPERMESSAGE = descriptor.Descriptor(
-  name='LooperMessage',
-  full_name='LooperMessage',
+_SLIMMESSAGE_LOOPER = descriptor.Descriptor(
+  name='Looper',
+  full_name='SlimMessage.Looper',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='type', full_name='LooperMessage.type', index=0,
+      name='loop_number', full_name='SlimMessage.Looper.loop_number', index=0,
+      number=1, type=13, cpp_type=3, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='command', full_name='SlimMessage.Looper.command', index=1,
+      number=2, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='settings', full_name='SlimMessage.Looper.settings', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[_SLIMMESSAGE_LOOPER_SETTING, ],
+  enum_types=[
+    _SLIMMESSAGE_LOOPER_COMMAND,
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=138,
+  serialized_end=441,
+)
+
+_SLIMMESSAGE_GLOBAL_SETTING = descriptor.Descriptor(
+  name='Setting',
+  full_name='SlimMessage.Global.Setting',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    descriptor.FieldDescriptor(
+      name='name', full_name='SlimMessage.Global.Setting.name', index=0,
+      number=1, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=1,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='value', full_name='SlimMessage.Global.Setting.value', index=1,
+      number=2, type=2, cpp_type=6, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+    _SLIMMESSAGE_GLOBAL_SETTING_NAME,
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=547,
+  serialized_end=645,
+)
+
+_SLIMMESSAGE_GLOBAL = descriptor.Descriptor(
+  name='Global',
+  full_name='SlimMessage.Global',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    descriptor.FieldDescriptor(
+      name='command', full_name='SlimMessage.Global.command', index=0,
+      number=2, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    descriptor.FieldDescriptor(
+      name='settings', full_name='SlimMessage.Global.settings', index=1,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[_SLIMMESSAGE_GLOBAL_SETTING, ],
+  enum_types=[
+    _SLIMMESSAGE_GLOBAL_COMMAND,
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=444,
+  serialized_end=675,
+)
+
+_SLIMMESSAGE = descriptor.Descriptor(
+  name='SlimMessage',
+  full_name='SlimMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    descriptor.FieldDescriptor(
+      name='type', full_name='SlimMessage.type', index=0,
       number=1, type=14, cpp_type=8, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='command', full_name='LooperMessage.command', index=1,
+      name='looper', full_name='SlimMessage.looper', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     descriptor.FieldDescriptor(
-      name='setting', full_name='LooperMessage.setting', index=2,
+      name='global', full_name='SlimMessage.global', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -166,40 +315,65 @@ _LOOPERMESSAGE = descriptor.Descriptor(
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_SLIMMESSAGE_LOOPER, _SLIMMESSAGE_GLOBAL, ],
   enum_types=[
+    _SLIMMESSAGE_TYPE,
   ],
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=80,
-  serialized_end=177,
+  serialized_start=15,
+  serialized_end=707,
 )
 
-_COMMAND.fields_by_name['value'].enum_type = _LOOPERCOMMAND
-_LOOPERMESSAGE.fields_by_name['type'].enum_type = _MESSAGETYPE
-_LOOPERMESSAGE.fields_by_name['command'].message_type = _COMMAND
-_LOOPERMESSAGE.fields_by_name['setting'].message_type = _SETTING
-DESCRIPTOR.message_types_by_name['Command'] = _COMMAND
-DESCRIPTOR.message_types_by_name['Setting'] = _SETTING
-DESCRIPTOR.message_types_by_name['LooperMessage'] = _LOOPERMESSAGE
+_SLIMMESSAGE_LOOPER_SETTING.fields_by_name['name'].enum_type = _SLIMMESSAGE_LOOPER_SETTING_NAME
+_SLIMMESSAGE_LOOPER_SETTING.containing_type = _SLIMMESSAGE_LOOPER;
+_SLIMMESSAGE_LOOPER_SETTING_NAME.containing_type = _SLIMMESSAGE_LOOPER_SETTING;
+_SLIMMESSAGE_LOOPER.fields_by_name['command'].enum_type = _SLIMMESSAGE_LOOPER_COMMAND
+_SLIMMESSAGE_LOOPER.fields_by_name['settings'].message_type = _SLIMMESSAGE_LOOPER_SETTING
+_SLIMMESSAGE_LOOPER.containing_type = _SLIMMESSAGE;
+_SLIMMESSAGE_LOOPER_COMMAND.containing_type = _SLIMMESSAGE_LOOPER;
+_SLIMMESSAGE_GLOBAL_SETTING.fields_by_name['name'].enum_type = _SLIMMESSAGE_GLOBAL_SETTING_NAME
+_SLIMMESSAGE_GLOBAL_SETTING.containing_type = _SLIMMESSAGE_GLOBAL;
+_SLIMMESSAGE_GLOBAL_SETTING_NAME.containing_type = _SLIMMESSAGE_GLOBAL_SETTING;
+_SLIMMESSAGE_GLOBAL.fields_by_name['command'].enum_type = _SLIMMESSAGE_GLOBAL_COMMAND
+_SLIMMESSAGE_GLOBAL.fields_by_name['settings'].message_type = _SLIMMESSAGE_GLOBAL_SETTING
+_SLIMMESSAGE_GLOBAL.containing_type = _SLIMMESSAGE;
+_SLIMMESSAGE_GLOBAL_COMMAND.containing_type = _SLIMMESSAGE_GLOBAL;
+_SLIMMESSAGE.fields_by_name['type'].enum_type = _SLIMMESSAGE_TYPE
+_SLIMMESSAGE.fields_by_name['looper'].message_type = _SLIMMESSAGE_LOOPER
+_SLIMMESSAGE.fields_by_name['global'].message_type = _SLIMMESSAGE_GLOBAL
+_SLIMMESSAGE_TYPE.containing_type = _SLIMMESSAGE;
+DESCRIPTOR.message_types_by_name['SlimMessage'] = _SLIMMESSAGE
 
-class Command(message.Message):
+class SlimMessage(message.Message):
   __metaclass__ = reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _COMMAND
   
-  # @@protoc_insertion_point(class_scope:Command)
-
-class Setting(message.Message):
-  __metaclass__ = reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _SETTING
+  class Looper(message.Message):
+    __metaclass__ = reflection.GeneratedProtocolMessageType
+    
+    class Setting(message.Message):
+      __metaclass__ = reflection.GeneratedProtocolMessageType
+      DESCRIPTOR = _SLIMMESSAGE_LOOPER_SETTING
+      
+      # @@protoc_insertion_point(class_scope:SlimMessage.Looper.Setting)
+    DESCRIPTOR = _SLIMMESSAGE_LOOPER
+    
+    # @@protoc_insertion_point(class_scope:SlimMessage.Looper)
   
-  # @@protoc_insertion_point(class_scope:Setting)
-
-class LooperMessage(message.Message):
-  __metaclass__ = reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _LOOPERMESSAGE
+  class Global(message.Message):
+    __metaclass__ = reflection.GeneratedProtocolMessageType
+    
+    class Setting(message.Message):
+      __metaclass__ = reflection.GeneratedProtocolMessageType
+      DESCRIPTOR = _SLIMMESSAGE_GLOBAL_SETTING
+      
+      # @@protoc_insertion_point(class_scope:SlimMessage.Global.Setting)
+    DESCRIPTOR = _SLIMMESSAGE_GLOBAL
+    
+    # @@protoc_insertion_point(class_scope:SlimMessage.Global)
+  DESCRIPTOR = _SLIMMESSAGE
   
-  # @@protoc_insertion_point(class_scope:LooperMessage)
+  # @@protoc_insertion_point(class_scope:SlimMessage)
 
 # @@protoc_insertion_point(module_scope)
