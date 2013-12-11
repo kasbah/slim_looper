@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='slim.proto',
   package='',
-  serialized_pb='\n\nslim.proto\"\xb4\x05\n\x0bSlimMessage\x12\x1f\n\x04type\x18\x01 \x02(\x0e\x32\x11.SlimMessage.Type\x12#\n\x06looper\x18\x02 \x01(\x0b\x32\x13.SlimMessage.Looper\x12#\n\x06global\x18\x03 \x01(\x0b\x32\x13.SlimMessage.Global\x1a\xaf\x02\n\x06Looper\x12\x13\n\x0bloop_number\x18\x01 \x02(\r\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Looper.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Looper.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Looper.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x01\x12\x07\n\x03WET\x10\x02\"O\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\n\n\x06RECORD\x10\x02\x12\x0b\n\x07OVERDUB\x10\x03\x12\n\n\x06INSERT\x10\x04\x12\x0b\n\x07REPLACE\x10\x05\x1a\xe7\x01\n\x06Global\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Global.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Global.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Global.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x01\x12\x07\n\x03WET\x10\x02\"\x1c\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\x08\n\x04QUIT\x10\x01\"\x1e\n\x04Type\x12\n\n\x06LOOPER\x10\x00\x12\n\n\x06GLOBAL\x10\x01')
+  serialized_pb='\n\nslim.proto\"\xb4\x05\n\x0bSlimMessage\x12\x1f\n\x04type\x18\x01 \x02(\x0e\x32\x11.SlimMessage.Type\x12#\n\x06looper\x18\x02 \x01(\x0b\x32\x13.SlimMessage.Looper\x12#\n\x06global\x18\x03 \x01(\x0b\x32\x13.SlimMessage.Global\x1a\xaf\x02\n\x06Looper\x12\x13\n\x0bloop_number\x18\x01 \x02(\r\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Looper.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Looper.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Looper.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x00\x12\x07\n\x03WET\x10\x01\"O\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\n\n\x06RECORD\x10\x02\x12\x0b\n\x07OVERDUB\x10\x03\x12\n\n\x06INSERT\x10\x04\x12\x0b\n\x07REPLACE\x10\x05\x1a\xe7\x01\n\x06Global\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Global.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Global.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Global.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x00\x12\x07\n\x03WET\x10\x01\"\x1c\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\x08\n\x04QUIT\x10\x01\"\x1e\n\x04Type\x12\n\n\x06LOOPER\x10\x00\x12\n\n\x06GLOBAL\x10\x01')
 
 
 
@@ -22,11 +22,11 @@ _SLIMMESSAGE_LOOPER_SETTING_NAME = descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     descriptor.EnumValueDescriptor(
-      name='DRY', index=0, number=1,
+      name='DRY', index=0, number=0,
       options=None,
       type=None),
     descriptor.EnumValueDescriptor(
-      name='WET', index=1, number=2,
+      name='WET', index=1, number=1,
       options=None,
       type=None),
   ],
@@ -80,11 +80,11 @@ _SLIMMESSAGE_GLOBAL_SETTING_NAME = descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     descriptor.EnumValueDescriptor(
-      name='DRY', index=0, number=1,
+      name='DRY', index=0, number=0,
       options=None,
       type=None),
     descriptor.EnumValueDescriptor(
-      name='WET', index=1, number=2,
+      name='WET', index=1, number=1,
       options=None,
       type=None),
   ],
@@ -147,7 +147,7 @@ _SLIMMESSAGE_LOOPER_SETTING = descriptor.Descriptor(
     descriptor.FieldDescriptor(
       name='name', full_name='SlimMessage.Looper.Setting.name', index=0,
       number=1, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -224,7 +224,7 @@ _SLIMMESSAGE_GLOBAL_SETTING = descriptor.Descriptor(
     descriptor.FieldDescriptor(
       name='name', full_name='SlimMessage.Global.Setting.name', index=0,
       number=1, type=14, cpp_type=8, label=2,
-      has_default_value=False, default_value=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),

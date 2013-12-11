@@ -75,11 +75,11 @@ void   slim_message__free_unpacked
 }
 const ProtobufCEnumValue slim_message__looper__setting__name__enum_values_by_number[2] =
 {
-  { "DRY", "SLIM_MESSAGE__LOOPER__SETTING__NAME__DRY", 1 },
-  { "WET", "SLIM_MESSAGE__LOOPER__SETTING__NAME__WET", 2 },
+  { "DRY", "SLIM_MESSAGE__LOOPER__SETTING__NAME__DRY", 0 },
+  { "WET", "SLIM_MESSAGE__LOOPER__SETTING__NAME__WET", 1 },
 };
 static const ProtobufCIntRange slim_message__looper__setting__name__value_ranges[] = {
-{1, 0},{0, 2}
+{0, 0},{0, 2}
 };
 const ProtobufCEnumValueIndex slim_message__looper__setting__name__enum_values_by_name[2] =
 {
@@ -254,11 +254,11 @@ const ProtobufCMessageDescriptor slim_message__looper__descriptor =
 };
 const ProtobufCEnumValue slim_message__global__setting__name__enum_values_by_number[2] =
 {
-  { "DRY", "SLIM_MESSAGE__GLOBAL__SETTING__NAME__DRY", 1 },
-  { "WET", "SLIM_MESSAGE__GLOBAL__SETTING__NAME__WET", 2 },
+  { "DRY", "SLIM_MESSAGE__GLOBAL__SETTING__NAME__DRY", 0 },
+  { "WET", "SLIM_MESSAGE__GLOBAL__SETTING__NAME__WET", 1 },
 };
 static const ProtobufCIntRange slim_message__global__setting__name__value_ranges[] = {
-{1, 0},{0, 2}
+{0, 0},{0, 2}
 };
 const ProtobufCEnumValueIndex slim_message__global__setting__name__enum_values_by_name[2] =
 {

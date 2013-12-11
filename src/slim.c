@@ -19,14 +19,13 @@
 #include "slim.h"
 #include <stdlib.h>
 #include <string.h>
-#include "slim_socket.h"
-#include "protocol/slim.pb-c.h"
 
 Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples)
 {
     Slim* slim = (Slim*)malloc(sizeof(Slim));
     slim->n_loopers = n_loopers;
     slim->looper_array = calloc(n_loopers, sizeof(Looper));
+    //slim->socket = slim_socket_new();
     for (int i = 0; i < n_loopers; i++)
     {
         slim->looper_array[i] = looper_new(max_n_samples);
@@ -42,8 +41,39 @@ void slim_activate(Slim* slim)
     }
 }
 
+
 void slim_run(Slim* slim , uint32_t n_samples)
 {
+    //char* msg_buffer = slim->msg_buffer;
+    //SlimMessage* msg = slim->msg;
+    //printf("n: %i\r\n", n);
+    //if (n > 0)
+    //{
+    //    msg = slim_message__unpack(NULL, n, msg_buffer);
+    //    if (msg > 0)
+    //    {
+    //        switch(msg->type)
+    //        {
+    //            case SLIM_MESSAGE__TYPE__LOOPER:
+    //                printf ("command: %i\r\n", msg->looper->command);
+    //                if (msg->looper->command == SLIM_MESSAGE__LOOPER__COMMAND__SET)
+    //                {
+    //                    for (int i = 0; i < (msg->looper->n_settings); i++)
+    //                    {
+    //                        SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
+    //                        char* name = slim_message__looper__setting__name__descriptor.values[setting->name].name;
+    //                        printf("setting: %i %s %f\r\n", setting->name, name, setting->value);
+    //                    }
+    //                }
+    //                break;
+    //        }
+    //    }
+    //    else if (msg == NULL)
+    //    {
+    //        perror("ERROR unpacking message");
+    //    }
+    //}
+
     memset(slim->output, 0, sizeof(float) * n_samples);
     for (int i = 0; i < (slim->n_loopers); i++)
     {
@@ -76,40 +106,38 @@ void slim_connect(Slim* slim, void* input, void* output)
 }
 
 
-void slim_work_loop(Slim* slim)
-{
-    Socket* socket = slim_socket_new();
-    char buffer[256];
-    SlimMessage* msg;
-    while (1)
-    {
-        int n = read(socket->connection_fd, buffer, 255);
-        if (n < 0) perror("ERROR reading from socket");
-        else if (n > 0)
-        {
-            msg = slim_message__unpack(NULL, n, buffer);
-            if (msg > 0)
-            {
-                switch(msg->type)
-                {
-                    case SLIM_MESSAGE__TYPE__LOOPER:
-                        printf ("command: %i\r\n", msg->looper->command);
-                        if (msg->looper->command == SLIM_MESSAGE__LOOPER__COMMAND__SET)
-                        {
-                            for (int i = 0; i < (msg->looper->n_settings); i++)
-                            {
-                                SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
-                                printf("setting: %i %f\r\n", setting->name, setting->value);
-                            }
-                        }
-                        break;
-                }
-            }
-            else if (msg == NULL)
-            {
-                perror("Error unpacking message");
-            }
-        }
-    }
-    slim_socket_close(socket);
-}
+//void slim_work_loop(Slim* slim)
+//{
+//    while (1)
+//    {
+//        int n = read(socket->connection_fd, buffer, 255);
+//        if (n < 0) perror("ERROR reading from socket");
+//        else if (n > 0)
+//        {
+//            msg = slim_message__unpack(NULL, n, buffer);
+//            if (msg > 0)
+//            {
+//                switch(msg->type)
+//                {
+//                    case SLIM_MESSAGE__TYPE__LOOPER:
+//                        printf ("command: %i\r\n", msg->looper->command);
+//                        if (msg->looper->command == SLIM_MESSAGE__LOOPER__COMMAND__SET)
+//                        {
+//                            for (int i = 0; i < (msg->looper->n_settings); i++)
+//                            {
+//                                SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
+//                                char* name = slim_message__looper__setting__name__descriptor.values[setting->name].name;
+//                                printf("setting: %i %s %f\r\n", setting->name, name, setting->value);
+//                            }
+//                        }
+//                        break;
+//                }
+//            }
+//            else if (msg == NULL)
+//            {
+//                perror("ERROR unpacking message");
+//            }
+//        }
+//    }
+//    slim_socket_close(socket);
+//}

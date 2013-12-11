@@ -47,7 +47,16 @@ int main(void)
     output_port = jack_port_register (client, "out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
     slim = slim_new(1, jack_get_buffer_size(client));
     jack_activate(client);
-    slim_work_loop(slim);
+    char msg_buffer[256];
+    SlimMessage* msg;
+    Socket* socket = slim_socket_new();
+    if (socket <= 0) perror("ERROR creating socket");
+    while(1)
+    {
+        int n = slim_socket_read(socket, msg_buffer);
+        printf("n: %i\r\n", n);
+    }
+    //slim_work_loop(slim);
     exit(0);
 
 }

@@ -20,8 +20,8 @@ message SlimMessage {
         //settings are only read if command is "SET"
         message Setting {
             enum Name {
-                DRY = 1;
-                WET = 2;
+                DRY = 0;
+                WET = 1;
             }
             required Name name   = 1;
             required float value = 2;
@@ -40,8 +40,8 @@ message SlimMessage {
         //settings are only read if command is "SET"
         message Setting {
             enum Name {
-                DRY = 1;
-                WET = 2;
+                DRY = 0;
+                WET = 1;
             }
             required Name name   = 1;
             required float value = 2;

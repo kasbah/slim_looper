@@ -18,8 +18,8 @@ typedef struct _SlimMessage__Global__Setting SlimMessage__Global__Setting;
 /* --- enums --- */
 
 typedef enum _SlimMessage__Looper__Setting__Name {
-  SLIM_MESSAGE__LOOPER__SETTING__NAME__DRY = 1,
-  SLIM_MESSAGE__LOOPER__SETTING__NAME__WET = 2
+  SLIM_MESSAGE__LOOPER__SETTING__NAME__DRY = 0,
+  SLIM_MESSAGE__LOOPER__SETTING__NAME__WET = 1
 } SlimMessage__Looper__Setting__Name;
 typedef enum _SlimMessage__Looper__Command {
   SLIM_MESSAGE__LOOPER__COMMAND__SET = 0,
@@ -30,8 +30,8 @@ typedef enum _SlimMessage__Looper__Command {
   SLIM_MESSAGE__LOOPER__COMMAND__REPLACE = 5
 } SlimMessage__Looper__Command;
 typedef enum _SlimMessage__Global__Setting__Name {
-  SLIM_MESSAGE__GLOBAL__SETTING__NAME__DRY = 1,
-  SLIM_MESSAGE__GLOBAL__SETTING__NAME__WET = 2
+  SLIM_MESSAGE__GLOBAL__SETTING__NAME__DRY = 0,
+  SLIM_MESSAGE__GLOBAL__SETTING__NAME__WET = 1
 } SlimMessage__Global__Setting__Name;
 typedef enum _SlimMessage__Global__Command {
   SLIM_MESSAGE__GLOBAL__COMMAND__SET = 0,

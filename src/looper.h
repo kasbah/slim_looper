@@ -37,6 +37,7 @@ typedef enum {
 
 typedef struct {
     LooperRecordMode record_mode;
+    LooperState state;
 } LooperSettings;
 
 
@@ -51,7 +52,6 @@ typedef struct {
     float*       output;
     Loop*  loop;
     LooperSettings* settings;
-    LooperState state;
     LooperState previous_state;
 } Looper;
 
