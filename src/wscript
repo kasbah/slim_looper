@@ -71,9 +71,10 @@ def build(bld):
     # Build a standalone jack client
 
     obj = bld(features     = 'c cprogram',
-              source       = 'slim_jack.c slim.c looper.c slim_socket.c protocol/slim.pb-c.c',
+              source       = 'slim_jack.c slim.c looper.c slim_socket.c protocol/nanopb/pb_encode.c protocol/nanopb/pb_decode.c protocol/slim.pb.c',
               name         = 'slim',
               target       = '/slim',
+              includes     = 'protocol protocol/nanopb',
               install_path = None,
               uselib       = 'M JACK PROTOBUF_C')
 

@@ -21,7 +21,6 @@
 
 #include "looper.h"
 #include "slim_socket.h"
-#include "protocol/slim.pb-c.h"
 
 typedef struct {
     const float* input;
@@ -30,7 +29,6 @@ typedef struct {
     SlimSocket* socket;
     Looper** looper_array;
     char msg_buffer[256];
-    SlimMessage* msg;
 } Slim;
 
 Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples);
