@@ -16,7 +16,6 @@ SlimSocket* slim_socket_server_new(void)
     }
 
     unlink("/tmp/slim_socket");
-
     if (bind(self->listen_fd, (struct sockaddr *) self->address, sizeof(struct sockaddr_un)) != 0)
     {
         perror("ERROR bind() failed");
@@ -35,7 +34,7 @@ SlimSocket* slim_socket_server_new(void)
 int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
 {
     int n = -1;
-    int read_fd = accept(self->listen_fd, self->address, self->address_length);
+    int read_fd = accept(self->listen_fd, self->address, &self->address_length);
     if(read_fd > 0)
         n = recv(read_fd, msg_buffer, 255, 0);
     close(read_fd);

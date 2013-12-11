@@ -7,16 +7,16 @@ import socket
 from slim_pb2 import SlimMessage
 from os import unlink
 
-unlink("/tmp/slim_socket")
-s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-s.bind("/tmp/slim_socket")
-s.listen(5);
+#unlink("/tmp/slim_socket")
+#s.bind("/tmp/slim_socket")
+#s.listen(5);
 
 def send(msg):
     string = msg.SerializeToString()
-    cs, a = s.accept()
-    cs.send(string)
-    cs.close()
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.connect("/tmp/slim_socket") 
+    s.send(string)
+    s.close()
 
 class ControlMainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):

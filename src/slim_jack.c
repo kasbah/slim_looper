@@ -49,12 +49,12 @@ int main(void)
     jack_activate(client);
     char msg_buffer[256];
     SlimMessage* msg;
-    SlimSocket* socket = slim_socket_new();
+    SlimSocket* socket = slim_socket_server_new();
     if (socket <= 0) perror("ERROR creating socket");
     while(1)
     {
-        int n = slim_socket_read(socket, msg_buffer);
-        if (n > 0)
+        int n = slim_socket_server_read(socket, msg_buffer);
+        if (n > 2)
         {
             printf("n: %i\r\n", n);
         }
