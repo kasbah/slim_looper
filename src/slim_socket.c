@@ -7,7 +7,7 @@
 SlimSocket* slim_socket_server_new(void)
 {
     SlimSocket* self = slim_socket_new(); 
-    self->listen_fd = socket (AF_UNIX, SOCK_STREAM, 0);
+    self->listen_fd = socket (AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK, 0);
 
     if (self->listen_fd < 0)
     {
@@ -34,7 +34,7 @@ SlimSocket* slim_socket_server_new(void)
 int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
 {
     int n = -1;
-    int read_fd = accept(self->listen_fd, self->address, &self->address_length);
+    int read_fd = accept4(self->listen_fd, self->address, &self->address_length, SOCK_NONBLOCK);
     if(read_fd > 0)
         n = recv(read_fd, msg_buffer, 255, 0);
     close(read_fd);
