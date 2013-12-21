@@ -27,21 +27,21 @@ class ControlMainWindow(QtGui.QMainWindow):
 def playPause():
     msg = SlimMessage()
     msg.type = SlimMessage.LOOPER
-    msg.looper.loop_number = 0 
+    msg.looper.number = 0 
     msg.looper.command = SlimMessage.Looper.PAUSE 
     send(msg)
 
 def record():
     msg = SlimMessage()
     msg.type = SlimMessage.LOOPER
-    msg.looper.loop_number = 0 
+    msg.looper.number = 0 
     msg.looper.command = SlimMessage.Looper.RECORD
     send(msg)
 
 def dryValueChanged():
     msg = SlimMessage()
     msg.type = SlimMessage.LOOPER
-    msg.looper.loop_number = 0 
+    msg.looper.number = 0 
     msg.looper.command = SlimMessage.Looper.SET
     setting = msg.looper.settings.add()
     setting.name = SlimMessage.Looper.Setting.DRY 

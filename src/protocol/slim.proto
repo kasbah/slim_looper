@@ -6,7 +6,7 @@ message SlimMessage {
     required Type type = 1;
 
     message Looper { 
-        required uint32 loop_number = 1;
+        required uint32 number = 1;
         enum Command {
             SET     = 0;
             PAUSE   = 1;

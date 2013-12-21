@@ -41,7 +41,7 @@ void looper_reset(Looper* looper)
     looper->loop->pos = 0;
     looper->loop->end = 0;
     looper->settings->state = PAUSED;
-    looper->previous_state = PAUSED;
+    looper->previous_state  = PAUSED;
     looper->settings->record_mode = MODE_NEW;
 }
 
@@ -76,7 +76,6 @@ static uint8_t loop_exists(Loop* loop, uint32_t n_samples)
     return (loop->end >= n_samples);
 }
 
-
 void
 looper_record(Looper* looper, uint32_t n_samples)
 {
@@ -95,7 +94,10 @@ looper_record(Looper* looper, uint32_t n_samples)
                 loop->pos = 0;
                 loop->end = 0;
             }
-            memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
+            memcpy( &(loop->buffer[loop->pos])
+                  , input
+                  , n_samples * sizeof(float)
+                  );
             loop->pos += n_samples;
             loop->end += n_samples;
             memset(output, 0, n_samples * sizeof(float));
@@ -104,7 +106,10 @@ looper_record(Looper* looper, uint32_t n_samples)
         case MODE_OVERDUB:
             if (loop_pos_before_end(loop, n_samples)) 
             {
-                memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
+                memcpy( output
+                      , &(loop->buffer[loop->pos])
+                      , n_samples * sizeof(float)
+                      );
                 for (int i = 0; i < n_samples; i++)
                 {   //TODO: reduce gain to stop clipping 
                     loop->buffer[loop->pos + i] += input[i];
@@ -131,8 +136,14 @@ looper_record(Looper* looper, uint32_t n_samples)
         case MODE_INSERT:
             if (loop_exists(loop, n_samples))
             {
-                memmove(&(loop->buffer[loop->pos + n_samples]), &(loop->buffer[loop->pos]), (loop->end - loop->pos) * sizeof(float));
-                memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
+                memmove( &(loop->buffer[loop->pos + n_samples])
+                       , &(loop->buffer[loop->pos])
+                       , (loop->end - loop->pos) * sizeof(float)
+                       );
+                memcpy(&(loop->buffer[loop->pos])
+                      , input
+                      , n_samples * sizeof(float)
+                      );
                 loop->pos += n_samples;
                 loop->end += n_samples;
             }
@@ -142,7 +153,10 @@ looper_record(Looper* looper, uint32_t n_samples)
         case MODE_REPLACE:
             if (loop_pos_before_end(loop, n_samples)) 
             {
-                memcpy(&(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
+                memcpy(&(loop->buffer[loop->pos])
+                      , input
+                      , n_samples * sizeof(float)
+                      );
                 loop->pos += n_samples;
             }
             //position is greater than loop length 

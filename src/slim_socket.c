@@ -1,8 +1,9 @@
 #include <linux/un.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "slim_socket.h"
-#include "protocol/slim.pb-c.h"
 
 SlimSocket* slim_socket_server_new(void)
 {
@@ -66,5 +67,6 @@ int slim_socket_read(SlimSocket* self, char* msg_buffer)
 
 void slim_socket_free(SlimSocket* self)
 {
+    close(self->listen_fd);
     free(self);
 }

@@ -19,6 +19,8 @@
 #include "slim_jack.h"
 #include "slim.h"
 #include <jack/jack.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 static jack_port_t* input_port;
 static jack_port_t* output_port;

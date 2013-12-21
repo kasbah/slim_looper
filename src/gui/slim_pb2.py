@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='slim.proto',
   package='',
-  serialized_pb='\n\nslim.proto\"\xb4\x05\n\x0bSlimMessage\x12\x1f\n\x04type\x18\x01 \x02(\x0e\x32\x11.SlimMessage.Type\x12#\n\x06looper\x18\x02 \x01(\x0b\x32\x13.SlimMessage.Looper\x12#\n\x06global\x18\x03 \x01(\x0b\x32\x13.SlimMessage.Global\x1a\xaf\x02\n\x06Looper\x12\x13\n\x0bloop_number\x18\x01 \x02(\r\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Looper.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Looper.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Looper.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x00\x12\x07\n\x03WET\x10\x01\"O\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\n\n\x06RECORD\x10\x02\x12\x0b\n\x07OVERDUB\x10\x03\x12\n\n\x06INSERT\x10\x04\x12\x0b\n\x07REPLACE\x10\x05\x1a\xe7\x01\n\x06Global\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Global.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Global.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Global.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x00\x12\x07\n\x03WET\x10\x01\"\x1c\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\x08\n\x04QUIT\x10\x01\"\x1e\n\x04Type\x12\n\n\x06LOOPER\x10\x00\x12\n\n\x06GLOBAL\x10\x01')
+  serialized_pb='\n\nslim.proto\"\xaf\x05\n\x0bSlimMessage\x12\x1f\n\x04type\x18\x01 \x02(\x0e\x32\x11.SlimMessage.Type\x12#\n\x06looper\x18\x02 \x01(\x0b\x32\x13.SlimMessage.Looper\x12#\n\x06global\x18\x03 \x01(\x0b\x32\x13.SlimMessage.Global\x1a\xaa\x02\n\x06Looper\x12\x0e\n\x06number\x18\x01 \x02(\r\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Looper.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Looper.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Looper.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x00\x12\x07\n\x03WET\x10\x01\"O\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\t\n\x05PAUSE\x10\x01\x12\n\n\x06RECORD\x10\x02\x12\x0b\n\x07OVERDUB\x10\x03\x12\n\n\x06INSERT\x10\x04\x12\x0b\n\x07REPLACE\x10\x05\x1a\xe7\x01\n\x06Global\x12,\n\x07\x63ommand\x18\x02 \x02(\x0e\x32\x1b.SlimMessage.Global.Command\x12-\n\x08settings\x18\x03 \x03(\x0b\x32\x1b.SlimMessage.Global.Setting\x1a\x62\n\x07Setting\x12.\n\x04name\x18\x01 \x02(\x0e\x32 .SlimMessage.Global.Setting.Name\x12\r\n\x05value\x18\x02 \x02(\x02\"\x18\n\x04Name\x12\x07\n\x03\x44RY\x10\x00\x12\x07\n\x03WET\x10\x01\"\x1c\n\x07\x43ommand\x12\x07\n\x03SET\x10\x00\x12\x08\n\x04QUIT\x10\x01\"\x1e\n\x04Type\x12\n\n\x06LOOPER\x10\x00\x12\n\n\x06GLOBAL\x10\x01')
 
 
 
@@ -32,8 +32,8 @@ _SLIMMESSAGE_LOOPER_SETTING_NAME = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=336,
-  serialized_end=360,
+  serialized_start=331,
+  serialized_end=355,
 )
 
 _SLIMMESSAGE_LOOPER_COMMAND = descriptor.EnumDescriptor(
@@ -69,8 +69,8 @@ _SLIMMESSAGE_LOOPER_COMMAND = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=362,
-  serialized_end=441,
+  serialized_start=357,
+  serialized_end=436,
 )
 
 _SLIMMESSAGE_GLOBAL_SETTING_NAME = descriptor.EnumDescriptor(
@@ -90,8 +90,8 @@ _SLIMMESSAGE_GLOBAL_SETTING_NAME = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=336,
-  serialized_end=360,
+  serialized_start=331,
+  serialized_end=355,
 )
 
 _SLIMMESSAGE_GLOBAL_COMMAND = descriptor.EnumDescriptor(
@@ -111,8 +111,8 @@ _SLIMMESSAGE_GLOBAL_COMMAND = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=647,
-  serialized_end=675,
+  serialized_start=642,
+  serialized_end=670,
 )
 
 _SLIMMESSAGE_TYPE = descriptor.EnumDescriptor(
@@ -132,8 +132,8 @@ _SLIMMESSAGE_TYPE = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=677,
-  serialized_end=707,
+  serialized_start=672,
+  serialized_end=702,
 )
 
 
@@ -168,8 +168,8 @@ _SLIMMESSAGE_LOOPER_SETTING = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=262,
-  serialized_end=360,
+  serialized_start=257,
+  serialized_end=355,
 )
 
 _SLIMMESSAGE_LOOPER = descriptor.Descriptor(
@@ -180,7 +180,7 @@ _SLIMMESSAGE_LOOPER = descriptor.Descriptor(
   containing_type=None,
   fields=[
     descriptor.FieldDescriptor(
-      name='loop_number', full_name='SlimMessage.Looper.loop_number', index=0,
+      name='number', full_name='SlimMessage.Looper.number', index=0,
       number=1, type=13, cpp_type=3, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -211,7 +211,7 @@ _SLIMMESSAGE_LOOPER = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=138,
-  serialized_end=441,
+  serialized_end=436,
 )
 
 _SLIMMESSAGE_GLOBAL_SETTING = descriptor.Descriptor(
@@ -245,8 +245,8 @@ _SLIMMESSAGE_GLOBAL_SETTING = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=547,
-  serialized_end=645,
+  serialized_start=542,
+  serialized_end=640,
 )
 
 _SLIMMESSAGE_GLOBAL = descriptor.Descriptor(
@@ -280,8 +280,8 @@ _SLIMMESSAGE_GLOBAL = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=444,
-  serialized_end=675,
+  serialized_start=439,
+  serialized_end=670,
 )
 
 _SLIMMESSAGE = descriptor.Descriptor(
@@ -323,7 +323,7 @@ _SLIMMESSAGE = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=15,
-  serialized_end=707,
+  serialized_end=702,
 )
 
 _SLIMMESSAGE_LOOPER_SETTING.fields_by_name['name'].enum_type = _SLIMMESSAGE_LOOPER_SETTING_NAME

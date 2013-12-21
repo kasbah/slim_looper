@@ -19,7 +19,8 @@
 #include "slim.h"
 #include <stdlib.h>
 #include <string.h>
-#include "protocol/pb_decode.h"
+#include <stdio.h>
+#include "protocol/nanopb/pb_decode.h"
 #include "protocol/slim.pb.h"
 
 Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples)
@@ -43,7 +44,7 @@ void slim_activate(Slim* slim)
     }
 }
 
-void slim_parse_messages(const uint32_t n_bytes, const char* const msg_buffer)
+void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer)
 {
     static SlimMessage msg;
     pb_istream_t stream = pb_istream_from_buffer(msg_buffer, n_bytes);
@@ -53,37 +54,38 @@ void slim_parse_messages(const uint32_t n_bytes, const char* const msg_buffer)
         switch(msg.type)
         {
             case SlimMessage_Type_LOOPER:
-                printf ("command: %i\r\n", msg.looper.command);
-                if (msg.looper.command == SlimMessage_Looper_Command_SET)
-                    for (int i = 0; i < msg.looper.settings_count; i++)
+            {
+                if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
+                {
+                    LooperSettings* settings = slim->looper_array[msg.looper.number]->settings; 
+                    switch (msg.looper.command)
                     {
-                        SlimMessage_Looper_Setting setting = msg.looper.settings[i];
-                        printf("setting: %i %f\r\n", setting.name , setting.value);
+                        case SlimMessage_Looper_Command_RECORD:
+                            if (settings->state == RECORDING)
+                            {
+                                settings->state = RECORDING;
+                                settings->record_mode = MODE_NEW;
+                            }
+                            else
+                            {
+                                settings->state = PLAYING;
+                            }
+                            break;
                     }
+                }
+            }
+        }
 
-                break;
+        printf ("command: %i\r\n", msg.looper.command);
+        if (msg.looper.command == SlimMessage_Looper_Command_SET)
+        {
+            for (int i = 0; i < msg.looper.settings_count; i++)
+            {
+                SlimMessage_Looper_Setting setting = msg.looper.settings[i];
+                printf("setting: %i %f\r\n", setting.name , setting.value);
+            }
         }
     }
-    //    switch(msg->type)
-    //    {
-    //        case SlimMessage_Type_LOOPER:
-    //            printf ("command: %i\r\n", msg->looper.command);
-    //            if (msg->looper.command == SlimMessage_Looper_Command_SET)
-    //            {
-    //                for (int i = 0; i < (msg->looper->n_settings); i++)
-    //                {
-    //                    SlimMessage__Looper__Setting* setting = msg->looper->settings[i];
-    //                    char* name = slim_message__looper__setting__name__descriptor.values[setting->name].name;
-    //                    printf("setting: %i %s %f\r\n", setting->name, name, setting->value);
-    //                }
-    //            }
-    //            break;
-    //    }
-    //}
-    //else if (msg == NULL)
-    //{
-    //    perror("ERROR unpacking message");
-    //}
 }
 
 
@@ -93,7 +95,7 @@ void slim_run(Slim* slim , uint32_t n_samples)
     int n = slim_socket_server_read(slim->socket, msg_buffer);
     if (n > 0)
     {
-        slim_parse_messages(n, msg_buffer);
+        slim_parse_messages(slim, n, msg_buffer);
     }
 
     memset(slim->output, 0, sizeof(float) * n_samples);
@@ -109,6 +111,7 @@ void slim_run(Slim* slim , uint32_t n_samples)
 
 void slim_free(Slim* slim) 
 {
+    slim_socket_free(slim->socket);
     for (int i = 0; i < (slim->n_loopers); i++)
     {
         looper_free(slim->looper_array[i]);
