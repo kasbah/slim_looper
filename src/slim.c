@@ -61,7 +61,7 @@ void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const m
                     switch (msg.looper.command)
                     {
                         case SlimMessage_Looper_Command_RECORD:
-                            if (settings->state == RECORDING)
+                            if (settings->state != RECORDING)
                             {
                                 settings->state = RECORDING;
                                 settings->record_mode = MODE_NEW;
@@ -72,6 +72,7 @@ void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const m
                             }
                             break;
                     }
+                    printf("state: %i", settings->state);
                 }
             }
         }
@@ -104,7 +105,7 @@ void slim_run(Slim* slim , uint32_t n_samples)
         looper_run(slim->looper_array[i], n_samples);
         for (int j = 0; j < n_samples; j++)
         {
-            slim->output[j] += slim->looper_array[i]->output[j];
+            slim->output[j] = slim->looper_array[i]->output[j];
         }
     }
 }

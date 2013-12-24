@@ -48,12 +48,13 @@ int main(void)
     input_port = jack_port_register (client, "in", JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
     output_port = jack_port_register (client, "out", JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
     slim = slim_new(1, jack_get_buffer_size(client));
+    slim_activate(slim);
     jack_activate(client);
-    char msg_buffer[256];
+    //char msg_buffer[256];
     //SlimSocket* socket = slim_socket_server_new();
     //if (socket <= 0) perror("ERROR creating socket");
 
-    sleep(5);
+    sleep(10);
     exit(0);
 
 }
