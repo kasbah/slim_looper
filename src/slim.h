@@ -21,6 +21,8 @@
 
 #include "looper.h"
 #include "slim_socket.h"
+#include "protocol/nanopb/pb_decode.h"
+#include "protocol/slim.pb.h"
 
 typedef struct {
     const float* input;
@@ -35,6 +37,9 @@ Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples);
 void slim_activate(Slim* slim);
 void slim_run(Slim* slim , uint32_t n_samples);
 void slim_free(Slim* slim);
-//void slim_work_loop(Slim* slim);
 void slim_connect(Slim* slim, void* input, void* output);
+//void slim_work_loop(Slim* slim);
+static void slim_parse_looper_message(Slim* slim, const SlimMessage msg);
+static void slim_parse_global_message(Slim* slim, const SlimMessage msg);
+static void slim_parse_message(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer);
 #endif// __SLIM_H__

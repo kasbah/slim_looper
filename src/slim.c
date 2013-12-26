@@ -20,8 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "protocol/nanopb/pb_decode.h"
-#include "protocol/slim.pb.h"
 
 Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples)
 {
@@ -44,7 +42,43 @@ void slim_activate(Slim* slim)
     }
 }
 
-void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer)
+static void slim_parse_looper_message(Slim* slim, const SlimMessage msg)
+{
+    if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
+    {
+        LooperSettings* settings = slim->looper_array[msg.looper.number]->settings; 
+        switch (msg.looper.command)
+        {
+            case SlimMessage_Looper_Command_RECORD:
+                if (settings->state != RECORDING)
+                {
+                    settings->state = RECORDING;
+                    settings->record_mode = MODE_NEW;
+                }
+                else
+                {
+                    settings->state = PLAYING;
+                }
+                break;
+            case SlimMessage_Looper_Command_PAUSE:
+                if (settings->state != PAUSED)
+                {
+                    settings->state = PAUSED;
+                }
+                else
+                {
+                    settings->state = PLAYING;
+                }
+                break;
+        }
+    }
+}
+
+static void slim_parse_global_message(Slim* slim, const SlimMessage msg)
+{
+}
+
+static void slim_parse_message(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer)
 {
     static SlimMessage msg;
     pb_istream_t stream = pb_istream_from_buffer(msg_buffer, n_bytes);
@@ -54,27 +88,11 @@ void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const m
         switch(msg.type)
         {
             case SlimMessage_Type_LOOPER:
-            {
-                if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
-                {
-                    LooperSettings* settings = slim->looper_array[msg.looper.number]->settings; 
-                    switch (msg.looper.command)
-                    {
-                        case SlimMessage_Looper_Command_RECORD:
-                            if (settings->state != RECORDING)
-                            {
-                                settings->state = RECORDING;
-                                settings->record_mode = MODE_NEW;
-                            }
-                            else
-                            {
-                                settings->state = PLAYING;
-                            }
-                            break;
-                    }
-                    printf("state: %i", settings->state);
-                }
-            }
+                slim_parse_looper_message(slim, msg);
+                break;
+            case SlimMessage_Type_GLOBAL:
+                slim_parse_global_message(slim, msg);
+                break;
         }
 
         printf ("command: %i\r\n", msg.looper.command);
@@ -96,7 +114,7 @@ void slim_run(Slim* slim , uint32_t n_samples)
     int n = slim_socket_server_read(slim->socket, msg_buffer);
     if (n > 0)
     {
-        slim_parse_messages(slim, n, msg_buffer);
+        slim_parse_message(slim, n, msg_buffer);
     }
 
     memset(slim->output, 0, sizeof(float) * n_samples);
@@ -105,7 +123,7 @@ void slim_run(Slim* slim , uint32_t n_samples)
         looper_run(slim->looper_array[i], n_samples);
         for (int j = 0; j < n_samples; j++)
         {
-            slim->output[j] = slim->looper_array[i]->output[j];
+            slim->output[j] += slim->looper_array[i]->output[j];
         }
     }
 }
