@@ -78,30 +78,40 @@ static void slim_parse_global_message(Slim* slim, const SlimMessage msg)
 {
 }
 
-static void slim_parse_message(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer)
-{
-    static SlimMessage msg;
-    pb_istream_t stream = pb_istream_from_buffer(msg_buffer, n_bytes);
-    int status = pb_decode(&stream, SlimMessage_fields, &msg);
-    if (status == 1)
-    {
-        switch(msg.type)
-        {
-            case SlimMessage_Type_LOOPER:
-                slim_parse_looper_message(slim, msg);
-                break;
-            case SlimMessage_Type_GLOBAL:
-                slim_parse_global_message(slim, msg);
-                break;
-        }
 
-        printf ("command: %i\r\n", msg.looper.command);
-        if (msg.looper.command == SlimMessage_Looper_Command_SET)
+static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer)
+{
+    pb_istream_t stream = pb_istream_from_buffer(msg_buffer, n_bytes);
+
+    int status = 1;
+    int i = 0;
+    while (status == 1)
+    {
+        if (i++ >= MAX_MESSAGES)
+            break;
+        SlimMessage* messages = slim->messages;
+        status = pb_decode_delimited(&stream, SlimMessage_fields, &messages[i]);
+        if (status == 1)
         {
-            for (int i = 0; i < msg.looper.settings_count; i++)
+            //switch(messages[i].type)
+            //{
+            //    case SlimMessage_Type_LOOPER:
+            //        slim_parse_looper_message(slim, messages[i]);
+            //        break;
+            //    case SlimMessage_Type_GLOBAL:
+            //        slim_parse_global_message(slim, messages[i]);
+            //        break;
+            //}
+
+            printf ("command: %i\r\n", messages[i].looper.command);
+            printf ("looper number: %i\r\n", messages[i].looper.number);
+            if (messages[i].looper.command == SlimMessage_Looper_Command_SET)
             {
-                SlimMessage_Looper_Setting setting = msg.looper.settings[i];
-                printf("setting: %i %f\r\n", setting.name , setting.value);
+                for (int i = 0; i < messages[i].looper.settings_count; i++)
+                {
+                    SlimMessage_Looper_Setting setting = messages[i].looper.settings[i];
+                    printf("setting: %i %f\r\n", setting.name , setting.value);
+                }
             }
         }
     }
@@ -114,7 +124,8 @@ void slim_run(Slim* slim , uint32_t n_samples)
     int n = slim_socket_server_read(slim->socket, msg_buffer);
     if (n > 0)
     {
-        slim_parse_message(slim, n, msg_buffer);
+        printf("n: %i\r\n", n);
+        slim_parse_messages(slim, n, msg_buffer);
     }
 
     memset(slim->output, 0, sizeof(float) * n_samples);

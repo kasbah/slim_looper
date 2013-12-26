@@ -24,6 +24,8 @@
 #include "protocol/nanopb/pb_decode.h"
 #include "protocol/slim.pb.h"
 
+#define MAX_MESSAGES 32
+
 typedef struct {
     const float* input;
     float* output;
@@ -31,6 +33,7 @@ typedef struct {
     SlimSocket* socket;
     Looper** looper_array;
     char msg_buffer[256];
+    SlimMessage messages[MAX_MESSAGES];
 } Slim;
 
 Slim* slim_new(uint32_t n_loopers, uint32_t max_n_samples);
@@ -41,5 +44,5 @@ void slim_connect(Slim* slim, void* input, void* output);
 //void slim_work_loop(Slim* slim);
 static void slim_parse_looper_message(Slim* slim, const SlimMessage msg);
 static void slim_parse_global_message(Slim* slim, const SlimMessage msg);
-static void slim_parse_message(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer);
+static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer);
 #endif// __SLIM_H__

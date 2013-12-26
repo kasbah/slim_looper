@@ -5,14 +5,21 @@ from mainwindow import Ui_MainWindow
 
 import socket
 from slim_pb2 import SlimMessage
-from os import unlink
 
+from google.protobuf.internal import encoder
+
+
+#from os import unlink
 #unlink("/tmp/slim_socket")
 #s.bind("/tmp/slim_socket")
 #s.listen(5);
 
 def send(msg):
     string = msg.SerializeToString()
+    string = encoder._VarintBytes(len(string)) + string
+    msg.looper.number = 1 
+    string2 = msg.SerializeToString()
+    string += encoder._VarintBytes(len(string2)) + string2
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     s.connect("/tmp/slim_socket") 
     s.send(string)
