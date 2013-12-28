@@ -84,11 +84,9 @@ static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* 
     pb_istream_t stream = pb_istream_from_buffer(msg_buffer, n_bytes);
 
     int status = 1;
-    int i = 0;
-    while (status == 1)
+
+    for (int i = 0; i < MAX_MESSAGES; i++)
     {
-        if (i++ >= MAX_MESSAGES)
-            break;
         SlimMessage* messages = slim->messages;
         status = pb_decode_delimited(&stream, SlimMessage_fields, &messages[i]);
         if (status == 1)
@@ -113,6 +111,10 @@ static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* 
                     printf("setting: %i %f\r\n", setting.name , setting.value);
                 }
             }
+        }
+        else 
+        {
+            break;
         }
     }
 }

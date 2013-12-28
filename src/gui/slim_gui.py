@@ -1,7 +1,8 @@
 from __future__ import print_function
 import sys
-from PySide import QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 from mainwindow import Ui_MainWindow
+from carla_widgets.ledbutton import LEDButton
 
 import socket
 from slim_pb2 import SlimMessage
@@ -55,13 +56,20 @@ def dryValueChanged():
     setting.value = mySW.ui.drySlider.value()/100.0
     send(msg)
 
+def widgetClicked():
+    print("clucked")
+    mySW.ui.radioButton.setChecked(not mySW.ui.radioButton.isChecked())
+
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     mySW = ControlMainWindow()
-    mySW.ui.drySlider.valueChanged.connect (dryValueChanged)
+    mySW.ui.drySlider.valueChanged.connect(dryValueChanged)
     mySW.ui.playPauseButton.clicked.connect(playPause)
     mySW.ui.recordButton.clicked.connect(record)
     mySW.ui.drySlider.valueChanged.connect(dryValueChanged)
+    #mySW.connect(mySW.ui.label, QtCore.SIGNAL("clicked()"), widgetClicked)
+    #mySW.connect(mySW.ui.radioButton, QtCore.SIGNAL("clicked()"), widgetClicked)
+    mySW.connect(mySW.ui.widget, QtCore.SIGNAL("clicked()"), widgetClicked)
     mySW.show() 
     sys.exit(app.exec_())
 

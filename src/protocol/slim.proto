@@ -8,12 +8,13 @@ message SlimMessage {
     message Looper { 
         required uint32 number = 1;
         enum Command {
-            SET     = 0;
-            PAUSE   = 1;
-            RECORD  = 2;
-            OVERDUB = 3;
-            INSERT  = 4;
-            REPLACE = 5;
+            SET      = 0;
+            RECORD   = 1;
+            OVERDUB  = 2;
+            INSERT   = 3;
+            REPLACE  = 4;
+            PAUSE    = 6;
+            MULTIPLY = 5;
         }
         required Command command = 2;
 
