@@ -41,6 +41,25 @@ int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
     close(read_fd);
     return n;
 }
+//int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
+//{
+//    int n = -1;
+//    self->comm_fd = accept4(self->listen_fd, self->address, &self->address_length, SOCK_NONBLOCK);
+//    if(self->comm_fd > 0)
+//        n = recv(self->comm_fd, msg_buffer, 255, 0);
+//    return n;
+//}
+//
+//int slim_socket_server_resp(SlimSocket* self, char* msg_buffer)
+//{
+//    int n = -1;
+//    if(self->comm_fd > 0)
+//    {
+//        n = send(self->comm_fd, msg_buffer, 255, 0);
+//        close(self->comm_fd);
+//    }
+//    return n;
+//}
 
 SlimSocket* slim_socket_new(void)
 {

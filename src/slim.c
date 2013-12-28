@@ -103,7 +103,7 @@ static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* 
 
             printf ("command: %i\r\n", messages[i].looper.command);
             printf ("looper number: %i\r\n", messages[i].looper.number);
-            if (messages[i].looper.command == SlimMessage_Looper_Command_SET)
+            //if (messages[i].looper.command == SlimMessage_Looper_Command_SET)
             {
                 for (int i = 0; i < messages[i].looper.settings_count; i++)
                 {

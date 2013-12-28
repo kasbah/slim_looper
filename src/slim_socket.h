@@ -8,13 +8,14 @@
 
 typedef struct {
     int listen_fd;
+    int comm_fd;
     struct sockaddr_un* address;
     int address_length;
 } SlimSocket;
 
 SlimSocket* slim_socket_server_new(void);
 SlimSocket* slim_socket_new(void);
-int slim_socket_read(SlimSocket* self, char* msg_buffer);
+//int slim_socket_read(SlimSocket* self, char* msg_buffer);
 int slim_socket_server_read(SlimSocket* self, char* msg_buffer);
 void slim_socket_free(SlimSocket* self);
 

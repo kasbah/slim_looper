@@ -1,3 +1,4 @@
+//controler -> slim
 message SlimMessage {
     enum Type {
         LOOPER = 0;
@@ -7,18 +8,16 @@ message SlimMessage {
 
     message Looper { 
         required uint32 number = 1;
-        enum Command {
-            SET      = 0;
-            RECORD   = 1;
-            OVERDUB  = 2;
-            INSERT   = 3;
-            REPLACE  = 4;
-            PAUSE    = 6;
-            MULTIPLY = 5;
+        enum RequestState {
+            RECORD   = 0;
+            OVERDUB  = 1;
+            INSERT   = 2;
+            REPLACE  = 3;
+            MULTIPLY = 4;
+            PAUSE    = 5;
         }
-        required Command command = 2;
+        optional RequestState request_state = 2;
 
-        //settings are only read if command is "SET"
         message Setting {
             enum Name {
                 DRY = 0;
@@ -33,10 +32,9 @@ message SlimMessage {
 
     message Global {
         enum Command {
-            SET  = 0;
-            QUIT = 1;
+            QUIT = 0;
         };
-        required Command command = 2;
+        required Command command = 1;
 
         //settings are only read if command is "SET"
         message Setting {
@@ -47,7 +45,7 @@ message SlimMessage {
             required Name name   = 1;
             required float value = 2;
         }
-        repeated Setting settings = 3;
+        repeated Setting settings = 2;
     }
 
     optional Looper looper  = 2;
