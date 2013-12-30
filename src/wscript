@@ -40,17 +40,17 @@ def build(bld):
 
     # Build manifest.ttl by substitution (for portable lib extension)
     bld(features     = 'subst',
-        source       = 'lv2/slim_lv2_manifest.ttl.in',
+        source       = 'lv2/manifest.ttl.in',
         target       = '%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
         LIB_EXT      = module_ext)
 
     # Copy other data files to build bundle (build/slim_looper.lv2)
-    for i in ['lv2/slim_lv2.ttl']:
+    for i in ['lv2/slim.ttl']:
         bld(features     = 'subst',
             is_copy      = True,
             source       = i,
-            target       = '%s/%s' % (bundle, 'slim_lv2.ttl'),
+            target       = '%s/%s' % (bundle, 'slim.ttl'),
             install_path = '${LV2DIR}/%s' % bundle)
 
     # Use LV2 headers from parent directory if building as a sub-project
