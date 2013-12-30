@@ -40,17 +40,17 @@ def build(bld):
 
     # Build manifest.ttl by substitution (for portable lib extension)
     bld(features     = 'subst',
-        source       = 'slim_lv2_manifest.ttl.in',
+        source       = 'lv2/slim_lv2_manifest.ttl.in',
         target       = '%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
         LIB_EXT      = module_ext)
 
     # Copy other data files to build bundle (build/slim_looper.lv2)
-    for i in ['slim_lv2.ttl']:
+    for i in ['lv2/slim_lv2.ttl']:
         bld(features     = 'subst',
             is_copy      = True,
             source       = i,
-            target       = '%s/%s' % (bundle, i),
+            target       = '%s/%s' % (bundle, 'slim_lv2.ttl'),
             install_path = '${LV2DIR}/%s' % bundle)
 
     # Use LV2 headers from parent directory if building as a sub-project
@@ -59,18 +59,19 @@ def build(bld):
     #    includes = '../..'
 
     # Build plugin library
-    #obj = bld(features     = 'c cshlib',
-    #          source       = 'slim_lv2.c slim.c looper.c',
-    #          name         = 'slim',
-    #          target       = '%s/slim' % bundle,
-    #          install_path = '${LV2DIR}/%s' % bundle,
-    #          uselib       = 'M LV2')
-    #obj.env.cshlib_PATTERN = module_pat
+    obj = bld(features     = 'c cshlib',
+              source       = 'lv2/slim_lv2.c slim.c looper.c slim_socket.c protocol/nanopb/pb_encode.c protocol/nanopb/pb_decode.c protocol/slim.pb.c',
+              name         = 'slim',
+              target       = '%s/slim' % bundle,
+              includes     = 'protocol protocol/nanopb',
+              install_path = '${LV2DIR}/%s' % bundle,
+              uselib       = 'M LV2')
+    obj.env.cshlib_PATTERN = module_pat
 
     # Build a standalone jack client
 
     obj = bld(features     = 'c cprogram',
-              source       = 'slim_jack.c slim.c looper.c slim_socket.c protocol/nanopb/pb_encode.c protocol/nanopb/pb_decode.c protocol/slim.pb.c',
+              source       = 'jack/slim_jack.c slim.c looper.c slim_socket.c protocol/nanopb/pb_encode.c protocol/nanopb/pb_decode.c protocol/slim.pb.c',
               name         = 'slim',
               target       = '/slim',
               includes     = 'protocol protocol/nanopb',
