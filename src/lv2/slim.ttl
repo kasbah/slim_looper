@@ -5,6 +5,19 @@
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
 @prefix slim:  <https://github.com/kasbah/slim_looper.lv2#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+
+slim:GlobalSetting
+    a rdfs:Class ,
+        owl:Class ;
+	rdfs:subClassOf lv2:Port ;
+	rdfs:label "Global Setting" .
+
+slim:LooperSetting
+    a rdfs:Class ,
+        owl:Class ;
+	rdfs:subClassOf lv2:Port ;
+	rdfs:label "Looper Setting" .
 
 <https://github.com/kasbah/slim_looper.lv2>
 	a lv2:Plugin;
