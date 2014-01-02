@@ -2,6 +2,7 @@ from PyQt4.QtGui import QPalette, QColor
 
 fPalBlack = QPalette()
 fPalBlue = QPalette()
+
 fPalBlack.setColor(QPalette.Disabled, QPalette.Window, QColor(14, 14, 14));
 fPalBlack.setColor(QPalette.Active,   QPalette.Window, QColor(17, 17, 17));
 fPalBlack.setColor(QPalette.Inactive, QPalette.Window, QColor(17, 17, 17));

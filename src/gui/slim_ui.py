@@ -1,8 +1,9 @@
 from __future__ import print_function
 import sys
-from PyQt4.QtGui import QGroupBox, QWidget, QVBoxLayout, QMenuBar, QHBoxLayout
+from PyQt4.QtGui import QGroupBox, QWidget, QVBoxLayout, QMenuBar, QHBoxLayout, QDial
 from PyQt4.QtGui import QStatusBar, QApplication, QMainWindow, QPushButton, QStyleFactory
-from PyQt4.QtCore import QString, QRect, QMetaObject, SIGNAL
+from PyQt4.QtGui import QLabel 
+from PyQt4.QtCore import QString, QRect, QMetaObject, SIGNAL, Qt
 
 
 from ui_settings import slimUISettings
@@ -27,24 +28,38 @@ class LooperWidget(QGroupBox):
     def __init__(self, parent, looper_number, looper_settings):
         global commands
         super(LooperWidget, self).__init__(parent)
-        self.horizontalLayout = QHBoxLayout(self)
+        self.verticalLayout = QVBoxLayout(self)
+        self.hwidget = QWidget()
+        self.verticalLayout.addWidget(self.hwidget)
+        self.horizontalLayout = QHBoxLayout(self.hwidget)
         self.buttons = []
         self.sliders = []
         self.number = looper_number
         for number,name in commands:
-            if name != "SET":
-                self.buttons.append(QPushButton(self, text=QApplication.translate("MainWindow", name.title(), None, QApplication.UnicodeUTF8)))
-                self.horizontalLayout.addWidget(self.buttons[-1])
-                self.buttons[-1].command = number
-                self.buttons[-1].clicked.connect(self.onButtonClicked)
+            self.buttons.append(QPushButton(self, text=QApplication.translate("MainWindow", name.title(), None, QApplication.UnicodeUTF8)))
+            self.horizontalLayout.addWidget(self.buttons[-1])
+            self.buttons[-1].command = number
+            self.buttons[-1].clicked.connect(self.onButtonClicked)
         for d in looper_settings:
-            print(d)
-            self.sliders.append(ParamSpinBox(self))
-            self.sliders[-1].setDefault(float(d["lv2:default"][0]))
-            self.sliders[-1].setMaximum(float(d["lv2:maximum"][0]))
-            self.sliders[-1].setMinimum(float(d["lv2:minimum"][0]))
-            self.sliders[-1].setStep(0.0)
-            self.horizontalLayout.addWidget(self.sliders[-1])
+            widget = QWidget()
+            widget.setMaximumHeight(90)
+            widget.setMaximumWidth (90)
+            widget.setMinimumHeight(90)
+            widget.setMinimumWidth (90)
+            layout = QVBoxLayout(widget)
+            name = d["lv2:name"][0].replace("Looper ","", 1)
+            widget.label = QLabel(name)
+            widget.label.setAlignment(Qt.AlignCenter)
+            widget.dial = QDial()
+            layout.addWidget(widget.dial)
+            layout.addWidget(widget.label)
+            self.sliders.append(widget)
+            #self.sliders[-1].setDefault(float(d["lv2:default"][0]))
+            #self.sliders[-1].setMaximum(float(d["lv2:maximum"][0]))
+            #self.sliders[-1].setMinimum(float(d["lv2:minimum"][0]))
+            #self.sliders[-1].setStep(0.0)
+            #self.sliders[-1].setLabel(d["lv2:name"][0])
+            self.verticalLayout.addWidget(self.sliders[-1])
 
 
     def retranslateUi(self):
@@ -97,9 +112,11 @@ class ControlMainWindow(QMainWindow):
         self.ui.setupUi(self)
 
 if __name__ == "__main__":
-    QApplication.setStyle(QStyleFactory.create("QtCurve"))
-    QApplication.setPalette(ui_palette.fPalBlue)
-    QApplication.setPalette(ui_palette.fPalBlack)
+    QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+    QApplication.setPalette(QApplication.style().standardPalette())
+    #QApplication.setStyle(QStyleFactory.create("QtCurve"))
+    #QApplication.setPalette(ui_palette.fPalBlue)
+    #QApplication.setPalette(ui_palette.fPalBlack)
     app = QApplication(sys.argv)
     mySW = ControlMainWindow()
     mySW.show() 
