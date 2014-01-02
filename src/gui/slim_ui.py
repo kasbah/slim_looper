@@ -4,9 +4,10 @@ from PyQt4.QtGui import QGroupBox, QWidget, QVBoxLayout, QMenuBar, QHBoxLayout
 from PyQt4.QtGui import QStatusBar, QApplication, QMainWindow, QPushButton, QStyleFactory
 from PyQt4.QtCore import QString, QRect, QMetaObject, SIGNAL
 
+
+import ui_settings
 from slim_pb2 import SlimMessage
-from google.protobuf.internal import encoder
-import socket
+import slim_socket
 
 try:
     _fromUtf8 = QString.fromUtf8
@@ -17,14 +18,6 @@ commands = []
 cmd_dict = SlimMessage.Looper.DESCRIPTOR.enum_types_by_name["Command"].values_by_number
 for number, value in cmd_dict.iteritems():
     commands.append((number, value.name))
-
-def send(msg):
-    string = msg.SerializeToString()
-    string = encoder._VarintBytes(len(string)) + string
-    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.connect("/tmp/slim_socket") 
-    s.send(string)
-    s.close()
 
 class LooperWidget(QGroupBox):
     def __init__(self, parent, looper_number):
@@ -46,7 +39,7 @@ class LooperWidget(QGroupBox):
         msg.type = SlimMessage.LOOPER
         msg.looper.number = self.number 
         msg.looper.command = self.sender().command 
-        send(msg)
+        slim_socket.send(msg)
 
 class Ui_SLim(object):
     def setupUi(self, SLim):
