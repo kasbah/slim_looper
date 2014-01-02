@@ -45,7 +45,7 @@ class PixmapDial(QDial):
     def __init__(self, parent):
         QDial.__init__(self, parent)
 
-        self.fPixmap      = QPixmap("../bitmaps/dial_01d.png")
+        self.fPixmap      = QPixmap("./bitmaps/dial_01d.png")
         self.fPixmapNum   = "01"
         self.fCustomPaint = self.CUSTOM_PAINT_NULL
 
@@ -89,7 +89,7 @@ class PixmapDial(QDial):
 
     def setEnabled(self, enabled):
         if self.isEnabled() != enabled:
-            self.fPixmap.load(":/bitmaps/dial_%s%s.png" % (self.fPixmapNum, "" if enabled else "d"))
+            self.fPixmap.load("./bitmaps/dial_%s%s.png" % (self.fPixmapNum, "" if enabled else "d"))
             self.updateSizes()
             self.update()
         QDial.setEnabled(self, enabled)
@@ -115,7 +115,7 @@ class PixmapDial(QDial):
 
     def setPixmap(self, pixmapId):
         self.fPixmapNum = "%02i" % pixmapId
-        self.fPixmap.load(":/bitmaps/dial_%s%s.png" % (self.fPixmapNum, "" if self.isEnabled() else "d"))
+        self.fPixmap.load("./bitmaps/dial_%s%s.png" % (self.fPixmapNum, "" if self.isEnabled() else "d"))
 
         if self.fPixmap.width() > self.fPixmap.height():
             self.fOrientation = self.HORIZONTAL

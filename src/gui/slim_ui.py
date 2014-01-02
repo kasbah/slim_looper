@@ -9,6 +9,7 @@ from ui_settings import slimUISettings
 from slim_pb2 import SlimMessage
 import slim_socket
 
+import ui_palette
 
 from carla_widgets.paramspinbox import ParamSpinBox
 
@@ -96,8 +97,9 @@ class ControlMainWindow(QMainWindow):
         self.ui.setupUi(self)
 
 if __name__ == "__main__":
-    QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
-    #QApplication.setPalette(QApplication.style().standardPalette())
+    QApplication.setStyle(QStyleFactory.create("QtCurve"))
+    QApplication.setPalette(ui_palette.fPalBlue)
+    QApplication.setPalette(ui_palette.fPalBlack)
     app = QApplication(sys.argv)
     mySW = ControlMainWindow()
     mySW.show() 
