@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <stddef.h>
 
+#define MSG_BUFFER_SIZE 256
+
 typedef struct {
     int listen_fd;
     int comm_fd;

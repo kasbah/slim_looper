@@ -20,7 +20,7 @@ except AttributeError:
     _fromUtf8 = lambda s: s
 
 commands = []
-cmd_dict = SlimMessage.Looper.DESCRIPTOR.enum_types_by_name["Command"].values_by_number
+cmd_dict = SlimMessage.Looper.DESCRIPTOR.enum_types_by_name["State"].values_by_number
 for number, value in cmd_dict.iteritems():
     commands.append((number, value.name))
 
@@ -68,7 +68,7 @@ class LooperWidget(QGroupBox):
         msg = SlimMessage()
         msg.type = SlimMessage.LOOPER
         msg.looper.number = self.number 
-        msg.looper.command = self.sender().command 
+        msg.looper.state = self.sender().command 
         slim_socket.send(msg)
 
 class Ui_SLim(object):

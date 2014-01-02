@@ -32,34 +32,34 @@ SlimSocket* slim_socket_server_new(void)
     return self;
 }
 
-int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
-{
-    int n = -1;
-    int read_fd = accept4(self->listen_fd, self->address, &self->address_length, SOCK_NONBLOCK);
-    if(read_fd > 0)
-        n = recv(read_fd, msg_buffer, 255, 0);
-    close(read_fd);
-    return n;
-}
 //int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
 //{
 //    int n = -1;
-//    self->comm_fd = accept4(self->listen_fd, self->address, &self->address_length, SOCK_NONBLOCK);
-//    if(self->comm_fd > 0)
-//        n = recv(self->comm_fd, msg_buffer, 255, 0);
+//    int read_fd = accept4(self->listen_fd, self->address, &self->address_length, SOCK_NONBLOCK);
+//    if(read_fd > 0)
+//        n = recv(read_fd, msg_buffer, MSG_BUFFER_SIZE - 1, 0);
+//    close(read_fd);
 //    return n;
 //}
-//
-//int slim_socket_server_resp(SlimSocket* self, char* msg_buffer)
-//{
-//    int n = -1;
-//    if(self->comm_fd > 0)
-//    {
-//        n = send(self->comm_fd, msg_buffer, 255, 0);
-//        close(self->comm_fd);
-//    }
-//    return n;
-//}
+int slim_socket_server_read(SlimSocket* self, char* msg_buffer)
+{
+    int n = -1;
+    self->comm_fd = accept4(self->listen_fd, self->address, &self->address_length, SOCK_NONBLOCK);
+    if(self->comm_fd > 0)
+        n = recv(self->comm_fd, msg_buffer, MSG_BUFFER_SIZE - 1, 0);
+    return n;
+}
+
+int slim_socket_server_resp(SlimSocket* self, char* msg_buffer)
+{
+    int n = -1;
+    if(self->comm_fd > 0)
+    {
+        n = send(self->comm_fd, msg_buffer, MSG_BUFFER_SIZE - 1, 0);
+        close(self->comm_fd);
+    }
+    return n;
+}
 
 SlimSocket* slim_socket_new(void)
 {
@@ -79,7 +79,7 @@ int slim_socket_read(SlimSocket* self, char* msg_buffer)
 {
     int read_fd = socket (AF_UNIX, SOCK_STREAM, 0);
     int n = connect(read_fd, self->address, self->address_length);
-    n = recv(read_fd, msg_buffer, 255, 0);
+    n = recv(read_fd, msg_buffer, MSG_BUFFER_SIZE - 1, 0);
     close(read_fd);
     return n;
 }

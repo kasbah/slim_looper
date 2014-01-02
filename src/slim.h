@@ -32,7 +32,7 @@ typedef struct {
     uint32_t n_loopers;
     SlimSocket* socket;
     Looper** looper_array;
-    char msg_buffer[256];
+    char msg_buffer[MSG_BUFFER_SIZE];
     SlimMessage messages[MAX_MESSAGES];
 } Slim;
 

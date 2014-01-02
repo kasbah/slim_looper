@@ -19,32 +19,20 @@
 #define __LOOPER_H__
 
 #include <stdint.h>
+#include "protocol/slim.pb.h"
 
 #define LOOP_MAX_SAMPLES 19200000 
 
-typedef enum {
-    PAUSED    = 0,
-    PLAYING   = 1,
-    RECORDING = 2
-} LooperState;
-
-typedef enum {
-    MODE_NEW     = 0,
-    MODE_OVERDUB = 1,
-    MODE_INSERT  = 2,
-    MODE_REPLACE = 3
-} LooperRecordMode;
-
 typedef struct {
-    LooperRecordMode record_mode;
-    LooperState state;
+    SlimMessage_Looper_State requested_state;
+    SlimMessage_Looper_State state;
+    SlimMessage_Looper_State previously_run_state;
 } LooperSettings;
-
 
 typedef struct {
     float*       buffer;
-    unsigned       end;
-    unsigned       pos;
+    uint32_t        end;
+    uint32_t        pos;
 } Loop;
 
 typedef struct {
@@ -52,7 +40,6 @@ typedef struct {
     float*       output;
     Loop*  loop;
     LooperSettings* settings;
-    LooperState previous_state;
 } Looper;
 
 Looper* looper_new(uint32_t max_n_samples);

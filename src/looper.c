@@ -40,28 +40,33 @@ void looper_reset(Looper* looper)
 {
     looper->loop->pos = 0;
     looper->loop->end = 0;
-    looper->settings->state = PAUSED;
-    looper->previous_state  = PAUSED;
-    looper->settings->record_mode = MODE_NEW;
+    looper->settings->state                 = SlimMessage_Looper_State_PAUSE;
+    looper->settings->requested_state       = SlimMessage_Looper_State_PAUSE;
+    looper->settings->previously_run_state  = SlimMessage_Looper_State_PAUSE;
 }
 
 void looper_run(Looper* looper, uint32_t n_samples)
 {
-    switch(looper->settings->state)
+    LooperSettings* settings = looper->settings;
+    settings->state = settings->requested_state;
+    memset(looper->output, 0, n_samples * sizeof(float));
+    switch(settings->state)
     {
-        case RECORDING:
+        case SlimMessage_Looper_State_RECORD:
+        case SlimMessage_Looper_State_OVERDUB:
+        case SlimMessage_Looper_State_INSERT:
+        case SlimMessage_Looper_State_REPLACE:
+        case SlimMessage_Looper_State_MULTIPLY:
             looper_record(looper, n_samples);
             break;
-        case PLAYING:
+        case SlimMessage_Looper_State_PLAY:
             looper_play(looper, n_samples);
             break;
-        case PAUSED:
+        case SlimMessage_Looper_State_PAUSE:
         default:
-            memset(looper->output, 0, n_samples * sizeof(float));
             break;
     }
-
-    looper->previous_state = looper->settings->state;
+    settings->previously_run_state = settings->state;
 }
 
 // is position after processing nsamples before loop end?
@@ -85,11 +90,11 @@ looper_record(Looper* looper, uint32_t n_samples)
     Loop*               loop     = looper->loop;
     LooperSettings*     settings = looper->settings;
 
-    switch(settings->record_mode) 
+    switch(settings->state) 
     {
-        case MODE_NEW:
+        case SlimMessage_Looper_State_RECORD:
             //reset if we are not already running
-            if (looper->previous_state != RECORDING)
+            if (settings->previously_run_state != SlimMessage_Looper_State_RECORD)
             {
                 loop->pos = 0;
                 loop->end = 0;
@@ -103,7 +108,7 @@ looper_record(Looper* looper, uint32_t n_samples)
             memset(output, 0, n_samples * sizeof(float));
             break;
 
-        case MODE_OVERDUB:
+        case SlimMessage_Looper_State_OVERDUB:
             if (loop_pos_before_end(loop, n_samples)) 
             {
                 memcpy( output
@@ -127,13 +132,9 @@ looper_record(Looper* looper, uint32_t n_samples)
                 }
                 loop->pos = n_samples;
             }
-            else //no loop, output silence
-            {
-                memset(output, 0, n_samples * sizeof(float));
-            }
             break;
 
-        case MODE_INSERT:
+        case SlimMessage_Looper_State_INSERT:
             if (loop_exists(loop, n_samples))
             {
                 memmove( &(loop->buffer[loop->pos + n_samples])
@@ -147,10 +148,9 @@ looper_record(Looper* looper, uint32_t n_samples)
                 loop->pos += n_samples;
                 loop->end += n_samples;
             }
-            memset(output, 0, n_samples * sizeof(float));
             break;
 
-        case MODE_REPLACE:
+        case SlimMessage_Looper_State_REPLACE:
             if (loop_pos_before_end(loop, n_samples)) 
             {
                 memcpy(&(loop->buffer[loop->pos])
@@ -166,7 +166,6 @@ looper_record(Looper* looper, uint32_t n_samples)
                 memcpy(loop->buffer, input, n_samples * sizeof(float));
                 loop->pos = n_samples;
             }
-            memset(output, 0, n_samples * sizeof(float));
             break;
 
         default:
@@ -183,6 +182,7 @@ looper_play(Looper* looper, uint32_t n_samples)
     Loop*               loop     = looper->loop;
     LooperSettings*     settings = looper->settings;
 
+
     if (loop_pos_before_end(loop, n_samples))
     {
         memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
@@ -194,9 +194,5 @@ looper_play(Looper* looper, uint32_t n_samples)
     {
         memcpy(output, loop->buffer, n_samples * sizeof(float));
         loop->pos = n_samples;
-    }
-    else //no loop, output silence
-    {
-        memset(output, 0, n_samples * sizeof(float));
     }
 }

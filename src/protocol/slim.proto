@@ -8,15 +8,16 @@ message SlimMessage {
 
     message Looper { 
         required uint32 number = 1;
-        enum Command {
+        enum State {
             RECORD   = 0;
             OVERDUB  = 1;
             INSERT   = 2;
             REPLACE  = 3;
             MULTIPLY = 4;
-            PAUSE    = 5;
+            PLAY     = 5;
+            PAUSE    = 6;
         }
-        optional Command command = 2;
+        optional State state = 2;
 
         message Setting {
             enum Name {
@@ -34,9 +35,8 @@ message SlimMessage {
         enum Command {
             QUIT = 0;
         };
-        required Command command = 1;
+        optional Command command = 1;
 
-        //settings are only read if command is "SET"
         message Setting {
             enum Name {
                 DRY = 0;
