@@ -2,7 +2,7 @@ import rdflib
 from rdfdict.rdfdict import RDFdict 
 import rdfdict.namespaces as ns
 
-class slim_ui_settings(object):
+class slimUISettings(object):
     def __init__(self):
         path = "../lv2/slim.ttl"
         plugin = rdflib.URIRef("https://github.com/kasbah/slim_looper.lv2")

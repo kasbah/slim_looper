@@ -5,9 +5,12 @@ from PyQt4.QtGui import QStatusBar, QApplication, QMainWindow, QPushButton, QSty
 from PyQt4.QtCore import QString, QRect, QMetaObject, SIGNAL
 
 
-import ui_settings
+from ui_settings import slimUISettings
 from slim_pb2 import SlimMessage
 import slim_socket
+
+
+from carla_widgets.paramspinbox import ParamSpinBox
 
 try:
     _fromUtf8 = QString.fromUtf8
@@ -20,11 +23,12 @@ for number, value in cmd_dict.iteritems():
     commands.append((number, value.name))
 
 class LooperWidget(QGroupBox):
-    def __init__(self, parent, looper_number):
+    def __init__(self, parent, looper_number, looper_settings):
         global commands
         super(LooperWidget, self).__init__(parent)
         self.horizontalLayout = QHBoxLayout(self)
         self.buttons = []
+        self.sliders = []
         self.number = looper_number
         for number,name in commands:
             if name != "SET":
@@ -32,6 +36,16 @@ class LooperWidget(QGroupBox):
                 self.horizontalLayout.addWidget(self.buttons[-1])
                 self.buttons[-1].command = number
                 self.buttons[-1].clicked.connect(self.onButtonClicked)
+        for d in looper_settings:
+            print(d)
+            self.sliders.append(ParamSpinBox(self))
+            self.sliders[-1].setDefault(float(d["lv2:default"][0]))
+            self.sliders[-1].setMaximum(float(d["lv2:maximum"][0]))
+            self.sliders[-1].setMinimum(float(d["lv2:minimum"][0]))
+            self.sliders[-1].setStep(0.0)
+            self.horizontalLayout.addWidget(self.sliders[-1])
+
+
     def retranslateUi(self):
         pass
     def onButtonClicked(self):
@@ -58,11 +72,13 @@ class Ui_SLim(object):
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         SLim.setStatusBar(self.statusbar)
 
+        ui_settings = slimUISettings()
+
         QMetaObject.connectSlotsByName(SLim)
 
         self.loopers = []
-        self.loopers.append(LooperWidget(self.centralwidget, 0))
-        self.loopers.append(LooperWidget(self.centralwidget, 1))
+        self.loopers.append(LooperWidget(self.centralwidget, 0, ui_settings.looper))
+        self.loopers.append(LooperWidget(self.centralwidget, 1, ui_settings.looper))
         for looper in self.loopers:
             self.verticalLayout.addWidget(looper)
 
@@ -80,8 +96,8 @@ class ControlMainWindow(QMainWindow):
         self.ui.setupUi(self)
 
 if __name__ == "__main__":
-    QApplication.setStyle(QStyleFactory.create("Plastique"))
-    QApplication.setPalette(QApplication.style().standardPalette())
+    QApplication.setStyle(QStyleFactory.create("Cleanlooks"))
+    #QApplication.setPalette(QApplication.style().standardPalette())
     app = QApplication(sys.argv)
     mySW = ControlMainWindow()
     mySW.show() 

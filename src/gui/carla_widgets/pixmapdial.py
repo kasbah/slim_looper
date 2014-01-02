@@ -45,7 +45,7 @@ class PixmapDial(QDial):
     def __init__(self, parent):
         QDial.__init__(self, parent)
 
-        self.fPixmap      = QPixmap(":/bitmaps/dial_01d.png")
+        self.fPixmap      = QPixmap("../bitmaps/dial_01d.png")
         self.fPixmapNum   = "01"
         self.fCustomPaint = self.CUSTOM_PAINT_NULL
 
