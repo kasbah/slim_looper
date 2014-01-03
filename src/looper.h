@@ -32,6 +32,7 @@ typedef struct {
 typedef struct {
     float*       buffer;
     uint32_t        end;
+    uint32_t        end_before_multiply;
     uint32_t        pos;
 } Loop;
 
