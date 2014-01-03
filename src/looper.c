@@ -105,7 +105,6 @@ looper_record(Looper* looper, uint32_t n_samples)
                   );
             loop->pos += n_samples;
             loop->end += n_samples;
-            memset(output, 0, n_samples * sizeof(float));
             break;
 
         case SlimMessage_Looper_State_OVERDUB:
@@ -167,6 +166,31 @@ looper_record(Looper* looper, uint32_t n_samples)
                 loop->pos = n_samples;
             }
             break;
+        //case SlimMessage_Looper_State_MULTIPLY:
+        //    if (loop_pos_before_end(loop, n_samples)) 
+        //    {
+        //        memcpy( output
+        //              , &(loop->buffer[loop->pos])
+        //              , n_samples * sizeof(float)
+        //              );
+        //        for (int i = 0; i < n_samples; i++)
+        //        {   //TODO: reduce gain to stop clipping 
+        //            loop->buffer[loop->pos + i] += input[i];
+        //        }
+        //        loop->pos += n_samples;
+        //    }
+        //    //position is greater than loop length 
+        //    //increase loop length 
+        //    else if (loop_exists(loop, n_samples)) 
+        //    {
+        //        memcpy(output, loop->buffer, n_samples * sizeof(float));
+        //        memcpy(&loop->buffer[loop->pos], loop->buffer, n_samples * sizeof(float));
+        //        for (int i = 0; i < n_samples; i++)
+        //        {//TODO: reduce gain to stop clipping 
+        //            loop->buffer[i] += input[i];
+        //        }
+        //        loop->pos += n_samples;
+        //    }
 
         default:
             break;
