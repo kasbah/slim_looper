@@ -50,11 +50,10 @@ int main(void)
     slim = slim_new(1, jack_get_buffer_size(client));
     slim_activate(slim);
     jack_activate(client);
-    //char msg_buffer[256];
-    //SlimSocket* socket = slim_socket_server_new();
-    //if (socket <= 0) perror("ERROR creating socket");
-
-    sleep(10);
+    sleep(20);
+    jack_deactivate(client);
+    jack_client_close(client);
+    slim_free(slim);
     exit(0);
 
 }
