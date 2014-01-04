@@ -116,7 +116,7 @@ looper_record(Looper* looper, uint32_t n_samples)
                       , n_samples * sizeof(float)
                       );
                 for (int i = 0; i < n_samples; i++)
-                {   
+                {
                     //TODO: reduce gain to stop clipping 
                     loop->buffer[loop->pos + i] += input[i];
                 }
@@ -197,7 +197,7 @@ looper_record(Looper* looper, uint32_t n_samples)
                 //output the exisiting loop from the beginning
                 memcpy(output, loop->buffer, n_samples * sizeof(float));
                 //copy the whole loop
-                memcpy( &loop->buffer[loop->end + 1]
+                memcpy( &(loop->buffer[loop->end])
                       , loop->buffer
                       , loop->end_before_mult * sizeof(float)
                       );
