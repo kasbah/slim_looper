@@ -166,6 +166,31 @@ static char* test_multiply(void)
     looper_free(instance);
     return 0;
 }
+static char* test_extend(void)
+{
+    Looper* instance = setup_looper();
+    set_all(input, 0.1);
+    set_all(output, 0.0);
+    instance->settings->requested_state = SlimMessage_Looper_State_RECORD;
+    looper_run(instance, N_FRAMES);
+    set_all(input, 0.2);
+    looper_run(instance, N_FRAMES);
+    set_all(input, 0.05);
+    instance->settings->requested_state = SlimMessage_Looper_State_EXTEND;
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back first recording (1)", output, 0.1);
+    instance->settings->requested_state = SlimMessage_Looper_State_PLAY;
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back first recording after multiply (2)", output, 0.1);
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back second recording after multiply (3)", output, 0.2);
+    looper_run(instance, N_FRAMES);
+    assert_all("playing extended overdub (4)", output, 0.15);
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back first recording after multiply (5)", output, 0.1);
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back second recording after multiply (6)", output, 0.2);
+}
 
 static char* all_tests() 
 {
@@ -174,6 +199,7 @@ static char* all_tests()
     mu_run_test("test_insert: NOT ", test_insert);
     mu_run_test("test_replace: NOT ", test_replace);
     mu_run_test("test_multiply: NOT ", test_multiply);
+    mu_run_test("test_extend: NOT ", test_extend);
     return 0;
 }
 

@@ -16,6 +16,7 @@ message SlimMessage {
             MULTIPLY = 4;
             PLAY     = 5;
             PAUSE    = 6;
+            EXTEND   = 7;
         }
         optional State state = 2;
 

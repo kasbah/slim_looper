@@ -58,6 +58,7 @@ void looper_run(Looper* looper, uint32_t n_samples)
         case SlimMessage_Looper_State_INSERT:
         case SlimMessage_Looper_State_REPLACE:
         case SlimMessage_Looper_State_MULTIPLY:
+        case SlimMessage_Looper_State_EXTEND:
             looper_record(looper, n_samples);
             break;
         case SlimMessage_Looper_State_PLAY:
@@ -210,6 +211,45 @@ looper_record(Looper* looper, uint32_t n_samples)
                 loop->pos += n_samples;
                 loop->end += loop->end_before_mult;
             }
+            break;
+        case SlimMessage_Looper_State_EXTEND:
+            if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
+            {
+                loop->end_before_mult = loop->end;
+            }
+            if (loop_pos_before_end(loop, n_samples)) 
+            {
+                memcpy( output
+                      , &(loop->buffer[loop->pos])
+                      , n_samples * sizeof(float)
+                      );
+                for (int i = 0; i < n_samples; i++)
+                {   
+                    //TODO: reduce gain to stop clipping 
+                    loop->buffer[loop->pos + i] += input[i];
+                }
+                loop->pos += n_samples;
+            }
+            else if (loop_exists(loop, n_samples)) 
+            {
+                //output the exisiting loop from the beginning
+                memcpy(output, &(loop->buffer[loop->pos - loop->end_before_mult]), n_samples * sizeof(float));
+                //copy the current block
+                memcpy( &(loop->buffer[loop->pos])
+                      , &(loop->buffer[loop->pos - loop->end_before_mult])
+                      , n_samples * sizeof(float)
+                      );
+                //add input to the loop
+                for (int i = 0; i < n_samples; i++)
+                {
+                    //TODO: reduce gain to stop clipping 
+                    loop->buffer[loop->pos + i] += input[i];
+                }
+                loop->pos += n_samples;
+                loop->end += n_samples;
+            }
+
+
 
         default:
             break;
