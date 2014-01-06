@@ -83,7 +83,7 @@ static uint8_t loop_exists(Loop* loop, uint32_t n_samples)
     return (loop->end >= n_samples);
 }
 
-void
+static void
 looper_record(Looper* looper, uint32_t n_samples)
 {
     const float* const input  = looper->input;
@@ -216,8 +216,9 @@ looper_record(Looper* looper, uint32_t n_samples)
             if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
             {
                 loop->end_before_mult = loop->end;
+                loop->pos_extend = loop->pos;
             }
-            if (loop_pos_before_end(loop, n_samples)) 
+            if ((loop->pos + n_samples) <= (loop->end_before_mult)) 
             {
                 memcpy( output
                       , &(loop->buffer[loop->pos])
@@ -228,15 +229,20 @@ looper_record(Looper* looper, uint32_t n_samples)
                     //TODO: reduce gain to stop clipping 
                     loop->buffer[loop->pos + i] += input[i];
                 }
-                loop->pos += n_samples;
             }
             else if (loop_exists(loop, n_samples)) 
             {
+                printf("pos-extend: %i\r\n", loop->pos_extend);
+                printf("pos: %i\r\n", loop->pos);
+                printf("loop-end: %i\r\n", loop->end);
+                printf("loop-end-before: %i\r\n", loop->end_before_mult);
+                if (loop->pos_extend > loop->end_before_mult)
+                    loop->pos_extend -= loop->end_before_mult;
                 //output the exisiting loop from the beginning
-                memcpy(output, &(loop->buffer[loop->pos - loop->end_before_mult]), n_samples * sizeof(float));
+                memcpy(output, &(loop->buffer[loop->pos_extend]), n_samples * sizeof(float));
                 //copy the current block
                 memcpy( &(loop->buffer[loop->pos])
-                      , &(loop->buffer[loop->pos - loop->end_before_mult])
+                      , &(loop->buffer[loop->pos_extend])
                       , n_samples * sizeof(float)
                       );
                 //add input to the loop
@@ -245,18 +251,19 @@ looper_record(Looper* looper, uint32_t n_samples)
                     //TODO: reduce gain to stop clipping 
                     loop->buffer[loop->pos + i] += input[i];
                 }
-                loop->pos += n_samples;
                 loop->end += n_samples;
             }
-
-
+            loop->pos += n_samples;
+            loop->pos_extend += n_samples;
+            if (loop->pos_extend > loop->end_before_mult)
+                loop->pos_extend -= loop->end_before_mult;
 
         default:
             break;
     }
 }
 
-void
+static void
 looper_play(Looper* looper, uint32_t n_samples)
 {
     const float* const input  = looper->input;

@@ -34,6 +34,7 @@ typedef struct {
     uint32_t        end;
     uint32_t        end_before_mult;
     uint32_t        pos;
+    uint32_t        pos_extend;
 } Loop;
 
 typedef struct {
@@ -46,8 +47,8 @@ typedef struct {
 Looper* looper_new(uint32_t max_n_samples);
 void looper_free  (Looper* looper);
 void looper_run   (Looper* looper, uint32_t n_samples);
-void looper_record(Looper* looper, uint32_t n_samples);
-void looper_play  (Looper* looper, uint32_t n_samples);
 void looper_reset (Looper* looper);
 
+static void looper_play  (Looper* looper, uint32_t n_samples);
+static void looper_record(Looper* looper, uint32_t n_samples);
 #endif// __LOOPER_H__

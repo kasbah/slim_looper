@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define N_FRAMES 3 
+#define N_FRAMES 2 
 
-#define VERBOSE 0
+#define VERBOSE 1
 #if VERBOSE
 #define assert_all(message, buffer, value) do {\
     float test_var = value;\
@@ -135,7 +135,7 @@ static char* test_multiply(void)
     looper_run(instance, N_FRAMES);
 
     set_all(input, 0.05);
-    instance->settings->requested_state = SlimMessage_Looper_State_MULTIPLY;
+    instance->settings->requested_state = SlimMessage_Looper_State_EXTEND;
     looper_run(instance, N_FRAMES);
     assert_all("playing back first recording (1)", output, 0.1);
     looper_run(instance, N_FRAMES);
