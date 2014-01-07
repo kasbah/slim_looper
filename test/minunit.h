@@ -17,10 +17,8 @@ char *join(const char* s1, const char* s2)
 }
 
 #define mu_assert(message, test) do { if (!(test)) return message; } while (0)
-//#define mu_run_test(test_name, test) do { char *message = test(); tests_run++; \
-                               if (message) return join(test_name, message); } while (0)
 #define mu_run_test(test_name, test) do { char *message = test(); tests_run++; \
-                               if (message) return message; } while (0)
+                               if (message) return join(test_name, message); } while (0)
 extern int tests_run;
 
 #endif// __MINUNIT_H__

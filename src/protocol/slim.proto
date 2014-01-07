@@ -13,10 +13,9 @@ message SlimMessage {
             OVERDUB  = 1;
             INSERT   = 2;
             REPLACE  = 3;
-            MULTIPLY = 4;
+            EXTEND   = 4;
             PLAY     = 5;
             PAUSE    = 6;
-            EXTEND   = 7;
         }
         optional State state = 2;
 

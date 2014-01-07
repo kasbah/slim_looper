@@ -5,7 +5,7 @@
 
 #define N_FRAMES 2 
 
-#define VERBOSE 1
+#define VERBOSE 0
 #if VERBOSE
 #define assert_all(message, buffer, value) do {\
     float test_var = value;\
@@ -124,7 +124,7 @@ static char* test_replace(void)
     looper_free(instance);
     return 0;
 }
-static char* test_multiply(void)
+static char* test_extend1(void)
 {
     Looper* instance = setup_looper();
     set_all(input, 0.1);
@@ -166,7 +166,7 @@ static char* test_multiply(void)
     looper_free(instance);
     return 0;
 }
-static char* test_extend(void)
+static char* test_extend2(void)
 {
     Looper* instance = setup_looper();
     set_all(input, 0.1);
@@ -190,6 +190,7 @@ static char* test_extend(void)
     assert_all("playing back first recording after multiply (5)", output, 0.1);
     looper_run(instance, N_FRAMES);
     assert_all("playing back second recording after multiply (6)", output, 0.2);
+    looper_free(instance);
     return 0;
 }
 
@@ -199,8 +200,8 @@ static char* all_tests()
     mu_run_test("test_overdub: NOT ", test_overdub);
     mu_run_test("test_insert: NOT ", test_insert);
     mu_run_test("test_replace: NOT ", test_replace);
-    mu_run_test("test_multiply: NOT ", test_multiply);
-    mu_run_test("test_extend: NOT ", test_extend);
+    mu_run_test("test_extend1: NOT ", test_extend1);
+    mu_run_test("test_extend2: NOT ", test_extend2);
     return 0;
 }
 
