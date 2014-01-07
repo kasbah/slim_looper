@@ -190,6 +190,7 @@ static char* test_extend(void)
     assert_all("playing back first recording after multiply (5)", output, 0.1);
     looper_run(instance, N_FRAMES);
     assert_all("playing back second recording after multiply (6)", output, 0.2);
+    return 0;
 }
 
 static char* all_tests() 
@@ -205,6 +206,7 @@ static char* all_tests()
 
 int main(int argc, char **argv) {
     char *result = all_tests();
+
     if (result != 0) {
         printf("%s\n", result);
     }

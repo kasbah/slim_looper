@@ -218,6 +218,8 @@ looper_record(Looper* looper, uint32_t n_samples)
                 loop->end_before_mult = loop->end;
                 loop->pos_extend = loop->pos;
             }
+            if (loop->pos_extend >= loop->end_before_mult)
+                loop->pos_extend -= loop->end_before_mult;
             if ((loop->pos + n_samples) <= (loop->end_before_mult)) 
             {
                 memcpy( output
@@ -232,12 +234,6 @@ looper_record(Looper* looper, uint32_t n_samples)
             }
             else if (loop_exists(loop, n_samples)) 
             {
-                printf("pos-extend: %i\r\n", loop->pos_extend);
-                printf("pos: %i\r\n", loop->pos);
-                printf("loop-end: %i\r\n", loop->end);
-                printf("loop-end-before: %i\r\n", loop->end_before_mult);
-                if (loop->pos_extend > loop->end_before_mult)
-                    loop->pos_extend -= loop->end_before_mult;
                 //output the exisiting loop from the beginning
                 memcpy(output, &(loop->buffer[loop->pos_extend]), n_samples * sizeof(float));
                 //copy the current block
@@ -255,8 +251,6 @@ looper_record(Looper* looper, uint32_t n_samples)
             }
             loop->pos += n_samples;
             loop->pos_extend += n_samples;
-            if (loop->pos_extend > loop->end_before_mult)
-                loop->pos_extend -= loop->end_before_mult;
 
         default:
             break;
