@@ -109,34 +109,24 @@ looper_record(Looper* looper, uint32_t n_samples)
             break;
 
         case SlimMessage_Looper_State_OVERDUB:
-            if (loop_pos_before_end(loop, n_samples)) 
+            if (loop->pos >= loop->end)
+                loop->pos -= loop->end;
+            memcpy( output
+                  , &(loop->buffer[loop->pos])
+                  , n_samples * sizeof(float)
+                  );
+            for (int i = 0; i < n_samples; i++)
             {
-                memcpy( output
-                      , &(loop->buffer[loop->pos])
-                      , n_samples * sizeof(float)
-                      );
-                for (int i = 0; i < n_samples; i++)
-                {
-                    //TODO: reduce gain to stop clipping 
-                    loop->buffer[loop->pos + i] += input[i];
-                }
-                loop->pos += n_samples;
+                //TODO: reduce gain to stop clipping 
+                loop->buffer[loop->pos + i] += input[i];
             }
-            //position is greater than loop length 
+            loop->pos += n_samples;
             //looping around to start as long as we have a loop
-            else if (loop_exists(loop, n_samples)) 
-            {
-                memcpy(output, loop->buffer, n_samples * sizeof(float));
-                for (int i = 0; i < n_samples; i++)
-                {
-                    //TODO: reduce gain to stop clipping 
-                    loop->buffer[i] += input[i];
-                }
-                loop->pos = n_samples;
-            }
             break;
 
         case SlimMessage_Looper_State_INSERT:
+            if (loop->pos >= loop->end)
+                loop->pos -= loop->end;
             if (loop_exists(loop, n_samples))
             {
                 //push the existing loop along by n_samples
@@ -155,21 +145,13 @@ looper_record(Looper* looper, uint32_t n_samples)
             break;
 
         case SlimMessage_Looper_State_REPLACE:
-            if (loop_pos_before_end(loop, n_samples)) 
-            {
-                memcpy(&(loop->buffer[loop->pos])
-                      , input
-                      , n_samples * sizeof(float)
-                      );
-                loop->pos += n_samples;
-            }
-            //position is greater than loop length 
-            //looping around to start as long as we have a loop
-            else if (loop_exists(loop, n_samples))
-            {
-                memcpy(loop->buffer, input, n_samples * sizeof(float));
-                loop->pos = n_samples;
-            }
+            if (loop->pos >= loop->end)
+                loop->pos -= loop->end;
+            memcpy(&(loop->buffer[loop->pos])
+                    , input
+                    , n_samples * sizeof(float)
+                  );
+            loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_EXTEND:
             if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
@@ -225,17 +207,8 @@ looper_play(Looper* looper, uint32_t n_samples)
     Loop*               loop     = looper->loop;
     LooperSettings*     settings = looper->settings;
 
-
-    if (loop_pos_before_end(loop, n_samples))
-    {
-        memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
-        loop->pos += n_samples;
-    }
-    //position is greater than loop length 
-    //looping around to start as long as we have a loop
-    else if (loop_exists(loop, n_samples))
-    {
-        memcpy(output, loop->buffer, n_samples * sizeof(float));
-        loop->pos = n_samples;
-    }
+    if (loop->pos >= loop->end)
+        loop->pos -= loop->end;
+    memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
+    loop->pos += n_samples;
 }
