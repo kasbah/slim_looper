@@ -40,7 +40,7 @@ void looper_reset(Looper* looper)
 {
     looper->loop->pos = 0;
     looper->loop->end = 0;
-    looper->loop->end_before_mult = 0;
+    looper->loop->end_before_extend = 0;
     looper->settings->state                 = SlimMessage_Looper_State_PAUSE;
     looper->settings->requested_state       = SlimMessage_Looper_State_PAUSE;
     looper->settings->previously_run_state  = SlimMessage_Looper_State_PAUSE;
@@ -101,43 +101,45 @@ looper_record(Looper* looper, uint32_t n_samples)
                 loop->end = 0;
             }
             memcpy( &(loop->buffer[loop->pos])
-                  , input
-                  , n_samples * sizeof(float)
+                    , input
+                    , n_samples * sizeof(float)
                   );
             loop->pos += n_samples;
             loop->end += n_samples;
             break;
 
         case SlimMessage_Looper_State_OVERDUB:
-            if (loop->pos >= loop->end)
-                loop->pos -= loop->end;
-            memcpy( output
-                  , &(loop->buffer[loop->pos])
-                  , n_samples * sizeof(float)
-                  );
-            for (int i = 0; i < n_samples; i++)
+            if (loop->end > 0)
             {
-                //TODO: reduce gain to stop clipping 
-                loop->buffer[loop->pos + i] += input[i];
+                if (loop->pos >= loop->end)
+                    loop->pos -= loop->end;
+                memcpy( output
+                        , &(loop->buffer[loop->pos])
+                        , n_samples * sizeof(float)
+                      );
+                for (int i = 0; i < n_samples; i++)
+                {
+                    //TODO: reduce gain to stop clipping 
+                    loop->buffer[loop->pos + i] += input[i];
+                }
+                loop->pos += n_samples;
             }
-            loop->pos += n_samples;
-            //looping around to start as long as we have a loop
             break;
 
         case SlimMessage_Looper_State_INSERT:
-            if (loop->pos >= loop->end)
-                loop->pos -= loop->end;
-            if (loop_exists(loop, n_samples))
+            if (loop->end > 0)
             {
+                if (loop->pos >= loop->end)
+                    loop->pos -= loop->end;
                 //push the existing loop along by n_samples
                 memmove( &(loop->buffer[loop->pos + n_samples])
-                       , &(loop->buffer[loop->pos])
-                       , (loop->end - loop->pos) * sizeof(float)
+                        , &(loop->buffer[loop->pos])
+                        , (loop->end - loop->pos) * sizeof(float)
                        );
                 //fill the space with the input
                 memcpy( &(loop->buffer[loop->pos])
-                      , input
-                      , n_samples * sizeof(float)
+                        , input
+                        , n_samples * sizeof(float)
                       );
                 loop->pos += n_samples;
                 loop->end += n_samples;
@@ -145,27 +147,30 @@ looper_record(Looper* looper, uint32_t n_samples)
             break;
 
         case SlimMessage_Looper_State_REPLACE:
-            if (loop->pos >= loop->end)
-                loop->pos -= loop->end;
-            memcpy(&(loop->buffer[loop->pos])
-                    , input
-                    , n_samples * sizeof(float)
-                  );
-            loop->pos += n_samples;
+            if (loop->end > 0)
+            {
+                if (loop->pos >= loop->end)
+                    loop->pos -= loop->end;
+                memcpy(&(loop->buffer[loop->pos])
+                        , input
+                        , n_samples * sizeof(float)
+                      );
+                loop->pos += n_samples;
+            }
             break;
         case SlimMessage_Looper_State_EXTEND:
             if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
             {
-                loop->end_before_mult = loop->end;
+                loop->end_before_extend = loop->end;
                 loop->pos_extend = loop->pos;
             }
-            if (loop->pos_extend >= loop->end_before_mult)
-                loop->pos_extend -= loop->end_before_mult;
-            if ((loop->pos + n_samples) <= (loop->end_before_mult)) 
+            if (loop->pos_extend >= loop->end_before_extend)
+                loop->pos_extend -= loop->end_before_extend;
+            if ((loop->pos + n_samples) <= (loop->end_before_extend)) 
             {
                 memcpy( output
-                      , &(loop->buffer[loop->pos])
-                      , n_samples * sizeof(float)
+                        , &(loop->buffer[loop->pos])
+                        , n_samples * sizeof(float)
                       );
                 for (int i = 0; i < n_samples; i++)
                 {   
@@ -179,8 +184,8 @@ looper_record(Looper* looper, uint32_t n_samples)
                 memcpy(output, &(loop->buffer[loop->pos_extend]), n_samples * sizeof(float));
                 //copy the current block
                 memcpy( &(loop->buffer[loop->pos])
-                      , &(loop->buffer[loop->pos_extend])
-                      , n_samples * sizeof(float)
+                        , &(loop->buffer[loop->pos_extend])
+                        , n_samples * sizeof(float)
                       );
                 //add input to the loop
                 for (int i = 0; i < n_samples; i++)
