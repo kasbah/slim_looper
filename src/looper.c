@@ -70,18 +70,6 @@ void looper_run(Looper* looper, uint32_t n_samples)
     settings->previously_run_state = settings->state;
 }
 
-// is position after processing nsamples before loop end?
-static uint8_t loop_pos_before_end(Loop* loop, uint32_t n_samples)
-{
-    return ((loop->pos + n_samples) <= (loop->end));
-}
-
-// existence is defined as being at least one block long
-static uint8_t loop_exists(Loop* loop, uint32_t n_samples)
-{
-    return (loop->end >= n_samples);
-}
-
 static void
 looper_record(Looper* looper, uint32_t n_samples)
 {
@@ -159,44 +147,33 @@ looper_record(Looper* looper, uint32_t n_samples)
             }
             break;
         case SlimMessage_Looper_State_EXTEND:
-            if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
+            if (loop->end >= 0) 
             {
-                loop->end_before_extend = loop->end;
-                loop->pos_extend = loop->pos;
-            }
-            if (loop->pos_extend >= loop->end_before_extend)
-                loop->pos_extend -= loop->end_before_extend;
-            if ((loop->pos + n_samples) <= (loop->end_before_extend)) 
-            {
-                memcpy( output
-                        , &(loop->buffer[loop->pos])
-                        , n_samples * sizeof(float)
-                      );
+                if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
+                {
+                    loop->end_before_extend = loop->end;
+                    loop->pos_extend = loop->pos;
+                }
+                if (loop->pos_extend >= loop->end_before_extend)
+                    loop->pos_extend -= loop->end_before_extend;
+                memcpy(output, &(loop->buffer[loop->pos_extend]), n_samples * sizeof(float));
+                if ((loop->pos + n_samples) > (loop->end_before_extend)) 
+                {
+                    //copy the current block
+                    memcpy( &(loop->buffer[loop->pos])
+                            , &(loop->buffer[loop->pos_extend])
+                            , n_samples * sizeof(float)
+                          );
+                    loop->end += n_samples;
+                }
                 for (int i = 0; i < n_samples; i++)
                 {   
                     //TODO: reduce gain to stop clipping 
                     loop->buffer[loop->pos + i] += input[i];
                 }
+                loop->pos += n_samples;
+                loop->pos_extend += n_samples;
             }
-            else if (loop_exists(loop, n_samples)) 
-            {
-                //output the exisiting loop from the beginning
-                memcpy(output, &(loop->buffer[loop->pos_extend]), n_samples * sizeof(float));
-                //copy the current block
-                memcpy( &(loop->buffer[loop->pos])
-                        , &(loop->buffer[loop->pos_extend])
-                        , n_samples * sizeof(float)
-                      );
-                //add input to the loop
-                for (int i = 0; i < n_samples; i++)
-                {
-                    //TODO: reduce gain to stop clipping 
-                    loop->buffer[loop->pos + i] += input[i];
-                }
-                loop->end += n_samples;
-            }
-            loop->pos += n_samples;
-            loop->pos_extend += n_samples;
 
         default:
             break;
