@@ -21,14 +21,14 @@
 int tests_run = 0;
 
 float input[N_FRAMES];
-float output[N_FRAMES];
+float* output;
 
 static Looper* setup_looper(void)
 {
     Looper* instance = looper_new(N_FRAMES);
     looper_reset(instance);
     instance->input  = input;
-    instance->output = output;
+    output = instance->output;
     return instance;
 }
 
