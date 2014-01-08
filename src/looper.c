@@ -25,7 +25,7 @@ Looper* looper_new(size_t max_n_samples)
     looper->output = calloc(max_n_samples, sizeof(float));
     looper->loop   = (Loop*)malloc(sizeof(Loop));
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
-    looper->settings     = (LooperSettings*)malloc(sizeof(LooperSettings));
+    looper->state     = (LooperState*)malloc(sizeof(LooperState));
     return looper;
 }
 
@@ -42,22 +42,22 @@ void looper_reset(Looper* looper)
     looper->loop->pos = 0;
     looper->loop->end = 0;
     looper->loop->end_before_extend = 0;
-    looper->settings->state                 = SlimMessage_Looper_State_PAUSE;
-    looper->settings->requested_state       = SlimMessage_Looper_State_PAUSE;
-    looper->settings->previously_run_state  = SlimMessage_Looper_State_PAUSE;
+    looper->state->current         = SlimMessage_Looper_State_PAUSE;
+    looper->state->requested       = SlimMessage_Looper_State_PAUSE;
+    looper->state->previously_run  = SlimMessage_Looper_State_PAUSE;
 }
 
 void looper_run(Looper* looper, size_t n_samples)
 {
-    LooperSettings* settings = looper->settings;
-    Loop*           loop     = looper->loop;
-    settings->state = settings->requested_state;
+    LooperState* state = looper->state;
+    Loop*        loop  = looper->loop;
+    state->current = state->requested;
     memset(looper->output, 0, n_samples * sizeof(float));
-    switch(settings->state)
+    switch(state->current)
     {
         case SlimMessage_Looper_State_RECORD:
             //reset if we are not already running
-            if (settings->previously_run_state != SlimMessage_Looper_State_RECORD)
+            if (state->previously_run != SlimMessage_Looper_State_RECORD)
             {
                 loop->pos = 0;
                 loop->end = 0;
@@ -74,7 +74,7 @@ void looper_run(Looper* looper, size_t n_samples)
             replace(loop, n_samples, looper->input);
             break;
         case SlimMessage_Looper_State_EXTEND:
-            if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
+            if (state->previously_run != SlimMessage_Looper_State_EXTEND)
             {
                 loop->end_before_extend = loop->end;
                 loop->pos_extend = loop->pos;
@@ -88,7 +88,7 @@ void looper_run(Looper* looper, size_t n_samples)
         default:
             break;
     }
-    settings->previously_run_state = settings->state;
+    state->previously_run = state->current;
 }
 
 static void record (Loop* loop, size_t n_samples, const float* const input)

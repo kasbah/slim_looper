@@ -46,17 +46,17 @@ static void slim_parse_looper_message(Slim* slim, const SlimMessage msg)
 {
     if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
     {
-        LooperSettings* settings = slim->looper_array[msg.looper.number]->settings; 
-        printf("previous requested: %i\r\n", settings->requested_state);
-        if (settings->requested_state == msg.looper.state)
+        LooperState* state = slim->looper_array[msg.looper.number]->state; 
+        printf("previous requested: %i\r\n", state->requested);
+        if (state->requested == msg.looper.state)
         {
-            settings->requested_state = SlimMessage_Looper_State_PLAY;
+            state->requested = SlimMessage_Looper_State_PLAY;
         }
         else
         {
-            settings->requested_state = msg.looper.state;
+            state->requested = msg.looper.state;
         }
-        printf("now requested: %i\r\n", settings->requested_state);
+        printf("now requested: %i\r\n", state->requested);
     }
 }
 

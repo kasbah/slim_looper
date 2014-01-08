@@ -24,10 +24,10 @@
 #define LOOP_MAX_SAMPLES 19200000 
 
 typedef struct {
-    SlimMessage_Looper_State requested_state;
-    SlimMessage_Looper_State state;
-    SlimMessage_Looper_State previously_run_state;
-} LooperSettings;
+    SlimMessage_Looper_State requested;
+    SlimMessage_Looper_State current;
+    SlimMessage_Looper_State previously_run;
+} LooperState;
 
 typedef struct {
     float* buffer;
@@ -41,7 +41,7 @@ typedef struct {
     const float* input;
     float*       output;
     Loop*  loop;
-    LooperSettings* settings;
+    LooperState* state;
 } Looper;
 
 Looper* looper_new(size_t max_n_samples);
