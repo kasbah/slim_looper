@@ -194,6 +194,27 @@ static char* test_extend2(void)
     return 0;
 }
 
+static char* test_no_loop(void)
+{
+    Looper* instance = setup_looper();
+    instance->state->requested = SlimMessage_Looper_State_OVERDUB;
+    looper_run(instance, N_FRAMES);
+    mu_assert("remaining in pause after overdub", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    instance->state->requested = SlimMessage_Looper_State_INSERT;
+    looper_run(instance, N_FRAMES);
+    mu_assert("remaining in pause after insert", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    instance->state->requested = SlimMessage_Looper_State_REPLACE;
+    looper_run(instance, N_FRAMES);
+    mu_assert("remaining in pause after replace", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    instance->state->requested = SlimMessage_Looper_State_EXTEND;
+    looper_run(instance, N_FRAMES);
+    mu_assert("remaining in pause after extend", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    instance->state->requested = SlimMessage_Looper_State_PLAY;
+    looper_run(instance, N_FRAMES);
+    mu_assert("remaining in pause after play", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    return 0;
+}
+
 static char* all_tests() 
 {
     mu_run_test("test_record: NOT ", test_record);
@@ -202,6 +223,7 @@ static char* all_tests()
     mu_run_test("test_replace: NOT ", test_replace);
     mu_run_test("test_extend1: NOT ", test_extend1);
     mu_run_test("test_extend2: NOT ", test_extend2);
+    mu_run_test("test_no_loop: NOT ", test_no_loop);
     return 0;
 }
 

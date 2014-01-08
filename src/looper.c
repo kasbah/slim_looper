@@ -51,7 +51,25 @@ void looper_run(Looper* looper, size_t n_samples)
 {
     LooperState* state = looper->state;
     Loop*        loop  = looper->loop;
-    state->current = state->requested;
+    switch(state->requested)
+    {
+        case SlimMessage_Looper_State_RECORD:
+            state->current = state->requested;
+            break;
+        case SlimMessage_Looper_State_OVERDUB:
+        case SlimMessage_Looper_State_INSERT:
+        case SlimMessage_Looper_State_REPLACE:
+        case SlimMessage_Looper_State_EXTEND:
+        case SlimMessage_Looper_State_PLAY:
+            if(loop->end > 0)
+            {
+                state->current = state->requested;
+            }
+            break;
+        case SlimMessage_Looper_State_PAUSE:
+        default:
+            break;
+    }
     memset(looper->output, 0, n_samples * sizeof(float));
     switch(state->current)
     {
