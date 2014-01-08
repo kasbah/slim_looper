@@ -42,9 +42,9 @@ void looper_reset(Looper* looper)
     looper->loop->pos = 0;
     looper->loop->end = 0;
     looper->loop->end_before_extend = 0;
-    looper->state->current         = SlimMessage_Looper_State_PAUSE;
-    looper->state->requested       = SlimMessage_Looper_State_PAUSE;
-    looper->state->previously_run  = SlimMessage_Looper_State_PAUSE;
+    looper->state->current         = SlimMessage_Looper_State_NONE;
+    looper->state->requested       = SlimMessage_Looper_State_NONE;
+    looper->state->previously_run  = SlimMessage_Looper_State_NONE;
 }
 
 void looper_run(Looper* looper, size_t n_samples)
@@ -61,12 +61,13 @@ void looper_run(Looper* looper, size_t n_samples)
         case SlimMessage_Looper_State_REPLACE:
         case SlimMessage_Looper_State_EXTEND:
         case SlimMessage_Looper_State_PLAY:
+        case SlimMessage_Looper_State_PAUSE:
             if(loop->end > 0)
             {
                 state->current = state->requested;
             }
             break;
-        case SlimMessage_Looper_State_PAUSE:
+        case SlimMessage_Looper_State_NONE:
         default:
             break;
     }
@@ -103,6 +104,7 @@ void looper_run(Looper* looper, size_t n_samples)
             play(loop, n_samples, looper->output);
             break;
         case SlimMessage_Looper_State_PAUSE:
+        case SlimMessage_Looper_State_NONE:
         default:
             break;
     }

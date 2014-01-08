@@ -199,19 +199,22 @@ static char* test_no_loop(void)
     Looper* instance = setup_looper();
     instance->state->requested = SlimMessage_Looper_State_OVERDUB;
     looper_run(instance, N_FRAMES);
-    mu_assert("remaining in pause after overdub", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    mu_assert("remaining in none after overdub", instance->state->current == SlimMessage_Looper_State_NONE);
     instance->state->requested = SlimMessage_Looper_State_INSERT;
     looper_run(instance, N_FRAMES);
-    mu_assert("remaining in pause after insert", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    mu_assert("remaining in none after insert", instance->state->current == SlimMessage_Looper_State_NONE);
     instance->state->requested = SlimMessage_Looper_State_REPLACE;
     looper_run(instance, N_FRAMES);
-    mu_assert("remaining in pause after replace", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    mu_assert("remaining in none after replace", instance->state->current == SlimMessage_Looper_State_NONE);
     instance->state->requested = SlimMessage_Looper_State_EXTEND;
     looper_run(instance, N_FRAMES);
-    mu_assert("remaining in pause after extend", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    mu_assert("remaining in none after extend", instance->state->current == SlimMessage_Looper_State_NONE);
     instance->state->requested = SlimMessage_Looper_State_PLAY;
     looper_run(instance, N_FRAMES);
-    mu_assert("remaining in pause after play", instance->state->current == SlimMessage_Looper_State_PAUSE);
+    mu_assert("remaining in none after play", instance->state->current == SlimMessage_Looper_State_NONE);
+    instance->state->requested = SlimMessage_Looper_State_PAUSE;
+    looper_run(instance, N_FRAMES);
+    mu_assert("remaining in none after pause", instance->state->current == SlimMessage_Looper_State_NONE);
     return 0;
 }
 

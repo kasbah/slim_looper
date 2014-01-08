@@ -9,13 +9,14 @@ message SlimMessage {
     message Looper { 
         required uint32 number = 1;
         enum State {
-            RECORD   = 0;
-            OVERDUB  = 1;
-            INSERT   = 2;
-            REPLACE  = 3;
-            EXTEND   = 4;
-            PLAY     = 5;
-            PAUSE    = 6;
+            NONE     = 0;
+            RECORD   = 1;
+            OVERDUB  = 2;
+            INSERT   = 3;
+            REPLACE  = 4;
+            EXTEND   = 5;
+            PLAY     = 6;
+            PAUSE    = 7;
         }
         optional State state = 2;
 
