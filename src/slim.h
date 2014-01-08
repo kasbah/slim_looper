@@ -44,5 +44,5 @@ void slim_connect(Slim* slim, void* input, void* output);
 //void slim_work_loop(Slim* slim);
 static void slim_parse_looper_message(Slim* slim, const SlimMessage msg);
 static void slim_parse_global_message(Slim* slim, const SlimMessage msg);
-static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer);
+static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, char* msg_buffer);
 #endif// __SLIM_H__

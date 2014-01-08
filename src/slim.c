@@ -65,7 +65,7 @@ static void slim_parse_global_message(Slim* slim, const SlimMessage msg)
 }
 
 
-static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, const char* const msg_buffer)
+static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, char* msg_buffer)
 {
     pb_istream_t stream = pb_istream_from_buffer(msg_buffer, n_bytes);
 
@@ -149,5 +149,5 @@ void slim_connect(Slim* slim, void* input, void* output)
             slim->looper_array[i]->input = (const float*)input;
         }
     }
-    slim->output = (const float*) output;
+    slim->output = (float*) output;
 }

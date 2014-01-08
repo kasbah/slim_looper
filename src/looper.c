@@ -91,7 +91,7 @@ void looper_run(Looper* looper, size_t n_samples)
     settings->previously_run_state = settings->state;
 }
 
-static void record (Loop* loop, size_t n_samples, float* input)
+static void record (Loop* loop, size_t n_samples, const float* const input)
 {
     memcpy( &(loop->buffer[loop->pos])
             , input
@@ -101,7 +101,7 @@ static void record (Loop* loop, size_t n_samples, float* input)
     loop->end += n_samples;
 }
 
-static void overdub(Loop* loop, size_t n_samples, float* input, float* output)
+static void overdub(Loop* loop, size_t n_samples, const float* const input, float* output)
 {
     if (loop->end > 0)
     {
@@ -120,7 +120,7 @@ static void overdub(Loop* loop, size_t n_samples, float* input, float* output)
     }
 }
 
-static void insert(Loop* loop, size_t n_samples, float* input)
+static void insert(Loop* loop, size_t n_samples, const float* const input)
 {
     if (loop->end > 0)
     {
@@ -141,7 +141,7 @@ static void insert(Loop* loop, size_t n_samples, float* input)
     }
 }
 
-static void replace(Loop* loop, size_t n_samples, float* input)
+static void replace(Loop* loop, size_t n_samples, const float* const input)
 {
     if (loop->end > 0)
     {
@@ -154,7 +154,7 @@ static void replace(Loop* loop, size_t n_samples, float* input)
         loop->pos += n_samples;
     }
 }
-static void extend (Loop* loop, size_t n_samples, float* input, float* output)
+static void extend (Loop* loop, size_t n_samples, const float* const input, float* output)
 {
     if (loop->end >= 0) 
     {

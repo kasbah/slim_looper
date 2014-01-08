@@ -19,6 +19,7 @@ SlimSocket* slim_socket_server_new(void);
 SlimSocket* slim_socket_new(void);
 //int slim_socket_read(SlimSocket* self, char* msg_buffer);
 int slim_socket_server_read(SlimSocket* self, char* msg_buffer);
+int slim_socket_server_resp(SlimSocket* self, char* msg_buffer);
 void slim_socket_free(SlimSocket* self);
 
 #endif// __SOCKET_H__
