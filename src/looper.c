@@ -62,16 +62,16 @@ void looper_run(Looper* looper, size_t n_samples)
                 loop->pos = 0;
                 loop->end = 0;
             }
-            record(looper, n_samples);
+            record(loop, n_samples, looper->input);
             break;
         case SlimMessage_Looper_State_OVERDUB:
-            overdub(looper, n_samples);
+            overdub(loop, n_samples, looper->input, looper->output);
             break;
         case SlimMessage_Looper_State_INSERT:
-            insert(looper, n_samples);
+            insert(loop, n_samples, looper->input);
             break;
         case SlimMessage_Looper_State_REPLACE:
-            replace(looper, n_samples);
+            replace(loop, n_samples, looper->input);
             break;
         case SlimMessage_Looper_State_EXTEND:
             if (settings->previously_run_state != SlimMessage_Looper_State_EXTEND)
@@ -79,10 +79,10 @@ void looper_run(Looper* looper, size_t n_samples)
                 loop->end_before_extend = loop->end;
                 loop->pos_extend = loop->pos;
             }
-            extend(looper, n_samples);
+            extend(loop, n_samples, looper->input, looper->output);
             break;
         case SlimMessage_Looper_State_PLAY:
-            play(looper, n_samples);
+            play(loop, n_samples, looper->output);
             break;
         case SlimMessage_Looper_State_PAUSE:
         default:
@@ -91,52 +91,49 @@ void looper_run(Looper* looper, size_t n_samples)
     settings->previously_run_state = settings->state;
 }
 
-static void record(Looper* looper, size_t n_samples)
+static void record (Loop* loop, size_t n_samples, float* input)
 {
-    Loop* loop = looper->loop;
     memcpy( &(loop->buffer[loop->pos])
-            , looper->input
+            , input
             , n_samples * sizeof(float)
           );
     loop->pos += n_samples;
     loop->end += n_samples;
 }
 
-static void overdub(Looper* looper, size_t n_samples)
+static void overdub(Loop* loop, size_t n_samples, float* input, float* output)
 {
-    Loop* loop = looper->loop;
     if (loop->end > 0)
     {
         if (loop->pos >= loop->end)
             loop->pos -= loop->end;
-        memcpy( looper->output
+        memcpy(   output
                 , &(loop->buffer[loop->pos])
                 , n_samples * sizeof(float)
               );
         for (int i = 0; i < n_samples; i++)
         {
             //TODO: reduce gain to stop clipping 
-            loop->buffer[loop->pos + i] += looper->input[i];
+            loop->buffer[loop->pos + i] += input[i];
         }
         loop->pos += n_samples;
     }
 }
 
-static void insert(Looper* looper, size_t n_samples)
+static void insert(Loop* loop, size_t n_samples, float* input)
 {
-    Loop* loop = looper->loop;
     if (loop->end > 0)
     {
         if (loop->pos >= loop->end)
             loop->pos -= loop->end;
         //push the existing loop along by n_samples
-        memmove( &(loop->buffer[loop->pos + n_samples])
+        memmove(  &(loop->buffer[loop->pos + n_samples])
                 , &(loop->buffer[loop->pos])
                 , (loop->end - loop->pos) * sizeof(float)
                );
         //fill the space with the input
-        memcpy( &(loop->buffer[loop->pos])
-                , looper->input
+        memcpy(   &(loop->buffer[loop->pos])
+                , input
                 , n_samples * sizeof(float)
               );
         loop->pos += n_samples;
@@ -144,35 +141,33 @@ static void insert(Looper* looper, size_t n_samples)
     }
 }
 
-static void replace(Looper* looper, size_t n_samples)
+static void replace(Loop* loop, size_t n_samples, float* input)
 {
-    Loop* loop = looper->loop;
     if (loop->end > 0)
     {
         if (loop->pos >= loop->end)
             loop->pos -= loop->end;
-        memcpy(&(loop->buffer[loop->pos])
-                , looper->input
+        memcpy(   &(loop->buffer[loop->pos])
+                , input
                 , n_samples * sizeof(float)
               );
         loop->pos += n_samples;
     }
 }
-static void extend(Looper* looper, size_t n_samples)
+static void extend (Loop* loop, size_t n_samples, float* input, float* output)
 {
-    Loop* loop = looper->loop;
     if (loop->end >= 0) 
     {
         if (loop->pos_extend >= loop->end_before_extend)
             loop->pos_extend -= loop->end_before_extend;
-        memcpy(looper->output
+        memcpy(   output
                 , &(loop->buffer[loop->pos_extend])
                 , n_samples * sizeof(float)
               );
         if ((loop->pos + n_samples) > (loop->end_before_extend)) 
         {
             //copy the current block
-            memcpy( &(loop->buffer[loop->pos])
+            memcpy(   &(loop->buffer[loop->pos])
                     , &(loop->buffer[loop->pos_extend])
                     , n_samples * sizeof(float)
                   );
@@ -181,20 +176,18 @@ static void extend(Looper* looper, size_t n_samples)
         for (int i = 0; i < n_samples; i++)
         {   
             //TODO: reduce gain to stop clipping 
-            loop->buffer[loop->pos + i] += looper->input[i];
+            loop->buffer[loop->pos + i] += input[i];
         }
         loop->pos += n_samples;
         loop->pos_extend += n_samples;
     }
 }
 
-static void
-play(Looper* looper, size_t n_samples)
+static void play(Loop* loop, size_t n_samples, float* output)
 {
-    Loop* loop = looper->loop;
     if (loop->pos >= loop->end)
         loop->pos -= loop->end;
-    memcpy(looper->output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
+    memcpy(output, &(loop->buffer[loop->pos]), n_samples * sizeof(float));
     loop->pos += n_samples;
 }
 
