@@ -135,48 +135,39 @@ static void overdub(Loop* loop,
                     const float* const input,
                     float feedback)
 {
-    if (loop->end > 0)
+    if (loop->pos >= loop->end)
+        loop->pos -= loop->end;
+    for (int i = 0; i < n_samples; i++)
     {
-        if (loop->pos >= loop->end)
-            loop->pos -= loop->end;
-        for (int i = 0; i < n_samples; i++)
-        {
-            //TODO: reduce feedback to stop clipping
-            loop->buffer[loop->pos + i] *= feedback;
-            loop->buffer[loop->pos + i] += input[i];
-        }
+        //TODO: reduce feedback to stop clipping
+        loop->buffer[loop->pos + i] *= feedback;
+        loop->buffer[loop->pos + i] += input[i];
     }
 }
 
 static void insert(Loop* loop, size_t n_samples)
 {
-    if (loop->end > 0)
-    {
-        if (loop->pos >= loop->end)
-            loop->pos -= loop->end;
-        //push the existing loop along by n_samples
-        memmove( &(loop->buffer[loop->pos + n_samples]),
-                 &(loop->buffer[loop->pos]),
-                 (loop->end - loop->pos) * sizeof(float) );
-    }
+    if (loop->pos >= loop->end)
+        loop->pos -= loop->end;
+    //push the existing loop along by n_samples
+    memmove( &(loop->buffer[loop->pos + n_samples]),
+            &(loop->buffer[loop->pos]),
+            (loop->end - loop->pos) * sizeof(float) );
 }
 
 static void extend(Loop* loop, size_t n_samples)
 {
-    if (loop->end >= 0)
+    if (loop->pos_extend >= loop->end_before_extend)
+        loop->pos_extend -= loop->end_before_extend;
+    if ((loop->pos + n_samples) > (loop->end_before_extend))
     {
-        if (loop->pos_extend >= loop->end_before_extend)
-            loop->pos_extend -= loop->end_before_extend;
-        if ((loop->pos + n_samples) > (loop->end_before_extend))
-        {
-            //copy the current block
-            memcpy( &(loop->buffer[loop->pos]),
-                    &(loop->buffer[loop->pos_extend]),
-                    n_samples * sizeof(float) );
-            loop->end += n_samples;
-        }
-        loop->pos_extend += n_samples;
+        //copy the current block
+        memcpy( &(loop->buffer[loop->pos]),
+                &(loop->buffer[loop->pos_extend]),
+                n_samples * sizeof(float) );
+        loop->end += n_samples;
     }
+    loop->pos_extend += n_samples;
 }
 
 static void play(Loop* loop, size_t n_samples, float* output, float volume)
