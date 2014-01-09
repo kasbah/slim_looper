@@ -58,7 +58,6 @@ void looper_run(Looper* looper, size_t n_samples)
             break;
         case SlimMessage_Looper_State_OVERDUB:
         case SlimMessage_Looper_State_INSERT:
-        case SlimMessage_Looper_State_REPLACE:
         case SlimMessage_Looper_State_EXTEND:
         case SlimMessage_Looper_State_PLAY:
         case SlimMessage_Looper_State_PAUSE:
@@ -88,9 +87,6 @@ void looper_run(Looper* looper, size_t n_samples)
             break;
         case SlimMessage_Looper_State_INSERT:
             insert(loop, n_samples, looper->input);
-            break;
-        case SlimMessage_Looper_State_REPLACE:
-            replace(loop, n_samples, looper->input);
             break;
         case SlimMessage_Looper_State_EXTEND:
             if (state->previously_run != SlimMessage_Looper_State_EXTEND)
@@ -161,19 +157,6 @@ static void insert(Loop* loop, size_t n_samples, const float* const input)
     }
 }
 
-static void replace(Loop* loop, size_t n_samples, const float* const input)
-{
-    if (loop->end > 0)
-    {
-        if (loop->pos >= loop->end)
-            loop->pos -= loop->end;
-        memcpy(   &(loop->buffer[loop->pos])
-                , input
-                , n_samples * sizeof(float)
-              );
-        loop->pos += n_samples;
-    }
-}
 static void extend (Loop* loop, size_t n_samples, const float* const input, float* output)
 {
     if (loop->end >= 0) 

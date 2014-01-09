@@ -47,8 +47,12 @@ static void slim_parse_looper_message(Slim* slim, const SlimMessage msg)
     if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
     {
         LooperState* state = slim->looper_array[msg.looper.number]->state; 
-        printf("previous requested: %i\r\n", state->requested);
-        if (state->requested == msg.looper.state)
+        printf("current state: %i\r\n", state->current);
+        if (msg.looper.state == SlimMessage_Looper_State_NONE)
+        {
+            return;
+        }
+        else if (msg.looper.state == state->current)
         {
             state->requested = SlimMessage_Looper_State_PLAY;
         }
@@ -56,7 +60,7 @@ static void slim_parse_looper_message(Slim* slim, const SlimMessage msg)
         {
             state->requested = msg.looper.state;
         }
-        printf("now requested: %i\r\n", state->requested);
+        printf("requested state: %i\r\n", state->requested);
     }
 }
 
@@ -77,8 +81,8 @@ static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, char* msg_bu
         status = pb_decode_delimited(&stream, SlimMessage_fields, &messages[i]);
         if (status == 1)
         {
-            printf ("requested state: %i\r\n", messages[i].looper.state);
-            printf ("looper number  : %i\r\n", messages[i].looper.number);
+            printf ("message state: %i\r\n", messages[i].looper.state);
+            printf ("message looper number  : %i\r\n", messages[i].looper.number);
             {
                 for (int i = 0; i < messages[i].looper.settings_count; i++)
                 {

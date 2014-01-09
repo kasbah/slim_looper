@@ -104,26 +104,26 @@ static char* test_insert(void)
     return 0;
 }
 
-static char* test_replace(void)
-{
-    Looper* instance = setup_looper();
-    set_all(input, 0.1);
-    instance->state->requested = SlimMessage_Looper_State_RECORD;
-    looper_run(instance, N_FRAMES);
-    set_all(input, 0.2);
-    looper_run(instance, N_FRAMES);
-    instance->state->requested = SlimMessage_Looper_State_REPLACE;
-    set_all(input, 0.3);
-    looper_run(instance, N_FRAMES);
-    assert_all("silent while replacing", output, 0.0);
-    instance->state->requested = SlimMessage_Looper_State_PLAY;
-    looper_run(instance, N_FRAMES);
-    assert_all("playing second recording", output, 0.2);
-    looper_run(instance, N_FRAMES);
-    assert_all("playing back replaced", output, 0.3);
-    looper_free(instance);
-    return 0;
-}
+//static char* test_replace(void)
+//{
+//    Looper* instance = setup_looper();
+//    set_all(input, 0.1);
+//    instance->state->requested = SlimMessage_Looper_State_RECORD;
+//    looper_run(instance, N_FRAMES);
+//    set_all(input, 0.2);
+//    looper_run(instance, N_FRAMES);
+//    instance->state->requested = SlimMessage_Looper_State_REPLACE;
+//    set_all(input, 0.3);
+//    looper_run(instance, N_FRAMES);
+//    assert_all("silent while replacing", output, 0.0);
+//    instance->state->requested = SlimMessage_Looper_State_PLAY;
+//    looper_run(instance, N_FRAMES);
+//    assert_all("playing second recording", output, 0.2);
+//    looper_run(instance, N_FRAMES);
+//    assert_all("playing back replaced", output, 0.3);
+//    looper_free(instance);
+//    return 0;
+//}
 static char* test_extend1(void)
 {
     Looper* instance = setup_looper();
@@ -203,9 +203,6 @@ static char* test_no_loop(void)
     instance->state->requested = SlimMessage_Looper_State_INSERT;
     looper_run(instance, N_FRAMES);
     mu_assert("remaining in none after insert", instance->state->current == SlimMessage_Looper_State_NONE);
-    instance->state->requested = SlimMessage_Looper_State_REPLACE;
-    looper_run(instance, N_FRAMES);
-    mu_assert("remaining in none after replace", instance->state->current == SlimMessage_Looper_State_NONE);
     instance->state->requested = SlimMessage_Looper_State_EXTEND;
     looper_run(instance, N_FRAMES);
     mu_assert("remaining in none after extend", instance->state->current == SlimMessage_Looper_State_NONE);
@@ -223,7 +220,6 @@ static char* all_tests()
     mu_run_test("test_record: NOT ", test_record);
     mu_run_test("test_overdub: NOT ", test_overdub);
     mu_run_test("test_insert: NOT ", test_insert);
-    mu_run_test("test_replace: NOT ", test_replace);
     mu_run_test("test_extend1: NOT ", test_extend1);
     mu_run_test("test_extend2: NOT ", test_extend2);
     mu_run_test("test_no_loop: NOT ", test_no_loop);
