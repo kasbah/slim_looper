@@ -31,6 +31,7 @@ typedef struct {
 
 typedef struct {
     float feedback;
+    float volume;
 } LooperSettings;
 
 typedef struct {
@@ -59,11 +60,13 @@ static void overdub(Loop* loop,
                     size_t n_samples, 
                     const float* const input, 
                     float* output,
+                    float volume,
                     float feedback);
 static void insert (Loop* loop, size_t n_samples, const float* const input);
 static void extend (Loop* loop, size_t n_samples, 
                     const float* const input, 
                     float* output,
+                    float volume,
                     float feedback);
-static void play   (Loop* loop, size_t n_samples, float* output);
+static void play   (Loop* loop, size_t n_samples, float* output, float volume);
 #endif// __LOOPER_H__

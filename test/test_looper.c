@@ -87,9 +87,11 @@ static char* test_replace(void)
     instance->state->requested = SlimMessage_Looper_State_OVERDUB;
     set_all(input, 0.3);
     instance->settings->feedback = 0.0;
+    instance->settings->volume   = 0.0;
     looper_run(instance, N_FRAMES);
     assert_all("silent while replacing", output, 0.0);
     instance->state->requested = SlimMessage_Looper_State_PLAY;
+    instance->settings->volume   = 1.0;
     looper_run(instance, N_FRAMES);
     assert_all("playing second recording", output, 0.2);
     looper_run(instance, N_FRAMES);
