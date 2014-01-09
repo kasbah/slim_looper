@@ -25,8 +25,8 @@ Looper* looper_new(size_t max_n_samples)
     looper->output = calloc(max_n_samples, sizeof(float));
     looper->loop   = (Loop*)malloc(sizeof(Loop));
     looper->loop->buffer = calloc(LOOP_MAX_SAMPLES, sizeof(float));
-    looper->state     = (LooperState*)malloc(sizeof(LooperState));
-    looper->settings  = (LooperSettings*)malloc(sizeof(LooperSettings));
+    looper->state        = (LooperState*)malloc(sizeof(LooperState));
+    looper->settings     = (LooperSettings*)malloc(sizeof(LooperSettings));
     return looper;
 }
 
@@ -127,10 +127,7 @@ void looper_run(Looper* looper, size_t n_samples)
 
 static void record (Loop* loop, size_t n_samples, const float* const input)
 {
-    memcpy( &(loop->buffer[loop->pos])
-            , input
-            , n_samples * sizeof(float)
-          );
+    memcpy( &(loop->buffer[loop->pos]), input, n_samples * sizeof(float) );
     loop->pos += n_samples;
     loop->end += n_samples;
 }
@@ -164,15 +161,11 @@ static void insert(Loop* loop, size_t n_samples, const float* const input)
         if (loop->pos >= loop->end)
             loop->pos -= loop->end;
         //push the existing loop along by n_samples
-        memmove(  &(loop->buffer[loop->pos + n_samples])
-                , &(loop->buffer[loop->pos])
-                , (loop->end - loop->pos) * sizeof(float)
-               );
+        memmove( &(loop->buffer[loop->pos + n_samples]),
+                 &(loop->buffer[loop->pos]),
+                 (loop->end - loop->pos) * sizeof(float) );
         //fill the space with the input
-        memcpy(   &(loop->buffer[loop->pos])
-                , input
-                , n_samples * sizeof(float)
-              );
+        memcpy( &(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
         loop->pos += n_samples;
         loop->end += n_samples;
     }
@@ -191,10 +184,9 @@ static void extend(Loop* loop, size_t n_samples,
         if ((loop->pos + n_samples) > (loop->end_before_extend))
         {
             //copy the current block
-            memcpy(   &(loop->buffer[loop->pos])
-                    , &(loop->buffer[loop->pos_extend])
-                    , n_samples * sizeof(float)
-                  );
+            memcpy( &(loop->buffer[loop->pos]),
+                    &(loop->buffer[loop->pos_extend]),
+                    n_samples * sizeof(float) );
             loop->end += n_samples;
         }
         for (int i = 0; i < n_samples; i++)
@@ -204,8 +196,8 @@ static void extend(Loop* loop, size_t n_samples,
             loop->buffer[loop->pos + i] *= feedback;
             loop->buffer[loop->pos + i] += input[i];
         }
-        loop->pos += n_samples;
         loop->pos_extend += n_samples;
+        loop->pos += n_samples;
     }
 }
 
