@@ -89,6 +89,7 @@ void looper_run(Looper* looper, size_t n_samples)
                 loop->end = 0;
             }
             record(loop, n_samples, looper->input);
+            loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_OVERDUB:
             overdub(loop,
@@ -97,9 +98,11 @@ void looper_run(Looper* looper, size_t n_samples)
                     looper->output,
                     settings->volume,
                     settings->feedback);
+            loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_INSERT:
             insert(loop, n_samples, looper->input);
+            loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_EXTEND:
             if (state->previously_run != SlimMessage_Looper_State_EXTEND)
@@ -113,9 +116,11 @@ void looper_run(Looper* looper, size_t n_samples)
                     looper->output,
                     settings->volume,
                     settings->feedback);
+            loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_PLAY:
             play(loop, n_samples, looper->output, settings->volume);
+            loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_PAUSE:
         case SlimMessage_Looper_State_NONE:
@@ -128,7 +133,6 @@ void looper_run(Looper* looper, size_t n_samples)
 static void record (Loop* loop, size_t n_samples, const float* const input)
 {
     memcpy( &(loop->buffer[loop->pos]), input, n_samples * sizeof(float) );
-    loop->pos += n_samples;
     loop->end += n_samples;
 }
 
@@ -150,7 +154,6 @@ static void overdub(Loop* loop,
             loop->buffer[loop->pos + i] *= feedback;
             loop->buffer[loop->pos + i] += input[i];
         }
-        loop->pos += n_samples;
     }
 }
 
@@ -166,7 +169,6 @@ static void insert(Loop* loop, size_t n_samples, const float* const input)
                  (loop->end - loop->pos) * sizeof(float) );
         //fill the space with the input
         memcpy( &(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
-        loop->pos += n_samples;
         loop->end += n_samples;
     }
 }
@@ -197,7 +199,6 @@ static void extend(Loop* loop, size_t n_samples,
             loop->buffer[loop->pos + i] += input[i];
         }
         loop->pos_extend += n_samples;
-        loop->pos += n_samples;
     }
 }
 
@@ -209,6 +210,5 @@ static void play(Loop* loop, size_t n_samples, float* output, float volume)
     {
         output[i] = loop->buffer[loop->pos + i] * volume;
     }
-    loop->pos += n_samples;
 }
 
