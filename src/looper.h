@@ -56,17 +56,11 @@ void looper_run   (Looper* looper, size_t n_samples);
 void looper_reset (Looper* looper);
 
 static void record (Loop* loop, size_t n_samples, const float* const input);
-static void overdub(Loop* loop, 
-                    size_t n_samples, 
-                    const float* const input, 
-                    float* output,
-                    float volume,
+static void overdub(Loop* loop,
+                    size_t n_samples,
+                    const float* const input,
                     float feedback);
-static void insert (Loop* loop, size_t n_samples, const float* const input);
-static void extend (Loop* loop, size_t n_samples, 
-                    const float* const input, 
-                    float* output,
-                    float volume,
-                    float feedback);
+static void insert (Loop* loop, size_t n_samples);
+static void extend (Loop* loop, size_t n_samples);
 static void play   (Loop* loop, size_t n_samples, float* output, float volume);
 #endif// __LOOPER_H__

@@ -92,16 +92,13 @@ void looper_run(Looper* looper, size_t n_samples)
             loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_OVERDUB:
-            overdub(loop,
-                    n_samples,
-                    looper->input,
-                    looper->output,
-                    settings->volume,
-                    settings->feedback);
+            play   (loop, n_samples, looper->output, settings->volume);
+            overdub(loop, n_samples, looper->input, settings->feedback);
             loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_INSERT:
-            insert(loop, n_samples, looper->input);
+            insert(loop, n_samples);
+            record(loop, n_samples, looper->input);
             loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_EXTEND:
@@ -110,12 +107,9 @@ void looper_run(Looper* looper, size_t n_samples)
                 loop->end_before_extend = loop->end;
                 loop->pos_extend = loop->pos;
             }
-            extend(loop, 
-                    n_samples,
-                    looper->input,
-                    looper->output,
-                    settings->volume,
-                    settings->feedback);
+            extend (loop, n_samples);
+            play   (loop, n_samples, looper->output, settings->volume);
+            overdub(loop, n_samples, looper->input, settings->feedback);
             loop->pos += n_samples;
             break;
         case SlimMessage_Looper_State_PLAY:
@@ -139,8 +133,6 @@ static void record (Loop* loop, size_t n_samples, const float* const input)
 static void overdub(Loop* loop,
                     size_t n_samples,
                     const float* const input,
-                    float* output,
-                    float volume,
                     float feedback)
 {
     if (loop->end > 0)
@@ -149,7 +141,6 @@ static void overdub(Loop* loop,
             loop->pos -= loop->end;
         for (int i = 0; i < n_samples; i++)
         {
-            output[i] = loop->buffer[loop->pos + i] * volume;
             //TODO: reduce feedback to stop clipping
             loop->buffer[loop->pos + i] *= feedback;
             loop->buffer[loop->pos + i] += input[i];
@@ -157,7 +148,7 @@ static void overdub(Loop* loop,
     }
 }
 
-static void insert(Loop* loop, size_t n_samples, const float* const input)
+static void insert(Loop* loop, size_t n_samples)
 {
     if (loop->end > 0)
     {
@@ -167,17 +158,10 @@ static void insert(Loop* loop, size_t n_samples, const float* const input)
         memmove( &(loop->buffer[loop->pos + n_samples]),
                  &(loop->buffer[loop->pos]),
                  (loop->end - loop->pos) * sizeof(float) );
-        //fill the space with the input
-        memcpy( &(loop->buffer[loop->pos]), input, n_samples * sizeof(float));
-        loop->end += n_samples;
     }
 }
 
-static void extend(Loop* loop, size_t n_samples,
-                   const float* const input,
-                   float* output,
-                   float volume,
-                   float feedback)
+static void extend(Loop* loop, size_t n_samples)
 {
     if (loop->end >= 0)
     {
@@ -190,13 +174,6 @@ static void extend(Loop* loop, size_t n_samples,
                     &(loop->buffer[loop->pos_extend]),
                     n_samples * sizeof(float) );
             loop->end += n_samples;
-        }
-        for (int i = 0; i < n_samples; i++)
-        {
-            output[i] = loop->buffer[loop->pos + i] * volume;
-            //TODO: reduce feedback to stop clipping
-            loop->buffer[loop->pos + i] *= feedback;
-            loop->buffer[loop->pos + i] += input[i];
         }
         loop->pos_extend += n_samples;
     }
