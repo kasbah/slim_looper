@@ -30,6 +30,10 @@ typedef struct {
 } LooperState;
 
 typedef struct {
+    float feedback;
+} LooperSettings;
+
+typedef struct {
     float* buffer;
     size_t end;
     size_t pos;
@@ -42,6 +46,7 @@ typedef struct {
     float*       output;
     Loop*  loop;
     LooperState* state;
+    LooperSettings* settings;
 } Looper;
 
 Looper* looper_new(size_t max_n_samples);
@@ -50,9 +55,15 @@ void looper_run   (Looper* looper, size_t n_samples);
 void looper_reset (Looper* looper);
 
 static void record (Loop* loop, size_t n_samples, const float* const input);
-static void overdub(Loop* loop, size_t n_samples, const float* const input, float* output);
+static void overdub(Loop* loop, 
+                    size_t n_samples, 
+                    const float* const input, 
+                    float* output,
+                    float feedback);
 static void insert (Loop* loop, size_t n_samples, const float* const input);
-static void replace(Loop* loop, size_t n_samples, const float* const input);
-static void extend (Loop* loop, size_t n_samples, const float* const input, float* output);
+static void extend (Loop* loop, size_t n_samples, 
+                    const float* const input, 
+                    float* output,
+                    float feedback);
 static void play   (Loop* loop, size_t n_samples, float* output);
 #endif// __LOOPER_H__
