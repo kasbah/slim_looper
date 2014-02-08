@@ -59,6 +59,27 @@ static char* test_record(void)
     return 0;
 }
 
+static char* test_record2(void)
+{
+    Looper* instance = setup_looper();
+    set_all(input, 0.1);
+    set_all(output, 0.0);
+    instance->state->requested = SlimMessage_Looper_State_RECORD;
+    looper_run(instance, N_FRAMES);
+    assert_all("silent while recording (1)", output, 0.0);
+    set_all(input, 0.2);
+    set_all(output, 0.0);
+    looper_run(instance, N_FRAMES);
+    assert_all("silent while recording (2)", output, 0.0);
+    instance->state->requested = SlimMessage_Looper_State_PLAY;
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back first recording", output, 0.1);
+    looper_run(instance, N_FRAMES);
+    assert_all("playing back second recording", output, 0.2);
+    looper_free(instance);
+    return 0;
+}
+
 static char* test_overdub(void)
 {
     Looper* instance = setup_looper();
@@ -110,6 +131,7 @@ static char* test_insert(void)
     looper_run(instance, N_FRAMES);
     instance->state->requested = SlimMessage_Looper_State_PLAY;
     looper_run(instance, N_FRAMES);
+    assert_all("playing back first recording (1)", output, 0.1);
     instance->state->requested = SlimMessage_Looper_State_INSERT;
     set_all(input, 0.3);
     looper_run(instance, N_FRAMES);
@@ -118,7 +140,7 @@ static char* test_insert(void)
     looper_run(instance, N_FRAMES);
     assert_all("playing back second recording", output, 0.2);
     looper_run(instance, N_FRAMES);
-    assert_all("playing back first recording", output, 0.1);
+    assert_all("playing back first recording (2)", output, 0.1);
     looper_run(instance, N_FRAMES);
     assert_all("playing back inserted recording", output, 0.3);
     instance->state->requested = SlimMessage_Looper_State_PLAY;
@@ -222,6 +244,7 @@ static char* test_no_loop(void)
 static char* all_tests() 
 {
     mu_run_test("test_record: NOT ", test_record);
+    mu_run_test("test_record2: NOT ", test_record2);
     mu_run_test("test_overdub: NOT ", test_overdub);
     mu_run_test("test_replace: NOT ", test_replace);
     mu_run_test("test_insert: NOT ", test_insert);
