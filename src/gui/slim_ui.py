@@ -5,7 +5,6 @@ from PyQt4.QtGui import QStatusBar, QApplication, QMainWindow, QPushButton, QSty
 from PyQt4.QtGui import QLabel 
 from PyQt4.QtCore import QString, QRect, QMetaObject, SIGNAL, Qt
 
-
 from ui_settings import slimUISettings
 from slim_pb2 import SlimMessage
 import slim_socket
@@ -36,10 +35,14 @@ class LooperWidget(QGroupBox):
         self.sliders = []
         self.number = looper_number
         for number,name in commands:
-            self.buttons.append(QPushButton(self, text=QApplication.translate("MainWindow", name.title(), None, QApplication.UnicodeUTF8)))
+            button = QPushButton(self,
+                    text=QApplication.translate("MainWindow",
+                        name.title(),
+                        None, QApplication.UnicodeUTF8))
+            self.buttons.append(button)
             self.horizontalLayout.addWidget(self.buttons[-1])
-            self.buttons[-1].command = number
-            self.buttons[-1].clicked.connect(self.onButtonClicked)
+            button.command = number
+            button.clicked.connect(self.onButtonClicked)
         for d in looper_settings:
             widget = QWidget()
             widget.setMaximumHeight(90)
@@ -59,7 +62,7 @@ class LooperWidget(QGroupBox):
             widget.dial.setValue  (int(d["lv2:default"][0] * 100.0))
             widget.dial.name = SlimMessage.Looper.Setting.__dict__[name.upper()]
             widget.dial.valueChanged.connect(self.onSliderChanged)
-            self.verticalLayout.addWidget(self.sliders[-1])
+            self.verticalLayout.addWidget(widget)
 
 
     def retranslateUi(self):
