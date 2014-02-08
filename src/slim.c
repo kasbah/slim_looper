@@ -46,6 +46,15 @@ static void slim_parse_looper_message(Slim* slim, const SlimMessage msg)
 {
     if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
     {
+        printf ("message state: %i\r\n", msg.looper.state);
+        printf ("message looper number  : %i\r\n", msg.looper.number);
+        {
+            for (int i = 0; i < msg.looper.settings_count; i++)
+            {
+                SlimMessage_Looper_Setting setting = msg.looper.settings[i];
+                printf("setting: %i %f\r\n", setting.name , setting.value);
+            }
+        }
         LooperState* state = slim->looper_array[msg.looper.number]->state; 
         printf("current state: %i\r\n", state->current);
         if (msg.looper.state == SlimMessage_Looper_State_NONE)
@@ -81,15 +90,6 @@ static void slim_parse_messages(Slim* slim, const uint32_t n_bytes, char* msg_bu
         status = pb_decode_delimited(&stream, SlimMessage_fields, &messages[i]);
         if (status == 1)
         {
-            printf ("message state: %i\r\n", messages[i].looper.state);
-            printf ("message looper number  : %i\r\n", messages[i].looper.number);
-            {
-                for (int i = 0; i < messages[i].looper.settings_count; i++)
-                {
-                    SlimMessage_Looper_Setting setting = messages[i].looper.settings[i];
-                    printf("setting: %i %f\r\n", setting.name , setting.value);
-                }
-            }
             switch(messages[i].type)
             {
                 case SlimMessage_Type_LOOPER:

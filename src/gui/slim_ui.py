@@ -54,11 +54,11 @@ class LooperWidget(QGroupBox):
             layout.addWidget(widget.dial)
             layout.addWidget(widget.label)
             self.sliders.append(widget)
-            #self.sliders[-1].setDefault(float(d["lv2:default"][0]))
-            #self.sliders[-1].setMaximum(float(d["lv2:maximum"][0]))
-            #self.sliders[-1].setMinimum(float(d["lv2:minimum"][0]))
-            #self.sliders[-1].setStep(0.0)
-            #self.sliders[-1].setLabel(d["lv2:name"][0])
+            widget.dial.setMaximum(int(d["lv2:maximum"][0] * 100.0))
+            widget.dial.setMinimum(int(d["lv2:minimum"][0] * 100.0))
+            widget.dial.setValue  (int(d["lv2:default"][0] * 100.0))
+            widget.dial.name = SlimMessage.Looper.Setting.__dict__[name.upper()]
+            widget.dial.valueChanged.connect(self.onSliderChanged)
             self.verticalLayout.addWidget(self.sliders[-1])
 
 
@@ -69,6 +69,14 @@ class LooperWidget(QGroupBox):
         msg.type = SlimMessage.LOOPER
         msg.looper.number = self.number 
         msg.looper.state = self.sender().command 
+        slim_socket.send(msg)
+    def onSliderChanged(self, value):
+        msg = SlimMessage()
+        msg.type = SlimMessage.LOOPER
+        msg.looper.number = self.number 
+        setting = msg.looper.settings.add()
+        setting.name = self.sender().name 
+        setting.value = value / 100.0
         slim_socket.send(msg)
 
 class Ui_SLim(object):

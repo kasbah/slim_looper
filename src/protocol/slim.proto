@@ -21,8 +21,8 @@ message SlimMessage {
 
         message Setting {
             enum Name {
-                DRY = 0;
-                WET = 1;
+                VOLUME   = 0;
+                FEEDBACK = 1;
             }
             required Name name   = 1;
             required float value = 2;
