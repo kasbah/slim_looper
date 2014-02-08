@@ -35,11 +35,13 @@ typedef struct {
 } LooperSettings;
 
 typedef struct {
-    float* buffer;
-    size_t end;
-    size_t pos;
-    size_t end_before_extend;
-    size_t pos_extend;
+    float* beg;
+    float* end;
+    float* pos;
+    float* end_before_extend;
+    float* pos_extend;
+    size_t len;
+    size_t len_before_extend;
 } Loop;
 
 typedef struct {
