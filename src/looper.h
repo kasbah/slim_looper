@@ -38,8 +38,8 @@ typedef struct {
     float* beg;
     float* pos;
     float* end;
-    float* pos_extend;
-    float* end_before_extend;
+    float* pos_extend_source;
+    float* end_extend_source;
 } Loop;
 
 typedef struct {
@@ -55,6 +55,7 @@ void looper_free  (Looper* looper);
 void looper_run   (Looper* looper, size_t n_samples);
 void looper_reset (Looper* looper);
 
+static void loop_around(Loop* loop);
 static void record (Loop* loop, size_t n_samples, const float* const input);
 static void overdub(Loop* loop,
                     size_t n_samples,

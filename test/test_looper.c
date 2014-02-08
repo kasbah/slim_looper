@@ -38,7 +38,7 @@ static inline void set_all(float* buffer, float value)
         buffer[i] = value;
 }
 
-static char* test_record(void)
+static char* test_record1(void)
 {
     Looper* instance = setup_looper();
     set_all(input, 0.1);
@@ -243,7 +243,7 @@ static char* test_no_loop(void)
 
 static char* all_tests() 
 {
-    mu_run_test("test_record: NOT ", test_record);
+    mu_run_test("test_record1: NOT ", test_record1);
     mu_run_test("test_record2: NOT ", test_record2);
     mu_run_test("test_overdub: NOT ", test_overdub);
     mu_run_test("test_replace: NOT ", test_replace);
