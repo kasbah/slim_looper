@@ -36,12 +36,10 @@ typedef struct {
 
 typedef struct {
     float* beg;
-    float* end;
     float* pos;
-    float* end_before_extend;
+    float* end;
     float* pos_extend;
-    size_t len;
-    size_t len_before_extend;
+    float* end_before_extend;
 } Loop;
 
 typedef struct {
