@@ -44,32 +44,41 @@ void slim_activate(Slim* slim)
 
 static void slim_parse_looper_message(Slim* slim, const SlimMessage msg)
 {
-    if ((msg.looper.number) >= 0 && (msg.looper.number <= (slim->n_loopers)))
+    if (msg.looper.number >= 0 && (msg.looper.number < (slim->n_loopers)))
     {
+
+        Looper* looper = slim->looper_array[msg.looper.number];
         printf ("message state: %i\r\n", msg.looper.state);
         printf ("message looper number  : %i\r\n", msg.looper.number);
+        for (int i = 0; i < msg.looper.settings_count; i++)
         {
-            for (int i = 0; i < msg.looper.settings_count; i++)
+            SlimMessage_Looper_Setting setting = msg.looper.settings[i];
+            printf("setting: %i %f\r\n", setting.name , setting.value);
+            switch (setting.name) 
             {
-                SlimMessage_Looper_Setting setting = msg.looper.settings[i];
-                printf("setting: %i %f\r\n", setting.name , setting.value);
+                case SlimMessage_Looper_Setting_Name_VOLUME:
+                    looper->settings->volume = setting.value;
+                    break;
+                case SlimMessage_Looper_Setting_Name_FEEDBACK:
+                    looper->settings->feedback = setting.value;
+                    break;
+
             }
         }
-        LooperState* state = slim->looper_array[msg.looper.number]->state; 
-        printf("current state: %i\r\n", state->current);
+        printf("current state: %i\r\n", looper->state->current);
         if (msg.looper.state == SlimMessage_Looper_State_NONE)
         {
             return;
         }
-        else if (msg.looper.state == state->current)
+        else if (msg.looper.state == looper->state->current)
         {
-            state->requested = SlimMessage_Looper_State_PLAY;
+            looper->state->requested = SlimMessage_Looper_State_PLAY;
         }
         else
         {
-            state->requested = msg.looper.state;
+            looper->state->requested = msg.looper.state;
         }
-        printf("requested state: %i\r\n", state->requested);
+        printf("requested state: %i\r\n", looper->state->requested);
     }
 }
 
